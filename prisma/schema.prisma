@@ -1,0 +1,53 @@
+generator client {
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model attributes {
+  event_id      BigInt
+  key           String  @db.VarChar
+  composite_key String  @db.VarChar
+  value         String? @db.VarChar
+  events        events  @relation(fields: [event_id], references: [rowid], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([event_id, key])
+}
+
+model blocks {
+  rowid      BigInt       @id @default(autoincrement())
+  height     BigInt
+  chain_id   String       @db.VarChar
+  created_at DateTime     @db.Timestamptz(6)
+  events     events[]
+  tx_results tx_results[]
+
+  @@unique([height, chain_id])
+  @@index([height, chain_id], map: "idx_blocks_height_chain")
+}
+
+model events {
+  rowid      BigInt       @id @default(autoincrement())
+  block_id   BigInt
+  tx_id      BigInt?
+  type       String       @db.VarChar
+  attributes attributes[]
+  blocks     blocks       @relation(fields: [block_id], references: [rowid], onDelete: NoAction, onUpdate: NoAction)
+  tx_results tx_results?  @relation(fields: [tx_id], references: [rowid], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model tx_results {
+  rowid      BigInt   @id @default(autoincrement())
+  block_id   BigInt
+  index      Int
+  created_at DateTime @db.Timestamptz(6)
+  tx_hash    String   @db.VarChar
+  tx_result  Bytes
+  events     events[]
+  blocks     blocks   @relation(fields: [block_id], references: [rowid], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([block_id, index])
+}
