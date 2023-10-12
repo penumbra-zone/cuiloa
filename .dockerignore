@@ -1,0 +1,12 @@
+# ignore everything by default
+**
+# allow JS files
+!*.ts
+!*.js
+!*.json
+!pnpm-lock.yaml
+
+# nextjs files
+!prisma/
+!public/
+!src/
