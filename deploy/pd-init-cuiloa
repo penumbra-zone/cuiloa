@@ -1,0 +1,28 @@
+#!/bin/bash
+# Utility script to configure a new Penumbra node, specifically for Cuiloa.
+# Doing so requires modifying the CometBFT config to use the "psql" indexer.
+# Unfortunately, the tendermint-rs Rust crate used to managed the CometBFT
+# TOML config file via pd doesn't support this config, so we munge it with sed.
+
+
+set -euo pipefail
+
+# Display version info
+pd --version
+
+# Purge any preexisting state
+# rm -rf /pd/testnet_data
+
+if ! test -e /pd/testnet_data/node0/cometbft/config/config.toml ; then
+    >&2 printf "WARN: testnet config not found. Creating fresh node identity."
+    >&2 echo " See docs for details: https://guide.penumbra.zone/main/pd/join-testnet.html"
+    /bin/pd testnet --testnet-dir /pd/testnet_data join
+    sed -i -e 's#^indexer.*#indexer = "psql"\npsql-conn = "postgresql://penumbra:penumbra@postgres:5432/penumbra?sslmode=disable"#' /pd/testnet_data/node0/cometbft/config/config.toml
+    grep psql /pd/testnet_data/node0/cometbft/config/config.toml
+else
+    >&2 echo 'Node config already found, using it'
+fi
+
+chown 100 -R /pd/testnet_data/node0/cometbft
+chown 1000 -R /pd/testnet_data/node0/pd
+exit 0
