@@ -1,4 +1,3 @@
-// Disabling some lints because these components are directly installed by shadcn-ui
 /* eslint-disable react/prop-types */
 import * as React from "react";
 

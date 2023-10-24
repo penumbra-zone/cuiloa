@@ -1,16 +1,16 @@
 import db from "@/lib/db";
+import { HashResultValidator } from "@/lib/validators/search";
+import { z } from "zod";
 
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
-    const hash = url.searchParams.get("q") ?? "";
-    // console.log(hash);
-  
-    if ( !hash ) {
-      return new Response("Invalid query, no transaction hash.", { status: 400 });
-    }
+    const queryParam = url.searchParams.get("q")?.trim() ?? "";
 
-    const tx = await db.tx_results.findFirst({
+    const hash = HashResultValidator.parse(queryParam);
+
+    // BUG: As with /api/ht, this query is failing to pull in all associated event attributes, eg `action_undelegate.validator`.
+    const tx = await db.tx_results.findFirstOrThrow({
       select: {
         tx_hash: true,
         tx_result: true,
@@ -42,8 +42,6 @@ export async function GET(req: Request) {
         tx_hash: hash,
       },
     });
-
-    console.log(tx);
     // NOTE: Prisma's handling of 'bigint' typed columns gives the node equivalent which is one of the very
     //       few data types that JSON.stringify() cannot serialize. Prisma + NextJS completely smother this error, as well.
     //       The recommended solution is to monkey patch JSON globally[1] but I do it inline here for now.
@@ -53,6 +51,9 @@ export async function GET(req: Request) {
 
     return new Response(json);
   } catch (error) {
-    return new Response("Could not find transaction by hash.", { status: 404 });
+    if ( error instanceof z.ZodError ) {
+      return new Response("Invalid transaction query: Hash must be 64 hexadecimal characters with optional 0x prefix", { status: 422 });
+    }
+    return new Response("Could not find transaction result with provided hash.", { status: 404 });
   }
 }
