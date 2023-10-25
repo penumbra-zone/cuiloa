@@ -48,7 +48,7 @@ const Page : FC<PageProps> = ({ params }) => {
         { txData ? (
           <div className="bg-white rounded-sm">
           <div className="flex p-3">
-            <div className="shrink-0 flex flex-col gap-y-10 w-1/5 text-slate-600 text-sm">
+            <div className="shrink-0 flex flex-col gap-y-10 w-1/6 text-slate-600 text-sm">
               <div>
                 <p>Hash</p>
               </div>
@@ -69,7 +69,7 @@ const Page : FC<PageProps> = ({ params }) => {
               </div>
               {/* <pre>{JSON.stringify(txData, null, 2)}</pre> */}
             </div>
-            <div className="flex flex-col flex-wrap break-words gap-y-9 w-full">
+            <div className="flex flex-col flex-wrap break-words gap-y-9 w-5/6">
               <div>
                 <pre>{txData.tx_hash}</pre>
               </div>
@@ -85,7 +85,7 @@ const Page : FC<PageProps> = ({ params }) => {
                 </details>
               </div>
               <div>
-                <p>{typeof txData.created_at}</p>
+                <p>{txData.created_at}</p>
               </div>
               <div>
                 {txData.events.filter((v) => v.type === "action_output").map((v, i) => (
@@ -94,13 +94,17 @@ const Page : FC<PageProps> = ({ params }) => {
                   </div>
                 ))}
               </div>
-              <div>
-                {txData.events.filter((v) => v.type !== "action_output").map((v, i) => (
-                    <div key={i} className="flex justify-between">
-                      <p className="font-semibold">
-                        {v.attributes[0].key}
-                      </p>
-                      <pre className="whitespace-pre-wrap">{v.attributes[0].value}</pre>
+              <div className="flex flex-col w-full">
+                {txData.events.filter((v) => v.type !== "action_output").map(({ type, attributes }, i) => (
+                    <div key={i} className="w-full">
+                        {attributes.map(({ value, key }, j) => (
+                          <div key={j} className="flex justify-between flex-wrap w-full">
+                            <p className="font-semibold">
+                              {key}
+                            </p>
+                            <pre className="whitespace-pre-wrap break-all">{value}</pre>
+                          </div>
+                        ))}
                     </div>
                   ))}
               </div>

@@ -11,7 +11,6 @@ export async function GET(req: Request) {
 
     // NOTE: This endpoint doesn't return the plain data of a single block. It finds the block by height and, if they exist, attaches any associated events and transaction results.
     //       Duplicate height event attributes are also filtered out.
-    // BUG: Why is this query (*AND* the one in /api/tx) not pulling in the relevant `action_undelegate.validator` event attributes for a given block query?
     const block = await db.blocks.findFirstOrThrow({
       where: {
         height: ht,

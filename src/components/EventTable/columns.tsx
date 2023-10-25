@@ -27,8 +27,6 @@ export const columns : Array<ColumnDef<EventColumns>> = [
     accessorKey: "created_at",
     header: () => <div className="font-semibold text-gray-800 text-center">Timestamp</div>,
     cell: ({ row }) => {
-      console.log(row);
-      console.log(row.getValue("created_at"));
       const timestamp : string = row.getValue("created_at");
       return <p className="text-xs">{timestamp}</p>;
     },

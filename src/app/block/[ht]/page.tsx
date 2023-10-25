@@ -63,10 +63,10 @@ const Page : FC<PageProps> = ({ params }) => {
                   <div>
                     <p>{blockData.created_at}</p>
                   </div>
-                  <div className="break-words w-3/4">
+                  <div className="w-full">
                     { blockData.tx_results.length !== 0 ? (
                       <div className="flex">
-                        <div className="shrink-0 flex flex-col gap-y-10 w-1/5 text-slate-700 text-xs">
+                        <div className="shrink-0 flex flex-col gap-y-10 w-1/6 text-slate-700 text-xs">
                           <div>
                             <p>Hash</p>
                           </div>
@@ -89,13 +89,17 @@ const Page : FC<PageProps> = ({ params }) => {
                               <pre className="whitespace-pre-wrap text-xs">{blockData.tx_results[0].tx_result.data}</pre>
                             </details>
                           </div>
-                          <div>
-                            {blockData.events.map((v, i) => (
-                              <div key={i} className="flex justify-between">
-                                <p className="font-semibold">
-                                  {v.attributes[0].key}
-                                </p>
-                                <pre className="whitespace-pre-wrap">{v.attributes[0].value}</pre>
+                          <div className="flex flex-col w-full">
+                            {blockData.events.map(({ attributes }, i) => (
+                              <div key={i} className="w-full">
+                                {attributes.map(({ value, key }, j) => (
+                                  <div key={j} className="flex justify-between flex-wrap w-full">
+                                    <p className="font-semibold">
+                                      {key}
+                                    </p>
+                                    <pre className="break-all whitespace-pre-wrap">{value}</pre>
+                                  </div>
+                                ))}
                               </div>
                             ))}                        
                           </div>

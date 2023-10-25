@@ -1,18 +1,10 @@
-/* 
-  TODO: This component 
-  
-  Could try extracting out a minimal data table representation that can then be modified for different query types (Blocks vs Transaction Results vs Transaction Results, etc) but
-  starting with plain transaction events or block events will probably be the way to go for now.
-*/
-
-// TODO: see note above EventTable component about upgrading to tanstack-query >=v5
-"use client";
+ "use client";
 
 import { DataTable } from "./dataTable";
 import { columns } from "./columns";
 import { TableEvents } from "@/lib/validators/table";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 // TODO: resolve these typings and that with zod and how to navigate between them.
 // NOTE: is it possible to derive a tuple type that encodes the valid combinations of event attributes and their types?
@@ -40,10 +32,10 @@ export interface TransactionResult {
   events: Event[],
 };
 
-// TODO: Need to upgrade tanstack to >=v5 so that I can enable an efficient server-side hydration that works with
-//       NextJS's app dir model without resorting to extremely fragile and hard to debug artisinal rehydration patterns.
+// TODO: Could try extracting out a minimal data table representation that can then be modified for different query types
+//       such as Blocks vs Block Events vs Transaction Results vs Transaction Events etc.
 const EventTable = () => {
-  const { data: eventData, isLoading} = useQuery({
+  const { data: eventData, isLoading } = useQuery({
     queryFn: async () => {
       const { data } = await axios.get(`/api/events?page=${1}`);
       const result = TableEvents.safeParse(data);
@@ -53,7 +45,7 @@ const EventTable = () => {
         throw result.error;
       }
     },
-    queryKey: ["initialEventTableQuery"],
+    queryKey: ["eventTableQuery"],
   });
 
   return (

@@ -5,8 +5,9 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const pageParam = url.searchParams.get("page")?.trim() ?? "";
 
-    // TODO: make this a validator, too.
-    // TODO: config limit variable
+    // TODO
+    // - [ ] make this a validator, too.
+    // - [ ] config limit variable
     const pageOffset = (parseInt(pageParam, 10) - 1) * 10;
 
     const blockEvents = await db.blocks.findMany({

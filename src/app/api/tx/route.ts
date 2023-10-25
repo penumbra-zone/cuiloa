@@ -9,7 +9,6 @@ export async function GET(req: Request) {
 
     const hash = HashResultValidator.parse(queryParam);
 
-    // BUG: As with /api/ht, this query is failing to pull in all associated event attributes, eg `action_undelegate.validator`.
     const tx = await db.tx_results.findFirstOrThrow({
       select: {
         tx_hash: true,
@@ -42,6 +41,7 @@ export async function GET(req: Request) {
         tx_hash: hash,
       },
     });
+
     // NOTE: Prisma's handling of 'bigint' typed columns gives the node equivalent which is one of the very
     //       few data types that JSON.stringify() cannot serialize. Prisma + NextJS completely smother this error, as well.
     //       The recommended solution is to monkey patch JSON globally[1] but I do it inline here for now.
