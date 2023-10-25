@@ -4,10 +4,12 @@ import { type ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
 export interface EventColumns {
-  height: number,
-  createdAt: Date,
+  height: bigint
+  created_at: string,
   chain_id: string,
-  hash: string,
+  tx_results: Array<{
+    tx_hash: string,
+  }>,
 };
 
 // TODO: try out createColumnHelper for configurating columns
@@ -17,16 +19,18 @@ export const columns : Array<ColumnDef<EventColumns>> = [
     accessorKey: "height",
     header: () => <div className="font-semibold text-gray-800">Height</div>,
     cell: ({ row }) => {
-      const ht : number = row.getValue("height");
-      return <Link href={`/block/${ht}`} className="underline">{ht}</Link>;
+      const ht : bigint = row.getValue("height");
+      return <Link href={`/block/${ht}`} className="underline">{ht.toString()}</Link>;
     },
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: () => <div className="font-semibold text-gray-800 text-center">Timestamp</div>,
     cell: ({ row }) => {
-      const timestamp : Date = row.getValue("createdAt");
-      return <p className="text-xs">{timestamp.toISOString()}</p>;
+      console.log(row);
+      console.log(row.getValue("created_at"));
+      const timestamp : string = row.getValue("created_at");
+      return <p className="text-xs">{timestamp}</p>;
     },
   },
   {
@@ -34,11 +38,11 @@ export const columns : Array<ColumnDef<EventColumns>> = [
     header: () => <div className="font-semibold text-gray-800 text-center">Chain</div>,
   },
   {
-    accessorKey: "hash",
+    accessorKey: "tx_results",
     header: () => <div className="font-semibold text-gray-800 text-center">Hash</div>,
     cell: ({ row }) => {
-      const tx : string = row.getValue("hash");
-      return <Link href={`/tx/${tx}`} className="underline">{tx}</Link>;
+      const tx : Array<{ tx_hash: string }>= row.getValue("tx_results");
+      return <Link href={`/tx/${tx[0].tx_hash}`} className="underline">{tx[0].tx_hash}</Link>;
     },
   },
 ];

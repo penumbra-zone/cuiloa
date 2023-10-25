@@ -19,7 +19,6 @@ const Page : FC<PageProps> = ({ params }) => {
       const { data } = await axios.get(`/api/ht?q=${ht}`);
       const result = BlockResult.safeParse(data);
       if ( result.success ) {
-        console.log(result.data.events);
         return result.data;
       } else {
         throw result.error;

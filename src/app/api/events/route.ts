@@ -8,7 +8,6 @@ export async function GET(req: Request) {
     // TODO: make this a validator, too.
     // TODO: config limit variable
     const pageOffset = (parseInt(pageParam, 10) - 1) * 10;
-    console.log(pageOffset);
 
     const blockEvents = await db.blocks.findMany({
       where: {
@@ -32,11 +31,9 @@ export async function GET(req: Request) {
         created_at: "desc",
       },
     });
-    console.log(blockEvents);
 
     // NOTE: JSON, BigInt conversion, etc, figure it out.
     const json = JSON.stringify(blockEvents, function (_, value) { return typeof value === "bigint" ? value.toString() : value });
-    console.log(json);
     return new Response(json);
   } catch (error) {
     return new Response("Could not load events.", { status: 404 });
