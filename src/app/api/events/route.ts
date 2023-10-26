@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+// import { BigInt } from "@/lib/utils";
 
 export async function GET(req: Request) {
   try {
@@ -33,9 +34,7 @@ export async function GET(req: Request) {
       },
     });
 
-    // NOTE: JSON, BigInt conversion, etc, figure it out.
-    const json = JSON.stringify(blockEvents, function (_, value) { return typeof value === "bigint" ? value.toString() : value });
-    return new Response(json);
+    return new Response(JSON.stringify(blockEvents));
   } catch (error) {
     return new Response("Could not load events.", { status: 404 });
   }

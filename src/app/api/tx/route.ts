@@ -42,14 +42,7 @@ export async function GET(req: Request) {
       },
     });
 
-    // NOTE: Prisma's handling of 'bigint' typed columns gives the node equivalent which is one of the very
-    //       few data types that JSON.stringify() cannot serialize. Prisma + NextJS completely smother this error, as well.
-    //       The recommended solution is to monkey patch JSON globally[1] but I do it inline here for now.
-    //       [1]: https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields#serializing-bigint
-    // TODO: Consider either updating the schema so that this isn't an issue or explicitly patching this behavior somewhere more obvious/explicit.
-    const json = JSON.stringify(tx, function (_, value) { return typeof value === "bigint" ? value.toString() : value });
-
-    return new Response(json);
+    return new Response(JSON.stringify(tx));
   } catch (error) {
     if ( error instanceof z.ZodError ) {
       return new Response("Invalid transaction query: Hash must be 64 hexadecimal characters with optional 0x prefix", { status: 422 });

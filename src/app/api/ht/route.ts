@@ -75,9 +75,7 @@ export async function GET(req: Request) {
       },
     });
 
-    const json = JSON.stringify(block, function (_, value) { return typeof value === "bigint" ? value.toString() : value });
-
-    return new Response(json);
+    return new Response(JSON.stringify(block));
   } catch (error) {
     if ( error instanceof z.ZodError ) {
       return new Response("Invalid block height query.", { status: 422 });
