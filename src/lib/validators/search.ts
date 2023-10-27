@@ -13,9 +13,12 @@ export const HashResultValidator = z.union([
   return val;
 });
 
+// A preprocessor validator that helps avoid coercion runtime errors with BigInt validation by piping the results of converting a string to an integer.
+const toNonNegInt = z.number().or(z.string()).pipe(z.coerce.number().int().nonnegative());
+
 // This validator is to check whether a block height conforms to what is expected by the `height` column of the 
-// `blocks` table defined in cometbft's psql indexer schema.
-export const BlockHeightValidator = z.coerce.bigint().nonnegative({ message: "Block height must be a non-negative integer."});
+// `blocks` table defined in cometbft's psql indexer schema. The final .pipe() doesn't require a nonnegative check because of toNonNegInt.
+export const BlockHeightValidator = z.bigint().nonnegative({ message: "Block height must be a non-negative integer."}).or(toNonNegInt).pipe(z.coerce.bigint());
 
 export type HashResultQuery = z.infer<typeof HashResultValidator>;
 export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
