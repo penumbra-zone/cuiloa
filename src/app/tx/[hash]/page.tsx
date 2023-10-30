@@ -1,9 +1,10 @@
 "use client";
 
-import { type FC } from "react";
+import { useEffect, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { TransactionResult } from "@/lib/validators/search";
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 interface PageProps {
   params: {
@@ -14,28 +15,41 @@ interface PageProps {
 // TODO: this entire page could probably be rendered statically on the server via layout.ts & some minor optimization via tanstack query context.
 const Page : FC<PageProps> = ({ params }) => {
   const { hash } = params;
+  const { toast } = useToast();
 
-  const { data: txData , isFetched, isError, error} = useQuery({
+  const { data: txData , isFetched, isError } = useQuery({
     queryFn: async () => {
       const { data } = await axios.get(`/api/tx?q=${hash}`);
       const result = TransactionResult.safeParse(data);
-
       if ( result.success ) {
         return result.data;
       } else {
-        throw result.error;
+        throw new Error(result.error.message);
       }
     },
-    queryKey: ["txQuery"],
+    queryKey: ["txQuery", hash],
     retry: false,
   });
 
-  // TODO: integrate (enumerated?) toast errors rather than this mess.
+  // TODO: This is a hack of a compromise right now for the following reasons:
+  //       1. Ideally, want to descriminate the error message where relevant to the end user (input error vs server error, etc).
+  //       2. Doing this in queryFn is messy and doing it for every client useQuery is even messier
+  //       3. However, not doing error refinement in useQuery results in a re-render error as the page state is resolved.
+  //       Until error refinement is nailed down, useEffect delays the error toast to avoid re-render runtime errors.
+  useEffect(() => {
+    if (isError) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to find transaction event with provided hash. Please check hash or try a different query.",
+      });
+    }
+  }, [isError]);
+
   if ( isError ) {
     return (
-      <div>
-        <p>Failed to fetch requested transaction.</p>
-        <p>Error: {JSON.stringify(error)}</p>
+      <div className="py-5 flex justify-center">
+        <h1 className="text-4xl font-semibold">No results found.</h1>
       </div>
     );
   }

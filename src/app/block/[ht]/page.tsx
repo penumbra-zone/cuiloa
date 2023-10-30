@@ -1,9 +1,10 @@
 "use client";
 
-import { type FC } from "react";
+import { useEffect, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BlockResult } from "@/lib/validators/search";
+import { toast } from "@/components/ui/use-toast";
 
 interface PageProps {
   params: {
@@ -14,25 +15,34 @@ interface PageProps {
 const Page : FC<PageProps> = ({ params }) => {
   const { ht } = params;
 
-  const { data: blockData , isFetched, isError, error} = useQuery({
+  const { data: blockData , isFetched, isError } = useQuery({
     queryFn: async () => {
       const { data } = await axios.get(`/api/ht?q=${ht}`);
       const result = BlockResult.safeParse(data);
       if ( result.success ) {
         return result.data;
       } else {
-        throw result.error;
+        throw new Error(result.error.message);
       }
     },
-    queryKey: ["htQuery"],
+    queryKey: ["htQuery", ht],
     retry: false,
   });
 
+  useEffect(() => {
+    if (isError) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to find block event with provided height. Please check height or try a different query.",
+      });
+    }
+  }, [isError]);
+
   if ( isError ) {
     return (
-      <div>
-        <p>Failed to fetch requested transaction.</p>
-        <p>Error: {JSON.stringify(error)}</p>
+      <div className="py-5 flex justify-center">
+        <h1 className="text-4xl font-semibold">No results found.</h1>
       </div>
     );
   }

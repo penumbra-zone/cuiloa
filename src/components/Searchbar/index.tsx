@@ -2,6 +2,7 @@
 
 import { type FC, useRef, useState, useEffect } from "react";
 import { Command, CommandInput } from "../ui/command";
+import { useToast } from "@/components/ui/use-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { useOnClickOutside } from "usehooks-ts";
 import { BlockHeightValidator, HashResultValidator } from "@/lib/validators/search";
@@ -12,6 +13,7 @@ const SearchBar : FC = () => {
   const [input, setInput] = useState<string>("");
   const cmdRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { toast } = useToast();
 
   useOnClickOutside(cmdRef, () => {
     setInput("");
@@ -27,6 +29,7 @@ const SearchBar : FC = () => {
     router.push(`/${endpoint}/${input}`);
     router.refresh();
   };
+
   return (
     <Command
       ref={cmdRef}
@@ -40,8 +43,6 @@ const SearchBar : FC = () => {
           setInput(text);
         }}
         onKeyDown={(e) => {
-          // TODO: Would be good to say "hey buddy, that's not a valid input"
-          //       If that doesn't occur within the search then, ideally, would propagate that fact to the error page rather than just "Couldn't find a block with 'fizzbuzz'"
           // Aside: Now that this is just a single command input, maybe just convert this to a generic input box?
           if ( e.key === "Enter" && input.length !== 0 ) {
             const hashResult = HashResultValidator.safeParse(input);
@@ -50,6 +51,12 @@ const SearchBar : FC = () => {
               searchCmd("tx");
             } else if ( blockResult.success ) {
               searchCmd("block");
+            } else {
+              toast({
+                variant: "destructive",
+                title: "Invalid search query.",
+                description: "Please try again with a block height or transaction hash.",
+              });
             }
           }
         }}

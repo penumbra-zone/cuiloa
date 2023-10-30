@@ -5,6 +5,7 @@ import { columns } from "./columns";
 import { TableEvents } from "@/lib/validators/table";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { useToast } from "../ui/use-toast";
 
 // TODO: resolve these typings and that with zod and how to navigate between them.
 // NOTE: is it possible to derive a tuple type that encodes the valid combinations of event attributes and their types?
@@ -35,14 +36,28 @@ export interface TransactionResult {
 // TODO: Could try extracting out a minimal data table representation that can then be modified for different query types
 //       such as Blocks vs Block Events vs Transaction Results vs Transaction Events etc.
 const EventTable = () => {
+  const { toast } = useToast();
   const { data: eventData, isLoading } = useQuery({
     queryFn: async () => {
-      const { data } = await axios.get(`/api/events?page=${1}`);
-      const result = TableEvents.safeParse(data);
-      if ( result.success ) {
-        return result.data;
-      } else {
-        throw result.error;
+      try {
+        const { data } = await axios.get(`/api/events?page=${1}`);
+        const result = TableEvents.safeParse(data);
+        if ( result.success ) {
+          return result.data;
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error parsing data.",
+            description: "Could not parse block event data, please try reloading the page.",
+          });
+        }
+      } catch (error) {
+        // throw result.error;
+        toast({
+          variant: "destructive",
+          title: "Error loading block events.",
+          description: "Could not query block events from the server, please try reloading the page.",
+        });
       }
     },
     queryKey: ["eventTableQuery"],
