@@ -55,7 +55,7 @@ const Page : FC<PageProps> = ({ params }) => {
         <div>
           {blockData ? (
           <div className="flex flex-col justify-center w-full">
-            <h1 className="text-3xl mx-auto py-5 font-semibold">Transaction Event Summary</h1>
+            <h1 className="text-3xl mx-auto py-5 font-semibold">Block Summary</h1>
             <BlockEvent blockEvent={blockData}/>
           </div>
           ) : (

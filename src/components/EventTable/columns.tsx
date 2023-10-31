@@ -6,7 +6,6 @@ import Link from "next/link";
 export interface EventColumns {
   height: bigint
   created_at: string,
-  chain_id: string,
   tx_results: Array<{
     tx_hash: string,
   }>,
@@ -28,19 +27,15 @@ export const columns : Array<ColumnDef<EventColumns>> = [
     header: () => <div className="font-semibold text-gray-800 text-center">Timestamp</div>,
     cell: ({ row }) => {
       const timestamp : string = row.getValue("created_at");
-      return <p className="text-xs">{timestamp}</p>;
+      return <p className="text-xs text-center">{timestamp}</p>;
     },
-  },
-  {
-    accessorKey: "chain_id",
-    header: () => <div className="font-semibold text-gray-800 text-center">Chain</div>,
   },
   {
     accessorKey: "tx_results",
     header: () => <div className="font-semibold text-gray-800 text-center">Hash</div>,
     cell: ({ row }) => {
       const tx : Array<{ tx_hash: string }>= row.getValue("tx_results");
-      return <Link href={`/tx/${tx[0].tx_hash}`} className="underline">{tx[0].tx_hash}</Link>;
+      return <Link href={`/tx/${tx[0].tx_hash}`} className="underline"><pre className="text-center">{tx[0].tx_hash}</pre></Link>;
     },
   },
 ];

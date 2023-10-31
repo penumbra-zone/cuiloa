@@ -1,5 +1,4 @@
 import db from "@/lib/db";
-// import { BigInt } from "@/lib/utils";
 
 export async function GET(req: Request) {
   try {
@@ -20,7 +19,6 @@ export async function GET(req: Request) {
       select: {
         height: true,
         created_at: true,
-        chain_id: true,
         tx_results: {
           select: {
             tx_hash: true,
