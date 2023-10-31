@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { TransactionResult } from "@/lib/validators/search";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import TransactionEvent from "@/components/TransactionEvent";
 
 interface PageProps {
   params: {
@@ -55,76 +56,16 @@ const Page : FC<PageProps> = ({ params }) => {
   }
 
   // TODO: Replace with data table component views once those are fleshed out.
+  // TODO: add Suspense
   return (
     <div>
       {isFetched ? (
         <div>
         { txData ? (
-          <div className="bg-white rounded-sm">
-          <div className="flex p-3">
-            <div className="shrink-0 flex flex-col gap-y-10 w-1/6 text-slate-600 text-sm">
-              <div>
-                <p>Hash</p>
-              </div>
-              <div>
-                <p>Block Height</p>
-              </div>
-              <div>
-                <p>Transaction Result</p>
-              </div>
-              <div>
-                <p>Timestamp</p>
-              </div>
-              <div>
-                <p>Note Commitments</p>
-              </div>
-              <div>
-                <p>Other</p>
-              </div>
-              {/* <pre>{JSON.stringify(txData, null, 2)}</pre> */}
-            </div>
-            <div className="flex flex-col flex-wrap break-words gap-y-9 w-5/6">
-              <div>
-                <pre>{txData.tx_hash}</pre>
-              </div>
-              <div>
-                <p>{txData.blocks.height.toString()}</p>
-              </div>
-              <div className="break-words w-3/4">
-                <details>
-                  <summary className="list-none underline">
-                    click to expand
-                  </summary>
-                  <pre className="whitespace-pre-wrap text-xs">{txData.tx_result.data}</pre>
-                </details>
-              </div>
-              <div>
-                <p>{txData.created_at}</p>
-              </div>
-              <div>
-                {txData.events.filter((v) => v.type === "action_output").map((v, i) => (
-                  <div key={i}>
-                    <pre>{v.attributes[0].value}</pre>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-col w-full">
-                {txData.events.filter((v) => v.type !== "action_output").map(({ type, attributes }, i) => (
-                    <div key={i} className="w-full">
-                        {attributes.map(({ value, key }, j) => (
-                          <div key={j} className="flex justify-between flex-wrap w-full">
-                            <p className="font-semibold">
-                              {key}
-                            </p>
-                            <pre className="whitespace-pre-wrap break-all">{value}</pre>
-                          </div>
-                        ))}
-                    </div>
-                  ))}
-              </div>
-            </div>
+          <div className="flex flex-col justify-center w-full">
+            <h1 className="text-3xl mx-auto py-5 font-semibold">Transaction Event Summary</h1>
+            <TransactionEvent txEvent={txData} />
           </div>
-        </div>
         ) : (
           <p>No results</p>
         )}
