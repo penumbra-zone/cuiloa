@@ -11,6 +11,9 @@ jobs:
     name: Build container
     uses: ./.github/workflows/container.yml
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
   deploy-preview:
     name: Deploy cuiloa to preview
     permissions:
@@ -21,6 +24,9 @@ jobs:
       - build-container
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - id: gcloudauth
         uses: google-github-actions/auth@v0
         with:
