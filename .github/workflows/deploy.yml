@@ -1,0 +1,42 @@
+---
+name: Deploy cuiloa
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+#  build-container:
+#    name: Build container
+#    uses: ./.github/workflows/container.yml
+#    secrets: inherit
+  deploy:
+    name: Deploy cuiloa to preview
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+#    needs:
+#      - build-container
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - id: gcloudauth
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: 'projects/1006847873719/locations/global/workloadIdentityPools/gh-runner-pool/providers/my-provider'
+          service_account: 'github-actions@penumbra-sl-testnet.iam.gserviceaccount.com'
+
+      - name: get gke credentials
+        uses: google-github-actions/get-gke-credentials@v0
+        with:
+          cluster_name: testnet
+          project_id: penumbra-sl-testnet
+          location: us-central1
+
+      # We assume that cuiloa has been deployed to the cluster already.
+      # This task merely "bounces" the service, so that a fresh container is pulled.
+      - name: bounce cuiloa
+        run: kubectl rollout restart deployment cuiloa-preview
