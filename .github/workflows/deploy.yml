@@ -11,6 +11,9 @@ jobs:
     name: Build container
     uses: ./.github/workflows/container.yml
     secrets: inherit
+    permissions:
+      contents: read
+      packages: write
   deploy-preview:
     name: Deploy cuiloa to preview
     permissions:
