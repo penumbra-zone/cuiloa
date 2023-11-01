@@ -16,6 +16,7 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+      packages: 'write'
     needs:
       - build-container
     runs-on: ubuntu-latest
