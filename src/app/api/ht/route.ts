@@ -77,7 +77,7 @@ export async function GET(req: Request) {
 
     return new Response(JSON.stringify(block));
   } catch (error) {
-    if ( error instanceof z.ZodError ) {
+    if (error instanceof z.ZodError) {
       return new Response("Invalid block height query.", { status: 422 });
     }
     return new Response("Could not find block by height.", { status: 404 });

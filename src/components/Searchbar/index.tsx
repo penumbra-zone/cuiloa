@@ -44,12 +44,12 @@ const SearchBar : FC = () => {
         }}
         onKeyDown={(e) => {
           // Aside: Now that this is just a single command input, maybe just convert this to a generic input box?
-          if ( e.key === "Enter" && input.length !== 0 ) {
+          if (e.key === "Enter" && input.length !== 0) {
             const hashResult = HashResultValidator.safeParse(input);
             const blockResult = BlockHeightValidator.safeParse(input);
-            if ( hashResult.success ) {
+            if (hashResult.success) {
               searchCmd("tx");
-            } else if ( blockResult.success ) {
+            } else if (blockResult.success) {
               searchCmd("block");
             } else {
               toast({

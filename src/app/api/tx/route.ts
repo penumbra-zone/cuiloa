@@ -44,7 +44,7 @@ export async function GET(req: Request) {
 
     return new Response(JSON.stringify(tx));
   } catch (error) {
-    if ( error instanceof z.ZodError ) {
+    if (error instanceof z.ZodError) {
       return new Response("Invalid transaction query: Hash must be 64 hexadecimal characters with optional 0x prefix", { status: 422 });
     }
     return new Response("Could not find transaction result with provided hash.", { status: 404 });

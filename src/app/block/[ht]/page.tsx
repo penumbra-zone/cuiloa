@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, type FC } from "react";
+import { type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BlockResult } from "@/lib/validators/search";
-import { toast } from "@/components/ui/use-toast";
 import BlockEvent from "@/components/BlockEvent";
 
 interface PageProps {
@@ -20,7 +19,7 @@ const Page : FC<PageProps> = ({ params }) => {
     queryFn: async () => {
       const { data } = await axios.get(`/api/ht?q=${ht}`);
       const result = BlockResult.safeParse(data);
-      if ( result.success ) {
+      if (result.success) {
         return result.data;
       } else {
         throw new Error(result.error.message);
@@ -28,19 +27,12 @@ const Page : FC<PageProps> = ({ params }) => {
     },
     queryKey: ["htQuery", ht],
     retry: false,
+    meta: {
+      errorMessage: "Failed to find block event with provided height. Please check height or try a different query.",
+    },
   });
 
-  useEffect(() => {
-    if (isError) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to find block event with provided height. Please check height or try a different query.",
-      });
-    }
-  }, [isError]);
-
-  if ( isError ) {
+  if (isError) {
     return (
       <div className="py-5 flex justify-center">
         <h1 className="text-4xl font-semibold">No results found.</h1>
@@ -51,7 +43,7 @@ const Page : FC<PageProps> = ({ params }) => {
   // TODO: Replace with data table component views once those are fleshed out.
   return (
     <div>
-      { isFetched ? (
+      {isFetched ? (
         <div>
           {blockData ? (
           <div className="flex flex-col justify-center w-full">

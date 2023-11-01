@@ -11,15 +11,18 @@ export default async function Home() {
     queryFn: async () => {
       const { data } = await axios.get(`/api/events?page=${1}`);
       const result = TableEvents.safeParse(data);
-      if ( result.success ) {
+      if (result.success) {
         return result.data;
       } else {
         // NOTE: another reason to move this hydration further down the component tree, ie create a completely generic data-table component and
         //       make independent BlockEventTable/TransactionEventTable server generated components that performs the hydration, is that
         //       it will allow for toaster errors without losing access to static server rendering.
         //       It's that or going back to react-hot-toast which provides a headless UI solution for this precise issue.
-        throw result.error;
+        throw new Error(result.error.message);
       }
+    },
+    meta: {
+      errorMessage: "Failed to query data while trying to generate event table, please try reloading the page.",
     },
   });
 

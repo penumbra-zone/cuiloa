@@ -7,7 +7,7 @@ export const HashResultValidator = z.union([
   z.string().toUpperCase().length(64).regex(/^([A-F0-9]{64})$/, { message: "Hash must be 64 hexadecimal characters with optional 0x prefix." }),
 ]).transform((val) => {
   // Trim 0X if our hash is prefixed, otherwise return as is.
-  if ( val.length === 66 ) {
+  if (val.length === 66) {
     return val.slice(2);
   }
   return val;
