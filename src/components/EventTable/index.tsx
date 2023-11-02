@@ -1,10 +1,8 @@
- "use client";
-
-import { DataTable } from "./dataTable";
 import { columns } from "./columns";
 import { TableEvents } from "@/lib/validators/table";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { PaginatedDataTable } from "../ui/paginated-data-table";
 
 // TODO: resolve these typings and that with zod and how to navigate between them.
 // NOTE: is it possible to derive a tuple type that encodes the valid combinations of event attributes and their types?
@@ -34,10 +32,18 @@ export interface TransactionResult {
 
 // TODO: Could try extracting out a minimal data table representation that can then be modified for different query types
 //       such as Blocks vs Block Events vs Transaction Results vs Transaction Events etc.
-const EventTable = () => {
-  const { data: eventData, isLoading } = useQuery({
+const EventTable = async () => {
+  const queryClient = new QueryClient();
+
+  const defaultQueryOptions = {
+    pageIndex: 1,
+    pageSize: 10,
+  };
+
+  await queryClient.prefetchQuery({
     queryFn: async () => {
-      const { data } = await axios.get(`/api/events?page=${1}`);
+      const { data } = await axios.get(`/api/events?page=${0}`);
+      console.log(data);
       const result = TableEvents.safeParse(data);
       if (result.success) {
         return result.data;
@@ -45,28 +51,16 @@ const EventTable = () => {
         throw new Error(result.error.message);
       }
     },
-    queryKey: ["eventTableQuery"],
+    queryKey: ["eventTableQuery", defaultQueryOptions],
     meta: {
       errorMessage: "Failed to query data while trying to generate event table, please try reloading the page.",
     },
   });
 
   return (
-    <div>
-      {!isLoading ? (
-        <div>
-          {eventData ? (
-            <div className="container mx-auto py-10">
-              <DataTable columns={columns} data={eventData} />
-            </div>
-          ) : (
-            <p>Could not load table.</p>
-          )}
-        </div>
-      ) : (
-        <p>loading...</p>
-      )}
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PaginatedDataTable queryK="eventTableQuery" columns={columns}/>
+    </HydrationBoundary>
   );
 };
 
