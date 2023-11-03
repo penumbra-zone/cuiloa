@@ -1,10 +1,12 @@
 import db from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request) {
+  console.log("Success: GET /api/events");
   try {
     const url = new URL(req.url);
     const pageParam = url.searchParams.get("page")?.trim() ?? "";
-
     // TODO
     // - [ ] config limit variable
     const pageOffset = (parseInt(pageParam, 10)) * 10;
@@ -42,6 +44,7 @@ export async function GET(req: Request) {
     // - https://github.com/prisma/prisma/discussions/16148
     // - https://github.com/prisma/prisma/issues/6570
     // - https://github.com/prisma/prisma/issues/7550
+    console.log("querying database for Block Events.");
     const [count, blockEvents] = await Promise.all([
       db.blocks.count({
         where,
@@ -49,11 +52,14 @@ export async function GET(req: Request) {
       events,
     ]);
 
+    console.log("Successfully queried Block Events:");
+    console.log([count, blockEvents]);
     // Ensure that our pagination doesn't cut off early.
     const pages = Math.floor((count / 10) + 1);
 
     return new Response(JSON.stringify([pages, blockEvents]));
   } catch (error) {
+    console.log(error);
     return new Response("Could not load events.", { status: 404 });
   }
 }

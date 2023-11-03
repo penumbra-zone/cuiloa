@@ -18,7 +18,10 @@ const Page : FC<PageProps> = ({ params }) => {
 
   const { data: txData , isFetched, isError } = useQuery({
     queryFn: async () => {
+      console.log(`Fetching: GET /api/tx?q=${hash}`);
       const { data } = await axios.get(`/api/tx?q=${hash}`);
+      console.log("Fetched result:");
+      console.log(data);
       const result = TransactionResult.safeParse(data);
       if (result.success) {
         return result.data;

@@ -46,7 +46,10 @@ export function PaginatedDataTable<TData, TValue>({
   const { data } = useQuery({
     queryKey: [queryK, queryOptions],
     queryFn: async () => {
+      console.log(`Fetching: GET /api/events?page=${pageIndex}`);
       const { data } = await axios.get(`/api/events?page=${pageIndex}`);
+      console.log("Fetched result:");
+      console.log(data);
       const result = TableEvents.safeParse(data);
       if (result.success) {
         return result.data;
