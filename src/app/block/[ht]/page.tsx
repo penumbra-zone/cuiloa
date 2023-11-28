@@ -19,9 +19,9 @@ const Page : FC<PageProps> = ({ params }) => {
     queryFn: async () => {
       console.log(`Fetching: GET /api/ht?q=${ht}`);
       const { data } = await axios.get(`/api/ht?q=${ht}`);
-      console.log("Fetching result:");
-      console.log(data);
+      console.log("Fetching result:", data);
       const result = BlockResult.safeParse(data);
+      console.log(result);
       if (result.success) {
         return result.data;
       } else {
@@ -51,7 +51,7 @@ const Page : FC<PageProps> = ({ params }) => {
           {blockData ? (
           <div className="flex flex-col justify-center w-full">
             <h1 className="text-3xl mx-auto py-5 font-semibold">Block Summary</h1>
-            <BlockEvent blockEvent={blockData}/>
+            <BlockEvent blockPayload={blockData}/>
           </div>
           ) : (
             <div>
