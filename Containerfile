@@ -10,6 +10,7 @@ COPY --chown=node:node . .
 USER node
 
 # Install project.
+RUN pnpm config set @buf:registry  https://buf.build/gen/npm/v1/
 RUN pnpm install
 RUN pnpm build
 
