@@ -1,8 +1,9 @@
 import { type BlockResultPayload } from "@/lib/validators/search";
+import ReactJson from "@microlink/react-json-view";
 import { type FC } from "react";
 
 interface BlockEventProps {
-  blockEvent: BlockResultPayload
+  blockPayload: BlockResultPayload
 }
 
 // TODO: Similar to TransactionEvent, it looks increasingly likely that tanstack/table will actually work here so pulling out different DataTable representations will need to happen.
@@ -10,9 +11,8 @@ interface BlockEventProps {
 //       re-write the rendering for BlockEvent. What I'm assuming is that there's meaningful info (and lack-of) to tease out from Blocks
 //       and providing for that will eventually happen here; otherwise, just re-using the same component will make sense instead of mostly
 //       duplicate ui code that shows the exact same information.
-const BlockEvent : FC<BlockEventProps> = ({ blockEvent }) => {
-
-  const tx = blockEvent.tx_results.at(0);
+const BlockEvent : FC<BlockEventProps> = ({ blockPayload }) => {
+  const [blockEvent, penumbraTx] = blockPayload;
 
   return (
     <div className="bg-white rounded-sm">
@@ -27,11 +27,11 @@ const BlockEvent : FC<BlockEventProps> = ({ blockEvent }) => {
         </div>
         <div className="flex flex-col justify-start w-full">
           <p className="w-full">Transaction Event</p>
-          {tx !== undefined ? (
+          {penumbraTx ? (
             <div className="flex w-full flex-wrap gap-y-5 pl-5 pt-5">
               <div className="flex justify-start w-full">
                 <p className="w-1/6">Hash</p>
-                <pre>{tx.tx_hash}</pre>
+                <pre>{blockEvent.tx_hash}</pre>
               </div>
               <div className="flex w-full">
                 <p className="w-1/6 shrink-0">Transaction Result</p>
@@ -39,7 +39,9 @@ const BlockEvent : FC<BlockEventProps> = ({ blockEvent }) => {
                   <summary className="list-none underline font-semibold">
                     click to expand
                   </summary>
-                  <pre className="break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">{tx.tx_result.data}</pre>
+                  <pre className="break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
+                    <ReactJson src={penumbraTx.toJson() as object} />
+                  </pre>
                 </details>
               </div>
               <p>Event Attributes</p>

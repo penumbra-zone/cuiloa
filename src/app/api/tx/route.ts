@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { transactionFromBytes } from "@/lib/protobuf";
 import { HashResultValidator } from "@/lib/validators/search";
 import { z } from "zod";
 
@@ -12,7 +13,7 @@ export async function GET(req: Request) {
 
     const hash = HashResultValidator.parse(queryParam);
     console.log(`Querying db for transaction event with hash ${hash}`);
-    const tx = await db.tx_results.findFirstOrThrow({
+    const query = await db.tx_results.findFirstOrThrow({
       select: {
         tx_hash: true,
         tx_result: true,
@@ -45,9 +46,14 @@ export async function GET(req: Request) {
       },
     });
 
-    console.log("Successfully queried transaction event:");
-    console.log(tx);
-    return new Response(JSON.stringify(tx));
+    console.log("Successfully queried transaction event:", query);
+
+    const penumbraTx = transactionFromBytes(query.tx_result);
+    console.log("Successfully decoded Transaction from tx_result:", penumbraTx);
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { tx_result, ...tx} = query;
+    return new Response(JSON.stringify([tx, penumbraTx.toJsonString()]));
   } catch (error) {
     console.log(error);
     if (error instanceof z.ZodError) {

@@ -1,11 +1,13 @@
 import { type TransactionResultPayload } from "@/lib/validators/search";
+import ReactJson from "@microlink/react-json-view";
 import { type FC } from "react";
 
 interface TransactionEventProps {
-  txEvent: TransactionResultPayload
+  txPayload: TransactionResultPayload
 }
 
-const TransactionEvent : FC<TransactionEventProps> = ({ txEvent }) => {
+const TransactionEvent : FC<TransactionEventProps> = ({ txPayload }) => {
+  const [txEvent, penumbraTx] = txPayload;
   return (
     <div className="bg-white rounded-sm">
       <div className="flex flex-wrap justify-between p-5 gap-y-10 w-full">
@@ -24,7 +26,9 @@ const TransactionEvent : FC<TransactionEventProps> = ({ txEvent }) => {
               <summary className="list-none underline font-semibold">
                 click to expand
               </summary>
-              <pre className="break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">{txEvent.tx_result.data}</pre>
+              <pre className="break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
+                <ReactJson src={penumbraTx.toJson() as object}/>
+              </pre>
             </details>
           </div>
         </div>

@@ -1,5 +1,5 @@
+import { Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1alpha1/transaction_pb";
 import { z } from "zod";
-
 // This validator is to check whether a sha256 hash conforms to what is expected by the `tx_hash` column
 // of the `tx_result` table defined in cometbft's psql indexer schema.
 export const HashResultValidator = z.union([
@@ -24,47 +24,50 @@ export type HashResultQuery = z.infer<typeof HashResultValidator>;
 export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
 
 // zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/tx?q=<hash>
-export const TransactionResult = z.object({
-  tx_hash: z.string(),
-  // JSON.stringify transforms a Node Buffer into an object of { type: string, data: number[] }.
-  tx_result: z.object({
-    type: z.string(),
-    data: z.array(z.number()),
-  }),
-  created_at: z.string().datetime(),
-  events: z.array(z.object({
-    type: z.string(),
-    attributes: z.array(z.object({
-      value: z.string().nullable(),
-      key: z.string(),
+export const TransactionResult = z.tuple([
+  z.object({
+    tx_hash: z.string(),
+    created_at: z.string().datetime(),
+    events: z.array(z.object({
+      type: z.string(),
+      attributes: z.array(z.object({
+        value: z.string().nullable(),
+        key: z.string(),
+      })),
     })),
-  })),
-  blocks: z.object({
-    height: z.coerce.bigint(),
-    chain_id: z.string(),
+    blocks: z.object({
+      height: z.coerce.bigint(),
+      chain_id: z.string(),
+    }),
   }),
-});
+  // NOTE: Not sure how good this perf wise relative to JsonValue equivalent, but I would need to type out the entire object structure.
+  z.string().transform((jsonString) => {
+    const parsed = Transaction.fromJsonString(jsonString);
+    return parsed;
+  }),
+]);
 
 // zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/ht?q=<height>
-export const BlockResult = z.object({
-  chain_id: z.string(),
-  created_at: z.string().datetime(),
-  height: z.coerce.bigint(),
-  events: z.array(z.object({
-    type: z.string(),
-    attributes: z.array(z.object({
-      value: z.string().nullable(),
-      key: z.string(),
-    })),
-  })),
-  tx_results: z.array(z.object({
-    tx_hash: z.string(),
-    tx_result: z.object({
+// NOTE: This definition is meaningfully different from TransactionResult in that the Transaction value may not exist at all.
+export const BlockResult = z.tuple([
+  z.object({
+    chain_id: z.string(),
+    created_at: z.string().datetime(),
+    height: z.coerce.bigint(),
+    events: z.array(z.object({
       type: z.string(),
-      data: z.array(z.number()),
-    }),
-  })),
-});
+      attributes: z.array(z.object({
+        value: z.string().nullable(),
+        key: z.string(),
+      })),
+    })),
+    tx_hash: z.string(),
+  }),
+  z.string().transform((jsonString) => {
+    const parsed = Transaction.fromJsonString(jsonString);
+    return parsed;
+  }).nullable(),
+]);
 
 export type TransactionResultPayload = z.infer<typeof TransactionResult>;
 export type BlockResultPayload = z.infer<typeof BlockResult>;

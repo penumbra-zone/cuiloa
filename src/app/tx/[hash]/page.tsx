@@ -20,8 +20,7 @@ const Page : FC<PageProps> = ({ params }) => {
     queryFn: async () => {
       console.log(`Fetching: GET /api/tx?q=${hash}`);
       const { data } = await axios.get(`/api/tx?q=${hash}`);
-      console.log("Fetched result:");
-      console.log(data);
+      console.log("Fetched result:", data);
       const result = TransactionResult.safeParse(data);
       if (result.success) {
         return result.data;
@@ -53,7 +52,7 @@ const Page : FC<PageProps> = ({ params }) => {
         {txData ? (
           <div className="flex flex-col justify-center w-full">
             <h1 className="text-3xl mx-auto py-5 font-semibold">Transaction Event Summary</h1>
-            <TransactionEvent txEvent={txData} />
+            <TransactionEvent txPayload={txData} />
           </div>
         ) : (
           <p>No results</p>
