@@ -32,7 +32,7 @@ export interface TransactionResult {
 
 // TODO: Could try extracting out a minimal data table representation that can then be modified for different query types
 //       such as Blocks vs Block Events vs Transaction Results vs Transaction Events etc.
-const EventTable = async () => {
+const TransactionsTable = async () => {
   const queryClient = new QueryClient();
 
   const defaultQueryOptions = {
@@ -64,4 +64,4 @@ const EventTable = async () => {
   );
 };
 
-export default EventTable;
+export default TransactionsTable;
