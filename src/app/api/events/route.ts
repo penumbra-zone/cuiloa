@@ -1,9 +1,7 @@
 import db from "@/lib/db";
 
-export const dynamic = "force-dynamic";
-
-export async function GET(req: Request) {
-  console.log("Success: GET /api/events");
+export async function POST(req: Request) {
+  console.log("Success: POST /api/events");
   try {
     const url = new URL(req.url);
     const pageParam = url.searchParams.get("page")?.trim() ?? "";

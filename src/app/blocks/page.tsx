@@ -1,7 +1,11 @@
-const Page = async () => {
+import BlocksTable from "@/components/BlocksTable";
+
+const Page = () => {
+
   return (
     <div>
-      <h1 className="text-lg font-bold">Not yet implemented...</h1>
+      <h1 className="text-lg font-bold">Recent Blocks</h1>
+      <BlocksTable />
     </div>
   );
 };

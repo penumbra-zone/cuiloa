@@ -20,49 +20,50 @@ import {
 import { Button } from "@/components/ui/button";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { TableEvents } from "@/lib/validators/table";
+import { type z } from "zod";
 
-interface PaginatedDataTableProps<TData, TValue> {
+export interface QueryOptions {
+  pageIndex: number,
+  pageSize: number,
+}
+
+export type TableQueryKey = [string, QueryOptions];
+
+interface FetcherParams {
+  endpoint: string,
+  pageIndex: number
+};
+
+type Fetcher<Z extends z.ZodTypeAny> = ({ endpoint, pageIndex} : FetcherParams) => Promise<z.infer<Z>>;
+
+interface PaginatedDataTableProps<TData, TValue, Z extends z.ZodTypeAny> {
   columns: Array<ColumnDef<TData, TValue>>
-  queryK: string,
+  queryKey: TableQueryKey,
+  endpoint: string,
+  fetcher: Fetcher<Z>,
 }
  
-export function PaginatedDataTable<TData, TValue>({
+export function PaginatedDataTable<TData, TValue, Z extends z.ZodTypeAny>({
   columns,
-  queryK,
-}: PaginatedDataTableProps<TData, TValue>) {
+  queryKey,
+  endpoint,
+  fetcher,
+}: PaginatedDataTableProps<TData, TValue, Z>) {
 
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const options = queryKey[1];
 
-  const queryOptions = {
-    pageIndex,
-    pageSize,
-  };
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({...options});
 
   const { data } = useQuery({
-    queryKey: [queryK, queryOptions],
-    queryFn: async () => {
-      console.log(`Fetching: GET /api/events?page=${pageIndex}`);
-      const { data } = await axios.get(`/api/events?page=${pageIndex}`);
-      console.log("Fetched result:");
-      console.log(data);
-      const result = TableEvents.safeParse(data);
-      if (result.success) {
-        return result.data;
-      } else {
-        throw new Error(result.error.message);
-      }
-    },
+    queryKey,
+    queryFn: async () => await fetcher({ endpoint, pageIndex }),
     meta: {
       errorMessage: "Failed to query paginated data to populate table. Please try again.",
     },
   });
 
-  const [pageCount, eventData] = data ?? [0, []];
+  const [pageCount, tableData] : z.infer<Z> = data ?? [0, []];
+  console.log("pageCount", pageCount);
 
   const pagination = useMemo(
     () => ({
@@ -73,7 +74,7 @@ export function PaginatedDataTable<TData, TValue>({
   );
 
   const table = useReactTable({
-    data: eventData as TData[],
+    data: tableData as TData[],
     columns,
     pageCount,
     state: {
