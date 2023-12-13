@@ -11,7 +11,7 @@ interface BlockEventProps {
 //       re-write the rendering for BlockEvent. What I'm assuming is that there's meaningful info (and lack-of) to tease out from Blocks
 //       and providing for that will eventually happen here; otherwise, just re-using the same component will make sense instead of mostly
 //       duplicate ui code that shows the exact same information.
-const BlockEvent : FC<BlockEventProps> = ({ blockPayload }) => {
+const Block : FC<BlockEventProps> = ({ blockPayload }) => {
   const [blockEvent, penumbraTx] = blockPayload;
 
   return (
@@ -67,4 +67,4 @@ const BlockEvent : FC<BlockEventProps> = ({ blockPayload }) => {
   );
 };
 
-export default BlockEvent;
+export default Block;

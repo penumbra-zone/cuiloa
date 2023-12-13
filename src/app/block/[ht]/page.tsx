@@ -4,7 +4,7 @@ import { type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BlockResult } from "@/lib/validators/search";
-import BlockEvent from "@/components/BlockEvent";
+import Block from "@/components/Block";
 
 interface PageProps {
   params: {
@@ -51,7 +51,7 @@ const Page : FC<PageProps> = ({ params }) => {
           {blockData ? (
           <div className="flex flex-col justify-center w-full">
             <h1 className="text-3xl mx-auto py-5 font-semibold">Block Summary</h1>
-            <BlockEvent blockPayload={blockData}/>
+            <Block blockPayload={blockData}/>
           </div>
           ) : (
             <div>
