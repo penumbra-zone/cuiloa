@@ -48,7 +48,7 @@ const SearchBar : FC = () => {
             const hashResult = HashResultValidator.safeParse(input);
             const blockResult = BlockHeightValidator.safeParse(input);
             if (hashResult.success) {
-              searchCmd("tx");
+              searchCmd("transaction");
             } else if (blockResult.success) {
               searchCmd("block");
             } else {
