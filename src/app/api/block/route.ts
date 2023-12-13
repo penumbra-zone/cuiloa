@@ -6,7 +6,7 @@ import { z } from "zod";
 export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
-  console.log("Sucess: GET /api/ht");
+  console.log("Sucess: GET /api/block");
   try {
     const url = new URL(req.url);
     const queryParam = url.searchParams.get("q")?.trim() ?? "";

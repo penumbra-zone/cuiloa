@@ -23,7 +23,7 @@ export const BlockHeightValidator = z.bigint().nonnegative({ message: "Block hei
 export type HashResultQuery = z.infer<typeof HashResultValidator>;
 export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
 
-// zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/tx?q=<hash>
+// zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/transaction?q=<hash>
 export const TransactionResult = z.tuple([
   z.object({
     tx_hash: z.string(),
@@ -47,7 +47,7 @@ export const TransactionResult = z.tuple([
   }),
 ]);
 
-// zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/ht?q=<height>
+// zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/block?q=<height>
 // NOTE: This definition is meaningfully different from TransactionResult in that the Transaction value may not exist at all.
 export const BlockResult = z.tuple([
   z.object({

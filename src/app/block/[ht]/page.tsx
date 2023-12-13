@@ -17,8 +17,8 @@ const Page : FC<PageProps> = ({ params }) => {
 
   const { data: blockData , isFetched, isError } = useQuery({
     queryFn: async () => {
-      console.log(`Fetching: GET /api/ht?q=${ht}`);
-      const { data } = await axios.get(`/api/ht?q=${ht}`);
+      console.log(`Fetching: GET /api/block?q=${ht}`);
+      const { data } = await axios.get(`/api/block?q=${ht}`);
       console.log("Fetching result:", data);
       const result = BlockResult.safeParse(data);
       console.log(result);
