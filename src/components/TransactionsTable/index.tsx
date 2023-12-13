@@ -1,8 +1,7 @@
 import { columns } from "./columns";
-import { TableEvents } from "@/lib/validators/table";
-import axios from "axios";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
-import { PaginatedDataTable } from "../ui/paginated-data-table";
+import { PaginatedDataTable, type TableQueryKey } from "../ui/paginated-data-table";
+import getTransactions from "./getTransactions";
 
 // TODO: resolve these typings and that with zod and how to navigate between them.
 // NOTE: is it possible to derive a tuple type that encodes the valid combinations of event attributes and their types?
@@ -39,19 +38,23 @@ const TransactionsTable = async () => {
     pageIndex: 1,
     pageSize: 10,
   };
+  const endpoint = "/api/events";
+
+  const queryKey: TableQueryKey = ["TransactionsTable", defaultQueryOptions];
 
   await queryClient.prefetchQuery({
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/events?page=${0}`);
-      console.log(data);
-      const result = TableEvents.safeParse(data);
-      if (result.success) {
-        return result.data;
-      } else {
-        throw new Error(result.error.message);
-      }
-    },
-    queryKey: ["eventTableQuery", defaultQueryOptions],
+    // queryFn: async () => {
+    //   const { data } = await axios.get(`/api/events?page=${0}`);
+    //   console.log(data);
+    //   const result = TableEvents.safeParse(data);
+    //   if (result.success) {
+    //     return result.data;
+    //   } else {
+    //     throw new Error(result.error.message);
+    //   }
+    // },
+    queryFn: async () => await getTransactions({ endpoint, pageIndex: 0}),
+    queryKey,
     meta: {
       errorMessage: "Failed to query data while trying to generate event table, please try reloading the page.",
     },
@@ -59,7 +62,7 @@ const TransactionsTable = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaginatedDataTable queryK="eventTableQuery" columns={columns}/>
+      <PaginatedDataTable queryKey={queryKey} columns={columns} endpoint="/api/events" fetcher={getTransactions}/>
     </HydrationBoundary>
   );
 };

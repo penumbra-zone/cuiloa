@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
+  console.log("incoming POST req on /api/blocks/", req);
   try {
     const url = new URL(req.url);
     const pageParam = url.searchParams.get("page")?.trim() ?? "";
@@ -27,7 +28,7 @@ export async function GET(req: Request) {
     ]);
 
     console.log("Successfully queried Blocks count and Blocks.");
-    console.log(count, blocks);
+    console.log([count, blocks]);
 
     const pages = Math.floor((count / 10) + 1);
 
