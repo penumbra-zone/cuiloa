@@ -35,7 +35,7 @@ export const columns : Array<ColumnDef<EventColumns>> = [
     header: () => <div className="font-semibold text-gray-800 text-center">Hash</div>,
     cell: ({ row }) => {
       const tx : Array<{ tx_hash: string }>= row.getValue("tx_results");
-      return <Link href={`/tx/${tx[0].tx_hash}`} className="underline"><pre className="text-center">{tx[0].tx_hash}</pre></Link>;
+      return <Link href={`/transaction/${tx[0].tx_hash}`} className="underline"><pre className="text-center">{tx[0].tx_hash}</pre></Link>;
     },
   },
 ];

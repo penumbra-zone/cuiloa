@@ -2,11 +2,11 @@ import { type TransactionResultPayload } from "@/lib/validators/search";
 import ReactJson from "@microlink/react-json-view";
 import { type FC } from "react";
 
-interface TransactionEventProps {
+interface TransactionProps {
   txPayload: TransactionResultPayload
 }
 
-const TransactionEvent : FC<TransactionEventProps> = ({ txPayload }) => {
+const Transaction : FC<TransactionProps> = ({ txPayload }) => {
   const [txEvent, penumbraTx] = txPayload;
   return (
     <div className="bg-white rounded-sm">
@@ -67,4 +67,4 @@ const TransactionEvent : FC<TransactionEventProps> = ({ txPayload }) => {
   );
 };
 
-export default TransactionEvent;
+export default Transaction;

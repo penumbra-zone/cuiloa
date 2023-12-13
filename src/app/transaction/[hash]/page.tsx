@@ -4,7 +4,7 @@ import { type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { TransactionResult } from "@/lib/validators/search";
 import axios from "axios";
-import TransactionEvent from "@/components/TransactionEvent";
+import Transaction from "@/components/Transaction";
 
 interface PageProps {
   params: {
@@ -18,8 +18,8 @@ const Page : FC<PageProps> = ({ params }) => {
 
   const { data: txData , isFetched, isError } = useQuery({
     queryFn: async () => {
-      console.log(`Fetching: GET /api/tx?q=${hash}`);
-      const { data } = await axios.get(`/api/tx?q=${hash}`);
+      console.log(`Fetching: GET /api/transaction?q=${hash}`);
+      const { data } = await axios.get(`/api/transaction?q=${hash}`);
       console.log("Fetched result:", data);
       const result = TransactionResult.safeParse(data);
       if (result.success) {
@@ -52,7 +52,7 @@ const Page : FC<PageProps> = ({ params }) => {
         {txData ? (
           <div className="flex flex-col justify-center w-full">
             <h1 className="text-3xl mx-auto py-5 font-semibold">Transaction Event Summary</h1>
-            <TransactionEvent txPayload={txData} />
+            <Transaction txPayload={txData} />
           </div>
         ) : (
           <p>No results</p>

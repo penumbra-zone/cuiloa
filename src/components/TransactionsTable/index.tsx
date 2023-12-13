@@ -39,7 +39,7 @@ const TransactionsTable = async () => {
     pageSize: 10,
   };
 
-  const endpoint = "/api/events";
+  const endpoint = "/api/transactions";
   const queryKey: TableQueryKey = ["TransactionsTable", defaultQueryOptions];
 
   await queryClient.prefetchQuery({
