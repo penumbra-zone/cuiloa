@@ -14,6 +14,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+
   deploy-preview:
     name: Deploy cuiloa to preview
     permissions:
@@ -41,3 +42,31 @@ jobs:
       # This task merely "bounces" the service, so that a fresh container is pulled.
       - name: bounce cuiloa
         run: kubectl rollout restart deployment cuiloa-preview
+
+  deploy-testnet:
+    name: Deploy cuiloa to testnet
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+      packages: 'write'
+    needs:
+      - build-container
+    runs-on: ubuntu-latest
+    steps:
+      - id: gcloudauth
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: 'projects/1006847873719/locations/global/workloadIdentityPools/gh-runner-pool/providers/my-provider'
+          service_account: 'github-actions@penumbra-sl-testnet.iam.gserviceaccount.com'
+
+      - name: get gke credentials
+        uses: google-github-actions/get-gke-credentials@v0
+        with:
+          cluster_name: testnet
+          project_id: penumbra-sl-testnet
+          location: us-central1
+
+      # We assume that cuiloa has been deployed to the cluster already.
+      # This task merely "bounces" the service, so that a fresh container is pulled.
+      - name: bounce cuiloa
+        run: kubectl rollout restart deployment cuiloa-testnet
