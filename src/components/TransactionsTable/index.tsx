@@ -38,21 +38,11 @@ const TransactionsTable = async () => {
     pageIndex: 1,
     pageSize: 10,
   };
-  const endpoint = "/api/events";
 
+  const endpoint = "/api/events";
   const queryKey: TableQueryKey = ["TransactionsTable", defaultQueryOptions];
 
   await queryClient.prefetchQuery({
-    // queryFn: async () => {
-    //   const { data } = await axios.get(`/api/events?page=${0}`);
-    //   console.log(data);
-    //   const result = TableEvents.safeParse(data);
-    //   if (result.success) {
-    //     return result.data;
-    //   } else {
-    //     throw new Error(result.error.message);
-    //   }
-    // },
     queryFn: async () => await getTransactions({ endpoint, pageIndex: 0}),
     queryKey,
     meta: {

@@ -1,8 +1,6 @@
 "use server";
 
 import { columns } from "./columns";
-import { BlocksTableQuery } from "@/lib/validators/table";
-import axios from "axios";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { PaginatedDataTable, type TableQueryKey } from "../ui/paginated-data-table";
 import getBlocks from "./getBlocks";
