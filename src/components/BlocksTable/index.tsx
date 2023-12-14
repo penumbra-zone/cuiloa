@@ -2,7 +2,7 @@
 
 import { columns } from "./columns";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
-import { PaginatedDataTable, type TableQueryKey } from "../ui/paginated-data-table";
+import { PaginatedDataTable } from "../ui/paginated-data-table";
 import getBlocks from "./getBlocks";
 
 export interface BlocksTableRow {
@@ -16,24 +16,30 @@ const BlocksTable = async () => {
   const queryClient = new QueryClient();
 
   const defaultQueryOptions = {
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 10,
   };
-
-  const queryKey: TableQueryKey = ["BlocksTable", defaultQueryOptions];
+  const queryName = "BlocksTable";
   const endpoint = "/api/blocks";
+  const errorMessage = "Failed to query data while trying to generate blocks table, please try reloading the page.";
 
   await queryClient.prefetchQuery({
     queryFn: async () => await getBlocks({ endpoint, pageIndex: 0}),
-    queryKey,
+    queryKey: [queryName, defaultQueryOptions],
     meta: {
-      errorMessage: "Failed to query data while trying to generate blocks table, please try reloading the page.",
+      errorMessage,
     },
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaginatedDataTable queryKey={queryKey} columns={columns} fetcher={getBlocks} endpoint={endpoint}/>
+      <PaginatedDataTable
+        queryName={queryName}
+        defaultQueryOptions={defaultQueryOptions}
+        columns={columns}
+        fetcher={getBlocks}
+        endpoint={endpoint}
+        errorMessage={errorMessage}/>
     </HydrationBoundary>
   );
 };

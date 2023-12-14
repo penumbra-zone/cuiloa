@@ -1,13 +1,15 @@
 import db from "@/lib/db";
 
 export async function POST(req: Request) {
-  console.log("incoming POST req on /api/blocks/", req);
+  console.log("POST req on /api/blocks/", req);
   try {
     const url = new URL(req.url);
     const pageParam = url.searchParams.get("page")?.trim() ?? "";
 
     const pageOffset = (parseInt(pageParam, 10)) * 10;
-    
+
+    console.log("pageOffset", pageOffset);
+
     const blocksQuery = db.blocks.findMany({
       select: {
         height: true,

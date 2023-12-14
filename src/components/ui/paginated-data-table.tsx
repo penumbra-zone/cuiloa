@@ -27,8 +27,6 @@ export interface QueryOptions {
   pageSize: number,
 }
 
-export type TableQueryKey = [string, QueryOptions];
-
 interface FetcherParams {
   endpoint: string,
   pageIndex: number
@@ -38,32 +36,38 @@ type Fetcher<Z extends z.ZodTypeAny> = ({ endpoint, pageIndex} : FetcherParams) 
 
 interface PaginatedDataTableProps<TData, TValue, Z extends z.ZodTypeAny> {
   columns: Array<ColumnDef<TData, TValue>>
-  queryKey: TableQueryKey,
+  queryName: string,
+  defaultQueryOptions: QueryOptions,
   endpoint: string,
   fetcher: Fetcher<Z>,
+  errorMessage: string,
 }
  
 export function PaginatedDataTable<TData, TValue, Z extends z.ZodTypeAny>({
   columns,
-  queryKey,
+  queryName,
+  defaultQueryOptions,
   endpoint,
   fetcher,
+  errorMessage,
 }: PaginatedDataTableProps<TData, TValue, Z>) {
 
-  const options = queryKey[1];
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({...defaultQueryOptions});
 
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({...options});
+  const queryOptions = {
+    pageIndex,
+    pageSize,
+  };
 
   const { data } = useQuery({
-    queryKey,
+    queryKey: [queryName, queryOptions],
     queryFn: async () => await fetcher({ endpoint, pageIndex }),
     meta: {
-      errorMessage: "Failed to query paginated data to populate table. Please try again.",
+      errorMessage,
     },
   });
 
   const [pageCount, tableData] : z.infer<Z> = data ?? [0, []];
-  console.log("pageCount", pageCount);
 
   const pagination = useMemo(
     () => ({
