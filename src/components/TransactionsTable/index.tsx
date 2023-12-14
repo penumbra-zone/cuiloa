@@ -1,6 +1,6 @@
 import { columns } from "./columns";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
-import { PaginatedDataTable, type TableQueryKey } from "../ui/paginated-data-table";
+import { PaginatedDataTable } from "../ui/paginated-data-table";
 import getTransactions from "./getTransactions";
 
 // TODO: resolve these typings and that with zod and how to navigate between them.
@@ -35,24 +35,30 @@ const TransactionsTable = async () => {
   const queryClient = new QueryClient();
 
   const defaultQueryOptions = {
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 10,
   };
 
   const endpoint = "/api/transactions";
-  const queryKey: TableQueryKey = ["TransactionsTable", defaultQueryOptions];
-
+  const queryName = "TransactionsTable";
+  const errorMessage = "Failed to query data while trying to generate event table, please try reloading the page.";
   await queryClient.prefetchQuery({
     queryFn: async () => await getTransactions({ endpoint, pageIndex: 0}),
-    queryKey,
+    queryKey: [queryName, defaultQueryOptions],
     meta: {
-      errorMessage: "Failed to query data while trying to generate event table, please try reloading the page.",
+      errorMessage,
     },
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaginatedDataTable queryKey={queryKey} columns={columns} endpoint="/api/events" fetcher={getTransactions}/>
+      <PaginatedDataTable
+        queryName={queryName}
+        defaultQueryOptions={defaultQueryOptions}
+        columns={columns}
+        endpoint={endpoint}
+        fetcher={getTransactions}
+        errorMessage={errorMessage}/>
     </HydrationBoundary>
   );
 };
