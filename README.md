@@ -4,7 +4,14 @@ A block explorer for [Penumbra](https://penumbra.zone/). Written with NextJS and
 
 ## Getting Started
 
-TODO: a full dockerized setup (built off of Penumbra's own `docker-compose` setup) will be provided for building and running cuiloa. Until then...
+A docker compose file is provided.
+
+```
+docker compose up
+```
+
+Then navigate to http://localhost:3000 to view the app.
+If you want to set up the pieces manually, see below.
 
 ### PostgreSQL
 

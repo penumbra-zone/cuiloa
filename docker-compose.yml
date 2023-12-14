@@ -1,0 +1,86 @@
+---
+# docker-compose file for running Cuiloa, a block explorer for Penumbra
+
+# N.B. the version tag for Penumbra container images should be updated manually,
+# to track the latest version available in the public releases:
+# https://github.com/penumbra-zone/penumbra/releases
+version: "3.7"
+services:
+  # Initialize node config, via `pd testnet join`. This init container handles
+  # munging the CometBFT config to enable event indexing via psql.
+  pd-init:
+    image: ghcr.io/penumbra-zone/penumbra:v0.64.1
+    command: /usr/local/bin/pd-init-cuiloa
+    restart: "no"
+    volumes:
+      - cuiloa-pd:/pd
+      - ./deploy/pd-init-cuiloa:/usr/local/bin/pd-init-cuiloa:ro
+    # run initcontainer as root so we can chown dirs for app containers.
+    user: "0"
+
+  # The Penumbra daemon
+  pd:
+    image: ghcr.io/penumbra-zone/penumbra:v0.64.1
+    # consider verbose debugging logs:
+    # environment:
+      # RUST_LOG: h2=off,debug
+    command: >-
+      /bin/pd start --home /pd/testnet_data/node0/pd
+      --grpc-bind 0.0.0.0:8080 --abci-bind 0.0.0.0:26658
+    restart: on-failure
+    volumes:
+      - cuiloa-pd:/pd
+    # OK, I caved: running the pd container as root to avoid permissions problems.
+    # Ideally we'd run as 1000, same as in the container image, but alas.
+    # user: "1000"
+    user: "0"
+    depends_on:
+      pd-init:
+        condition: service_completed_successfully
+    ports:
+      - "26658:26658"
+      - "8080:8080"
+
+  # The CometBFT node
+  cometbft:
+    image: "docker.io/cometbft/cometbft:v0.37.2"
+    ports:
+      - "26656:26656"
+      - "26657:26657"
+    volumes:
+      - cuiloa-pd:/cometbft
+    user: "100"
+    environment:
+      CMTHOME: /cometbft/testnet_data/node0/cometbft
+    command: start --proxy_app=tcp://pd:26658
+    depends_on:
+      - postgres
+
+  # The Postgres database, for storing CometBFT indexing info
+  postgres:
+    image: "docker.io/library/postgres:latest"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./deploy/postgres-cometbft-schema.sql:/docker-entrypoint-initdb.d/postgres-cometbft-schema.sql:ro
+    environment:
+      POSTGRES_PASSWORD: penumbra
+      POSTGRES_USER: penumbra
+      POSTGRES_DB: penumbra
+    depends_on:
+      - pd
+
+  # The Cuiloa application, providing a web-based block explorer for Penumbra.
+  cuiloa:
+    build:
+      context: ./
+      dockerfile: Containerfile
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: 'postgresql://penumbra:penumbra@postgres:5432/penumbra?sslmode=disable'
+    depends_on:
+      - postgres
+
+volumes:
+  cuiloa-pd: {}
