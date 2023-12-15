@@ -20,3 +20,10 @@ update-cometbft-schema:
 
 container:
   podman build -t ghcr.io/penumbra-zone/cuiloa .
+
+compose:
+  docker compose up
+
+podman-compose:
+  podman compose down || true
+  podman-compose up --build --abort-on-container-exit --force-recreate --renew-anon-volumes --remove-orphans --pull-always
