@@ -23,6 +23,30 @@ export const BlockHeightValidator = z.bigint().nonnegative({ message: "Block hei
 export type HashResultQuery = z.infer<typeof HashResultValidator>;
 export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
 
+// TODO: There might be a more "correct" way to rely on Zod's typings to enforce the types that will eventually
+//       represent all query types but this is an OK approximation for now.
+//       i.e. Define an enum of QueryKinds and then an union of tuples with the tagged QueryKind and the associated validator for that kind, QueryValidator.
+//            This will ensure that only records with a kind of "TX_HASH" will have a value of HashResultQuery (ie a correctly formated hash string), and
+//            records with "BLOCK_HEIGHT" will only have a value of BlockHeightQuery (bigint), etc.
+
+export enum QueryKind {
+  TxHash = "TX_HASH",
+  BlockHeight = "BLOCK_HEIGHT",
+}
+
+const HashResultSearchValidator = HashResultValidator
+  .transform((val) => ({ kind: "TX_HASH", value: val }));
+
+export const BlockHeightSearchValidator = BlockHeightValidator
+  .transform((val) => ({ kind: "BLOCK_HEIGHT", value: val }));
+
+export const SearchValidator = z.union([
+  HashResultSearchValidator,
+  BlockHeightSearchValidator,
+]);
+
+export type SearchValidatorResult = z.infer<typeof SearchValidator>;
+
 // zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/transaction?q=<hash>
 export const TransactionResult = z.tuple([
   z.object({
