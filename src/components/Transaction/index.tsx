@@ -20,35 +20,18 @@ const Transaction : FC<TransactionProps> = ({ txPayload }) => {
           <pre>{txEvent.blocks.height.toString()}</pre>
         </div>
         <div className="flex justify-start w-full">
-          <p className="w-1/6 shrink-0">Transaction Result</p>
-          <div className="break-words">
-            <details>
-              <summary className="list-none underline font-semibold">
-                click to expand
-              </summary>
-              <pre className="break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
-                <ReactJson src={penumbraTx.toJson() as object}/>
-              </pre>
-            </details>
-          </div>
-        </div>
-        <div className="flex justify-start w-full">
           <p className="w-1/6">Timestamp</p>
           <pre>{txEvent.created_at}</pre>
         </div>
         <div className="flex justify-start w-full">
-          <p className="w-1/6">Note Committments</p>
-          <div>
-            {txEvent.events.filter((v) => v.type === "action_output").map((v, i) => (
-              <div key={i}>
-                <pre>{v.attributes[0].value}</pre>
-              </div>
-            ))}
-          </div>
+          <p className="w-1/6 shrink-0">Transaction Data</p>
+          <pre className="break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
+            <ReactJson src={penumbraTx.toJson() as object} name={"transaction"} displayDataTypes={false} collapseStringsAfterLength={20} collapsed={4} enableClipboard={true} displayObjectSize={false}/>
+          </pre>
         </div>
         <div className="flex flex-wrap justify-start w-full gap-y-5">
-          <p className="w-1/6 shrink-0">Other Event Attributes</p>
-          {txEvent.events.filter((v) => v.type !== "action_output").map(({ type, attributes }, i) => (
+          <p className="w-1/6 shrink-0">Event Attributes</p>
+          {txEvent.events.map(({ type, attributes }, i) => (
             <div key={i} className="w-full">
               <p className="pl-4">{type}</p>
               {attributes.map(({ value, key }, j) => (
