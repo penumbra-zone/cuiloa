@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     // const pageOffset = (parseInt(pageParam, 10)) * 10;
 
     if (searchQuery.kind === QueryKind.BlockHeight) {
-      const blocksQuery = db.blocks.findMany({
+      const blocksQuery = await db.blocks.findFirst({
         select: {
           height: true,
           created_at: true,
@@ -30,42 +30,29 @@ export async function POST(req: Request) {
           height: searchQuery.value as bigint,
         },
       });
-      return new Response(JSON.stringify([blocksQuery]));
+
+      return new Response(JSON.stringify({
+        kind: searchQuery.kind,
+        created_at: blocksQuery?.created_at,
+        value: blocksQuery?.height,
+      }));
+
     } else if (searchQuery.kind === QueryKind.TxHash) {
-      const txQuery = await db.tx_results.findFirstOrThrow({
+      const txQuery = await db.tx_results.findFirst({
         select: {
           tx_hash: true,
-          tx_result: true,
           created_at: true,
-          events: {
-            select: {
-              type: true,
-              attributes: {
-                select: {
-                  key: true,
-                  value: true,
-                },
-              },
-            },
-            where: {
-              NOT: {
-                type: "tx",
-              },
-            },
-          },
-          blocks: {
-            select: {
-              height: true,
-              chain_id: true,
-            },
-          },
         },
         where: {
           // value will be string when kind is TxHash
           tx_hash: searchQuery.value as string,
         },
       });
-      return new Response(JSON.stringify([txQuery]));
+      return new Response(JSON.stringify({
+        kind: searchQuery.kind,
+        created_at: txQuery?.created_at,
+        value: txQuery?.tx_hash,
+      }));
     } else {
       // This should be impossible.
       return new Response("Error processing query.", { status: 500 });

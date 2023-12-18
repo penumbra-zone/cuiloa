@@ -5,7 +5,7 @@ import { Command, CommandInput } from "../ui/command";
 import { useToast } from "@/components/ui/use-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { useOnClickOutside } from "usehooks-ts";
-import { BlockHeightValidator, HashResultValidator } from "@/lib/validators/search";
+import { SearchValidator } from "@/lib/validators/search";
 
 const SearchBar : FC = () => {
   const router = useRouter();
@@ -25,8 +25,8 @@ const SearchBar : FC = () => {
     cmdRef.current?.blur();
   }, [pathname]);
 
-  const searchCmd = ( endpoint: string ) => {
-    router.push(`/${endpoint}/${input}`);
+  const searchCmd = () => {
+    router.push(`/search/${input}`);
     router.refresh();
   };
 
@@ -45,13 +45,11 @@ const SearchBar : FC = () => {
         onKeyDown={(e) => {
           // Aside: Now that this is just a single command input, maybe just convert this to a generic input box?
           if (e.key === "Enter" && input.length !== 0) {
-            const hashResult = HashResultValidator.safeParse(input);
-            const blockResult = BlockHeightValidator.safeParse(input);
-            if (hashResult.success) {
-              searchCmd("transaction");
-            } else if (blockResult.success) {
-              searchCmd("block");
-            } else {
+            const searchQuery = SearchValidator.safeParse(input);
+            if (searchQuery.success) {
+              searchCmd();
+            }
+            else {
               toast({
                 variant: "destructive",
                 title: "Invalid search query.",
