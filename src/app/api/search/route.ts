@@ -33,37 +33,15 @@ export async function POST(req: Request) {
 
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
-        results: blocksQuery?.height,
+        created_at: blocksQuery?.created_at,
+        value: blocksQuery?.height,
       }));
 
     } else if (searchQuery.kind === QueryKind.TxHash) {
       const txQuery = await db.tx_results.findFirst({
         select: {
           tx_hash: true,
-          tx_result: true,
           created_at: true,
-          events: {
-            select: {
-              type: true,
-              attributes: {
-                select: {
-                  key: true,
-                  value: true,
-                },
-              },
-            },
-            where: {
-              NOT: {
-                type: "tx",
-              },
-            },
-          },
-          blocks: {
-            select: {
-              height: true,
-              chain_id: true,
-            },
-          },
         },
         where: {
           // value will be string when kind is TxHash
@@ -72,7 +50,8 @@ export async function POST(req: Request) {
       });
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
-        results: txQuery?.tx_hash,
+        created_at: txQuery?.created_at,
+        value: txQuery?.tx_hash,
       }));
     } else {
       // This should be impossible.

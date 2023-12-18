@@ -1,4 +1,5 @@
 "use client";
+import SearchResultsTable from "@/components/SearchResultsTable";
 import { SearchResultValidator } from "@/lib/validators/search";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -20,6 +21,7 @@ const Page : FC<PageProps> = ({ params }) => {
       console.log("Fetched result:", data);
       const result = SearchResultValidator.safeParse(data);
       if (result.success) {
+        console.log(result.data);
         return result.data;
       } else {
         throw new Error(result.error.message);
@@ -47,7 +49,7 @@ const Page : FC<PageProps> = ({ params }) => {
           <h1 className="text-3xl mx-auto py-5 font-semibold">Search results</h1>
         {searchResultData ? (
           <div className="flex flex-col justify-center w-full">
-            <pre>{JSON.stringify(searchResultData)}</pre>
+            <SearchResultsTable data={[searchResultData]}/>
           </div>
         ) : (
           <p>No results</p>
