@@ -45,7 +45,12 @@ export const SearchValidator = z.union([
   BlockHeightSearchValidator,
 ]);
 
-export type SearchValidatorResult = z.infer<typeof SearchValidator>;
+export type SearchValidatorT = z.infer<typeof SearchValidator>;
+
+export const SearchResultValidator = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("TX_HASH"), results: HashResultValidator.optional() }),
+  z.object({ kind: z.literal("BLOCK_HEIGHT"), results: BlockHeightValidator.optional() }),
+]);
 
 // zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/transaction?q=<hash>
 export const TransactionResult = z.tuple([
