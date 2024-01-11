@@ -49,11 +49,24 @@ export const columns : Array<ColumnDef<ClientsColumns>> = [
     accessorKey: "attributes",
     header: () => <div className="font-semibold text-gray-800 text-center">info</div>,
     cell: ({ getValue }) => {
-      const tx = getValue() as Array<{ key: string, value: string | null }>;
-      // TODO: besides styling itself, do better re: null value case for value
+      let tx = getValue() as Array<{ key: string, value: string | null }>;
+      // TODO: styling are attrocious and has no labeling.
+      // For Also, for labeling data, might be better to transform data at API instead of UI containing string checking lol.
+      tx = tx.map(({key, value: _value}) => {
+        // Not sure when/if value will actually be Null but this seems like an OK work around until restyled.
+        const value = _value ?? "";
+        if (key === "client_id") {
+          return { key: "client", value };
+        } else if (key === "client_type") {
+          return { key: "type", value };
+        } else if (key === "consensus_height") {
+          return { key: "consensus height", value };
+        }
+        return {key, value};
+      });
       return (
         <ul>
-          {tx.map(({key, value}, index) => (<li key={index}>{key}{value}</li>))}
+          {tx.map(({key, value}, index) => (<li key={index}>{key}: {value}</li>))}
         </ul>
       );
     },
