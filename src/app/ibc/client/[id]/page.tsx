@@ -1,28 +1,31 @@
 "use client";
-import ClientsTable from "@/components/ibc/clients/ClientsTable";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { type FC } from "react";
 
-const Page = () => {
+interface PageProps {
+  params: {
+    id: string
+  }
+}
+
+const Page : FC<PageProps> = ({ params }) => {
+  const { id } = params;
   const { data , isFetched, isError } = useQuery({
     queryFn: async () => {
-      console.log("Fetching: GET /api/ibc/clients");
-      const { data } = await axios.get("/api/ibc/clients");
+      console.log("Fetching: GET /api/ibc/client");
+      const { data } = await axios.get(`/api/ibc/client?q=${id}`);
       console.log("Fetched result:", data);
       return data;
       // TODO: enforce validation
-      // const result = SearchResultValidator.safeParse(data);
+      // const result = IbcClientValidator.safeParse(data);
       // if (result.success) {
-      //   console.log(result.data);
-      //   return result.data;
-      // } else {
-      //   throw new Error(result.error.message);
-      // }
+      // ...
     },
-    queryKey: ["IbcClients"],
+    queryKey: ["IbcClient", id],
     retry: false,
     meta: {
-      errorMessage: "Failed to query for IBC Clients. Please try again.",
+      errorMessage: "Failed to query IBC Client by id. Please try again.",
     },
   });
 
@@ -38,11 +41,11 @@ const Page = () => {
     <div>
       {isFetched ? (
         <div>
-          <h1 className="text-3xl mx-auto py-5 font-semibold">IBC Clients</h1>
+          <h1 className="text-3xl mx-auto py-5 font-semibold">IBC Client</h1>
         {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         data  ? (
           <div className="flex flex-col justify-center w-full">
-            <ClientsTable data={data}/>
+            <pre>{JSON.stringify(data)}</pre>
           </div>
         ) : (
           <p>No results</p>

@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { type NextRequest } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   console.log("SUCCESS: GET /api/ibc/clients");
   try {
     console.log("Querying indexer for IBC clients.");
