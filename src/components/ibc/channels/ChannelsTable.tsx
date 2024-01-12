@@ -4,9 +4,6 @@ import { type FC } from "react";
 
 interface Props {
   data: Array<{
-    tx_results: {
-      tx_hash: string | null,
-    },
     blocks: {
       created_at: string,
       height: bigint,
@@ -18,7 +15,7 @@ interface Props {
   }>,
 }
 
-const ClientsTable : FC<Props> = ({ data }) => {
+const ChannelsTable : FC<Props> = ({ data }) => {
   return (
     <div>
       <DataTable columns={columns} data={data}/>
@@ -26,4 +23,4 @@ const ClientsTable : FC<Props> = ({ data }) => {
   );
 };
 
-export default ClientsTable;
+export default ChannelsTable;

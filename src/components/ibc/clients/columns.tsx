@@ -13,7 +13,7 @@ export interface ClientsColumns {
   },
   attributes: Array<{
     key: string,
-    value: string,
+    value: string | null,
   }>,
 };
 

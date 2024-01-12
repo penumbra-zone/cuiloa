@@ -9,15 +9,8 @@ const Page = () => {
       console.log("Fetching: GET /api/ibc/clients");
       const { data } = await axios.get("/api/ibc/clients");
       console.log("Fetched result:", data);
-      return data;
       // TODO: enforce validation
-      // const result = SearchResultValidator.safeParse(data);
-      // if (result.success) {
-      //   console.log(result.data);
-      //   return result.data;
-      // } else {
-      //   throw new Error(result.error.message);
-      // }
+      return data;
     },
     queryKey: ["IbcClients"],
     retry: false,
