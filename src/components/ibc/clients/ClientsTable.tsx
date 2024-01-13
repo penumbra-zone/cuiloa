@@ -1,6 +1,5 @@
 import { columns } from "./columns";
 import { DataTable } from "../../ui/data-table";
-// import { type QueryKind } from "@/lib/validators/search";
 import { type FC } from "react";
 
 interface Props {
@@ -14,7 +13,7 @@ interface Props {
     },
     attributes: Array<{
       key: string,
-      value: string,
+      value: string | null,
     }>,
   }>,
 }
