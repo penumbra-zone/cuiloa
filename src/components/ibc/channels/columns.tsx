@@ -3,45 +3,44 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-export interface ChannelsColumns {
-  blocks: {
-    created_at: string,
-    height: bigint,
-  },
-  attributes: Array<{
+export type ChannelsColumns = Record<number, {
     key: string,
     value: string | null,
-  }>,
-};
+  }>;
 
 // TODO formating, styling, etc
 export const columns : Array<ColumnDef<ChannelsColumns>> = [
   {
-    accessorKey: "blocks.height",
-    header: () => <div className="font-semibold text-gray-800">Block</div>,
+    id: "connectionId",
+    accessorFn: (row) => row[0].value,
+    header: () => <div className="font-semibold text-gray-800">Channel ID</div>,
     cell: ({ getValue }) => {
-      const ht: bigint = getValue() as bigint;
-      return <Link href={`/block/${ht}`} className="underline">{ht.toString()}</Link>;
+      // Precondition: value should never be null for `connection_id`
+      const channelId = getValue() as string;
+      return <Link href={`/ibc/channel/${channelId}`} className="underline">{channelId}</Link>;
     },
   },
   {
-    accessorKey: "blocks.created_at",
-    header: () => <div className="font-semibold text-gray-800 text-center">Timestamp</div>,
+    id: "clientId",
+    accessorFn: (row) => row[1].value,
+    header: () => <div className="font-semibold text-gray-800 text-center">Client ID</div>,
     cell: ({ getValue }) => {
-      const timestamp : string = getValue() as string;
-      return <p className="text-xs text-center">{timestamp}</p>;
+      const clientId = getValue() as string;
+      return <Link href={`/ibc/client/${clientId}`}><p className="underline text-center">{clientId}</p></Link>;
     },
   },
   {
-    accessorKey: "attributes",
-    header: () => <div className="font-semibold text-gray-800 text-center">Channel ID</div>,
+    id: "connectionIds",
+    accessorFn: (row) => row[2].value,
+    // TODO: There can be multiple connections for a given channel, something to handle/worry about later.
+    header: () => <div className="font-semibold text-gray-800 text-center">Connection IDs</div>,
     cell: ({ getValue }) => {
-      const attributes = getValue() as Array<{ key: string, value: string | null }>;
+      const connectionId = getValue() as string;
       // TODO: styling
-      const channelId = attributes.find(({ key }) => key==="channel_id");
+      // const channelId = attributes.find(({ key }) => key==="channel_id");
       return (
         <div className="text-center">
-          <p>{channelId?.value}</p>
+          <p>{connectionId}</p>
         </div>
       );
     },

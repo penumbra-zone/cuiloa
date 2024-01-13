@@ -4,14 +4,8 @@ import { type FC } from "react";
 
 interface Props {
   data: Array<{
-    blocks: {
-      created_at: string,
-      height: bigint,
-    },
-    attributes: Array<{
-      key: string,
-      value: string | null,
-    }>,
+    key: string,
+    value: string | null,
   }>,
 }
 
