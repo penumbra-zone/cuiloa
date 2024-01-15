@@ -31,7 +31,7 @@ export const columns : Array<ColumnDef<ChannelsColumns>> = [
   },
   {
     id: "connectionIds",
-    accessorFn: (row) => row[2].value,
+    accessorFn: (row) => row[3].value,
     // TODO: There can be multiple connections for a given channel, something to handle/worry about later.
     header: () => <div className="font-semibold text-gray-800 text-center">Connection IDs</div>,
     cell: ({ getValue }) => {
@@ -41,6 +41,20 @@ export const columns : Array<ColumnDef<ChannelsColumns>> = [
       return (
         <div className="text-center">
           <p>{connectionId}</p>
+        </div>
+      );
+    },
+  },
+  {
+    id: "counterpartyId",
+    accessorFn: (row) => row[2].value,
+    // TODO: There can be multiple connections for a given channel, something to handle/worry about later.
+    header: () => <div className="font-semibold text-gray-800 text-center">Counterparty Chain</div>,
+    cell: ({ getValue }) => {
+      const counterpartyId = getValue() as string;
+      return (
+        <div className="text-center">
+          <p>{counterpartyId}</p>
         </div>
       );
     },
