@@ -44,6 +44,8 @@ export async function GET(_req: NextRequest) {
     console.log(channelsQuery[0].attributes);
 
     console.log("Searching for connections associated with IBC Channels...");
+    // TODO: I currently don't know of a good way to find the last known consensus height for every channel's counterparty chain.
+    //       See note in /api/ibc/channels/route.ts#L85
     const connections = await db.events.findMany({
       select: {
         attributes: {
