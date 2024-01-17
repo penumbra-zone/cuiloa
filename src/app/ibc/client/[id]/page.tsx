@@ -1,6 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import Link from "next/link";
 import { type FC } from "react";
 
 interface PageProps {
@@ -16,11 +17,9 @@ const Page : FC<PageProps> = ({ params }) => {
       console.log("Fetching: GET /api/ibc/client");
       const { data } = await axios.get(`/api/ibc/client?q=${id}`);
       console.log("Fetched result:", data);
-      return data;
       // TODO: enforce validation
       // const result = IbcClientValidator.safeParse(data);
-      // if (result.success) {
-      // ...
+      return data as { channelId: string, connectionId: string, clientId: string, clientType: string, consensusHeight: string, header: string };
     },
     queryKey: ["IbcClient", id],
     retry: false,
@@ -40,12 +39,37 @@ const Page : FC<PageProps> = ({ params }) => {
   return (
     <div>
       {isFetched ? (
-        <div>
+        <div className="flex flex-col justify-center w-full">
           <h1 className="text-3xl mx-auto py-5 font-semibold">IBC Client</h1>
         {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         data  ? (
-          <div className="flex flex-col justify-center w-full">
-            <pre>{JSON.stringify(data)}</pre>
+          <div className="bg-white rounded-sm flex flex-wrap justify-between p-5 max-w-5xl ml-auto mr-auto gap-2">
+            <div className="flex justify-start w-full">
+              <p className="w-1/6">Client ID</p>
+              <pre>{data.clientId}</pre>
+            </div>
+            <div className="flex justify-start w-full">
+              <p className="w-1/6">Client Type</p>
+              <pre>{data.clientType}</pre>
+            </div>
+            <div className="flex justify-start w-full">
+              <p className="w-1/6">Counterparty Height</p>
+              <pre>{data.consensusHeight}</pre>
+            </div>
+            <div className="flex justify-start w-full">
+              <p className="w-1/6">Channel ID</p>
+              <Link href={`/ibc/channel/${data.channelId}`} className="underline"><pre>{data.clientId}</pre></Link>
+            </div>
+            <div className="flex justify-start w-full">
+              <p className="w-1/6">Connection IDs</p>
+              <Link href={`/ibc/connection/${data.connectionId}`} className="underline"><pre>{data.connectionId}</pre></Link>
+            </div>
+            {/* <div className="flex justify-start w-full">
+              <p className="w-1/6">Header</p>
+              <div className="overflow-hidden">
+                {data.recentTransactions.map(({ hash }, i) => <Link href={`/transaction/${hash}`} key={i} className="underline"><pre>{hash}</pre></Link>)}
+              </div>
+            </div> */}
           </div>
         ) : (
           <p>No results</p>
