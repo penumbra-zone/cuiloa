@@ -18,7 +18,7 @@ const Page : FC<PageProps> = ({ params }) => {
       console.log(`Fetching: GET /api/ibc/channel/${channelId}`);
       const { data } = await axios.get(`/api/ibc/channel?q=${channelId}`);
       console.log("Fetched result:", data);
-      return data as { connectionId: string, clientId: string, recentTransactions: Array<{hash: string}>};
+      return data as { connectionId: string, clientId: string, consensusHeight: string, recentTransactions: Array<{hash: string}>};
       // TODO: enforce validation
       // const result = IbcChannelValidator.safeParse(data);
     },
@@ -52,6 +52,10 @@ const Page : FC<PageProps> = ({ params }) => {
             <div className="flex justify-start w-full">
               <p className="w-1/6">Client ID</p>
               <Link href={`/ibc/client/${data.clientId}`} className="underline"><pre>{data.clientId}</pre></Link>
+            </div>
+            <div className="flex justify-start w-full">
+              <p className="w-1/6">Counterparty Height</p>
+              <pre>{data.consensusHeight}</pre>
             </div>
             <div className="flex justify-start w-full">
               <p className="w-1/6">Connection IDs</p>

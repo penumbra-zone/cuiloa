@@ -82,6 +82,56 @@ export async function GET(req: NextRequest) {
 
     console.log("Successfully queried client_id for channel.", clientId);
 
+    // WARNING: This query does not check/enforce the fact that this update used the channel.
+    // TODO: Check for whether this event is associated with the correct channel.
+    // update_client event types do not include this information, so I'd hope/assume that a related
+    // transaction or block will have that associated data? If so, how do I find it?
+    const clientHeight = await db.events.findFirstOrThrow({
+      select: {
+        attributes: {
+          select: {
+            key: true,
+            value: true,
+          },
+          where: {
+            key: {
+              equals: "consensus_height",
+            },
+          },
+        },
+      },
+      where: {
+        AND: [
+          {
+            type: {
+              equals: "update_client",
+            },
+            attributes: {
+              some: {
+                AND: [
+                  {
+                    key: {
+                      equals: "client_id",
+                    },
+                  },
+                  {
+                    value: {
+                      equals: clientId.attributes[0].value,
+                    },
+                  },
+                ],
+
+              },
+            },
+          },
+        ],
+      },
+      orderBy: {
+        block_id: "desc",
+      },
+    });
+
+    console.log("Successfully queried for latest client height.", clientHeight);
 
     // This will return the block id for the latest client_update event type for a given client_id.
     const transactions = await db.events.findMany({
@@ -111,7 +161,12 @@ export async function GET(req: NextRequest) {
 
     console.log("Successfully queried recent transactions for channel.", recentTransactions);
 
-    return new Response(JSON.stringify({ "connectionId": connectionId.attributes[0].value, "clientId": clientId.attributes[0].value, recentTransactions}));
+    return new Response(JSON.stringify({
+        "connectionId": connectionId.attributes[0].value,
+        "clientId": clientId.attributes[0].value,
+        "consensusHeight": clientHeight.attributes[0].value,
+        recentTransactions,
+      }));
 
   } catch (error) {
     console.error("GET request failed.", error);
