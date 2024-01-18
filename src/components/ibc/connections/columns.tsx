@@ -14,11 +14,11 @@ export const columns : Array<ColumnDef<ConnectionsColumns>> = [
     id: "connectionId",
     // accessorFn: (row) => row[0].value,
     accessorKey: "value",
-    header: () => <div className="font-semibold text-gray-800">Channel ID</div>,
+    header: () => <div className="font-semibold text-gray-800 text-center">Channel ID</div>,
     cell: ({ getValue }) => {
       // Precondition: value should never be null for `connection_id`
       const connectionId = getValue() as string;
-      return <Link href={`/ibc/connection/${connectionId}`} className="underline">{connectionId}</Link>;
+      return <Link href={`/ibc/connection/${connectionId}`} className="underline"><p className="text-center">{connectionId}</p></Link>;
     },
   },
 ];
