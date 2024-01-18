@@ -48,13 +48,25 @@ export const columns : Array<ColumnDef<ChannelsColumns>> = [
   {
     id: "counterpartyId",
     accessorFn: (row) => row[2].value,
-    // TODO: There can be multiple connections for a given channel, something to handle/worry about later.
     header: () => <div className="font-semibold text-gray-800 text-center">Counterparty Chain</div>,
     cell: ({ getValue }) => {
       const counterpartyId = getValue() as string;
       return (
         <div className="text-center">
           <p>{counterpartyId}</p>
+        </div>
+      );
+    },
+  },
+  {
+    id: "counterpartyHeight",
+    accessorFn: (row) => row[4].value,
+    header: () => <div className="font-semibold text-gray-800 text-center">Counterparty Height</div>,
+    cell: ({ getValue }) => {
+      const counterpartyHeight = getValue() as string;
+      return (
+        <div className="text-center">
+          <p>{counterpartyHeight}</p>
         </div>
       );
     },
