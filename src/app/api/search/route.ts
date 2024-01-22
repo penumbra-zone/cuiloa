@@ -53,6 +53,46 @@ export async function POST(req: Request) {
         created_at: txQuery?.created_at,
         value: txQuery?.tx_hash,
       }));
+    } else if (searchQuery.kind === QueryKind.IbcClient) {
+      const clientQuery = await db.events.findMany({
+        select: {
+          type: true,
+          tx_results: {
+            select: {
+              tx_hash: true,
+            },
+          },
+        },
+        where: {
+          attributes: {
+            some: {
+              AND: [
+                {
+                  key: {
+                    equals: "client_id",
+                  },
+                },
+                {
+                  value: {
+                    equals: searchQuery.value as string,
+                  },
+                },
+              ],
+            },
+          },
+        },
+        orderBy: {
+          block_id: "desc",
+        },
+        take: 10,
+      });
+      console.log("Successfully queried for IBC Client Search Results.", clientQuery);
+      const clientData = clientQuery.map(({ type, tx_results: txResults }) => ({type, hash: txResults?.tx_hash }));
+      return new Response(JSON.stringify({
+        kind: searchQuery.kind,
+        created_at: undefined,
+        value: JSON.stringify(clientData),
+      }));
     } else {
       // This should be impossible.
       return new Response("Error processing query.", { status: 500 });

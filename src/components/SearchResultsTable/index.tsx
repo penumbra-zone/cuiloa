@@ -1,17 +1,29 @@
 import { columns } from "./columns";
 import { DataTable } from "../ui/data-table";
-// import { type QueryKind } from "@/lib/validators/search";
 import { type FC } from "react";
 
-interface Props {
+interface RelatedIbcTransaction {
+  type: string,
+  hash: string,
+}
+
+interface IbcSearchResult {
+  kind: string,
+  identifier: string,
+  related?: RelatedIbcTransaction[],
+}
+// TODO?
+// interface TransactionSearchResult {}
+// interface BlockSearchResult {}
+interface SearchResultsTableProps {
   data: Array<{
     kind: string,
     created_at?: string,
     value?: string | bigint
-  }>,
+  }> | IbcSearchResult[],
 }
 
-const SearchResultsTable : FC<Props> = ({ data }) => {
+const SearchResultsTable : FC<SearchResultsTableProps> = ({ data }) => {
   return (
     <div>
       <DataTable columns={columns} data={data}/>

@@ -22,15 +22,15 @@ export const BlockHeightValidator = z.bigint().nonnegative({ message: "Block hei
 
 // Validator for IBC Complient *Client* Identifiers.[0]
 // [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
-export const IbcClientValidator = z.string().regex(/^([A-Za-z0-9\.\[\]<>_+-#]{9,64})$/);
+export const IbcClientValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{9,64})$/);
 
 // Validator for IBC Complient *Channel* Identifiers.[0]
 // [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
-export const IbcChannelValidator = z.string().regex(/^([A-Za-z0-9\.\[\]<>_+-#]{8,64})$/);
+export const IbcChannelValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{8,64})$/);
 
 // Validator for IBC Complient *Connection* Identifiers.[0]
 // [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
-export const IbcConnectionValidator = z.string().regex(/^([A-Za-z0-9\.\[\]<>_+-#]{10,64})$/);
+export const IbcConnectionValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{10,64})$/);
 
 export type HashResultQuery = z.infer<typeof HashResultValidator>;
 export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
@@ -52,6 +52,9 @@ export enum QueryKind {
   TxHash = "TX_HASH",
 }
 
+// NOTE: would it be worth converting these branded values into using the ts enum value intead of the string literals?
+//       more a question with how zod plays with those values and how it differentiates them. might also be why my code ended up this way
+//       without realizing it.
 const HashResultSearchValidator = HashResultValidator
   .transform((val) => ({ kind: "TX_HASH", value: val }));
 
@@ -67,6 +70,7 @@ export const IbcChannelSearchValidator = IbcChannelValidator
 export const IbcConnectionSearchValidator = IbcConnectionValidator
   .transform((val) => ({ kind: "IBC_CONNECTION", value: val }));
 
+// Validator used for checking whether a user's search query input is recognized and supported.
 export const SearchValidator = z.union([
   HashResultSearchValidator,
   BlockHeightSearchValidator,

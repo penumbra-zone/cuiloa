@@ -133,7 +133,7 @@ export async function GET(req: NextRequest) {
 
     console.log("Successfully queried for latest client height.", clientHeight);
 
-    // This will return the block id for the latest client_update event type for a given client_id.
+    // This will return the latest transactions that are associated with the channel.
     const transactions = await db.events.findMany({
       select: {
         tx_results: {
