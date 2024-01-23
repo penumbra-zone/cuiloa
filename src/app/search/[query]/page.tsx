@@ -1,6 +1,6 @@
 "use client";
 import SearchResultsTable from "@/components/SearchResultsTable";
-import { SearchResultValidator } from "@/lib/validators/search";
+// import { SearchResultValidator } from "@/lib/validators/search";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { type FC } from "react";
@@ -19,13 +19,14 @@ const Page : FC<PageProps> = ({ params }) => {
       console.log(`Fetching: GET /api/search?q=${query}`);
       const { data } = await axios.post(`/api/search?q=${query}`);
       console.log("Fetched result:", data);
-      const result = SearchResultValidator.safeParse(data);
-      if (result.success) {
-        console.log(result.data);
-        return result.data;
-      } else {
-        throw new Error(result.error.message);
-      }
+      return data;
+      // const result = SearchResultValidator.safeParse(data);
+      // if (result.success) {
+      //   console.log(result.data);
+      //   return result.data;
+      // } else {
+      //   throw new Error(result.error.message);
+      // }
     },
     queryKey: ["searchResult", query],
     retry: false,
@@ -47,7 +48,8 @@ const Page : FC<PageProps> = ({ params }) => {
       {isFetched ? (
         <div>
           <h1 className="text-3xl mx-auto py-5 font-semibold">Search results</h1>
-        {searchResultData ? (
+        {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        searchResultData ? (
           <div className="flex flex-col justify-center w-full">
             <SearchResultsTable data={[searchResultData]}/>
           </div>

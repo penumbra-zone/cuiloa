@@ -2,31 +2,30 @@ import { columns } from "./columns";
 import { DataTable } from "../ui/data-table";
 import { type FC } from "react";
 
-interface RelatedIbcTransaction {
+
+export interface RelatedQuery {
   type: string,
-  hash: string,
+  identifier: string,
 }
 
-interface IbcSearchResult {
+export interface SearchResult {
   kind: string,
   identifier: string,
-  related?: RelatedIbcTransaction[],
+  related?: RelatedQuery[],
 }
 // TODO?
 // interface TransactionSearchResult {}
 // interface BlockSearchResult {}
 interface SearchResultsTableProps {
-  data: Array<{
-    kind: string,
-    created_at?: string,
-    value?: string | bigint
-  }> | IbcSearchResult[],
+  data: SearchResult[]
 }
 
 const SearchResultsTable : FC<SearchResultsTableProps> = ({ data }) => {
+  const relatedVisible = !!data[0].related;
+  console.log("relatedVisible", relatedVisible);
   return (
     <div>
-      <DataTable columns={columns} data={data}/>
+      <DataTable columns={columns} data={data} columnVisibility={{ "related": relatedVisible }}/>
     </div>
   );
 };
