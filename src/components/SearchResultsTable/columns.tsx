@@ -1,14 +1,12 @@
 "use client";
 
-import { QueryKind } from "@/lib/validators/search";
+// import { QueryKind } from "@/lib/validators/search";
 import { type ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
+// import Link from "next/link";
+import { type RelatedQuery, type SearchResult } from ".";
 
-export interface SearchResultsColumns {
-  kind: string,
-  created_at?: string,
-  value?: string | bigint
-};
+
+type SearchResultsColumns = SearchResult;
 
 export const columns : Array<ColumnDef<SearchResultsColumns>> = [
   {
@@ -20,26 +18,40 @@ export const columns : Array<ColumnDef<SearchResultsColumns>> = [
     },
   },
   {
-    accessorKey: "created_at",
-    header: () => <div className="font-semibold text-gray-800 text-center">Timestamp</div>,
+    accessorKey: "identifier",
+    header: () => <div className="font-semibold text-gray-800 text-center">ID</div>,
     cell: ({ row }) => {
-      const createdAt : string = row.getValue("created_at");
-      return <p className="text-xs text-center">{createdAt}</p>;
+      const identifier : string = row.getValue("identifier");
+      return <p className="text-xs text-center">{identifier}</p>;
     },
   },
   {
-    accessorKey: "value",
-    header: () => <div className="font-semibold text-gray-800 text-center">value</div>,
+    id: "related",
+    accessorKey: "related",
+    header: () => <div className="font-semibold text-gray-800 text-center">Related Queries</div>,
     cell: ({ row }) => {
       console.log(row);
-      const kind : string = row.getValue("kind");
-      if (kind === QueryKind.BlockHeight) {
-        const height: bigint = row.getValue("value");
-        return <Link href={`/block/${height}`} className="underline">{height.toString()}</Link>;
-      } else if (kind === QueryKind.TxHash) {
-        const txHash: string = row.getValue("value");
-        return <Link href={`/transaction/${txHash}`} className="underline">{txHash}</Link>;
+      // const kind : string = row.getValue("kind");
+      const related : RelatedQuery[] | undefined = row.getValue("related");
+      // TODO: Do some kind of convenient formatting that better signals what is being shown to the user
+      // if (kind === QueryKind.BlockHeight) {
+      //   const height: bigint = row.getValue("value");
+      //   return <Link href={`/block/${height}`} className="underline">{height.toString()}</Link>;
+      // } else if (kind === QueryKind.TxHash) {
+      //   const txHash: string = row.getValue("value");
+      //   return <Link href={`/transaction/${txHash}`} className="underline">{txHash}</Link>;
+      // }
+      if (related !== undefined) {
+        console.log(related);
+        console.log(related.map);
+        return (
+        <ul>
+          {/* {related.map(({ type, indentifier }, i) => <li key={i}>{type} : {indentifier}</li>)} */}
+          {related.map(({ type, identifier }, i) => (<div key={i}>{type}: {identifier}</div>))}
+        </ul>
+        );
       }
+      return <div>None</div>;
     },
   },
 ];

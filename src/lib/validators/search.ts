@@ -20,8 +20,23 @@ const toNonNegInt = z.number().or(z.string()).pipe(z.coerce.number().int().nonne
 // `blocks` table defined in cometbft's psql indexer schema. The final .pipe() doesn't require a nonnegative check because of toNonNegInt.
 export const BlockHeightValidator = z.bigint().nonnegative({ message: "Block height must be a non-negative integer."}).or(toNonNegInt).pipe(z.coerce.bigint());
 
+// Validator for IBC Complient *Client* Identifiers.[0]
+// [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
+export const IbcClientValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{9,64})$/);
+
+// Validator for IBC Complient *Channel* Identifiers.[0]
+// [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
+export const IbcChannelValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{8,64})$/);
+
+// Validator for IBC Complient *Connection* Identifiers.[0]
+// [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
+export const IbcConnectionValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{10,64})$/);
+
 export type HashResultQuery = z.infer<typeof HashResultValidator>;
 export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
+export type IbcClientValidatorT = z.infer<typeof IbcClientValidator>;
+export type IbcChannelValidatorT = z.infer<typeof IbcChannelValidator>;
+export type IbcConnectionValidatorT = z.infer<typeof IbcConnectionValidator>;
 
 // TODO: There might be a more "correct" way to rely on Zod's typings to enforce the types that will eventually
 //       represent all query types but this is an OK approximation for now.
@@ -30,23 +45,46 @@ export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
 //            records with "BLOCK_HEIGHT" will only have a value of BlockHeightQuery (bigint), etc.
 
 export enum QueryKind {
-  TxHash = "TX_HASH",
   BlockHeight = "BLOCK_HEIGHT",
+  IbcClient = "IBC_CLIENT",
+  IbcChannel = "IBC_CHANNEL",
+  IBCConnection = "IBC_CONNECTION",
+  TxHash = "TX_HASH",
 }
 
+// NOTE: would it be worth converting these branded values into using the ts enum value intead of the string literals?
+//       more a question with how zod plays with those values and how it differentiates them. might also be why my code ended up this way
+//       without realizing it.
 const HashResultSearchValidator = HashResultValidator
   .transform((val) => ({ kind: "TX_HASH", value: val }));
 
 export const BlockHeightSearchValidator = BlockHeightValidator
   .transform((val) => ({ kind: "BLOCK_HEIGHT", value: val }));
 
+export const IbcClientSearchValidator = IbcClientValidator
+  .transform((val) => ({ kind: "IBC_CLIENT", value: val }));
+
+export const IbcChannelSearchValidator = IbcChannelValidator
+  .transform((val) => ({ kind: "IBC_CHANNEL", value: val }));
+
+export const IbcConnectionSearchValidator = IbcConnectionValidator
+  .transform((val) => ({ kind: "IBC_CONNECTION", value: val }));
+
+// Validator used for checking whether a user's search query input is recognized and supported.
 export const SearchValidator = z.union([
   HashResultSearchValidator,
   BlockHeightSearchValidator,
+  IbcClientSearchValidator,
+  IbcChannelSearchValidator,
+  IbcConnectionSearchValidator,
 ]);
 
 export type SearchValidatorT = z.infer<typeof SearchValidator>;
 
+// Validators used for checking the result of searched queries represented as a discriminate union where the QueryKind serves as the discriminate.
+// Query Kinds supported ought to be defined in both `SearchValidator` and `QueryKind`.
+// NOTE: Completely forgot why I felt the need to chain optionals from within the discriminated record. Another thing in need of documentation
+//       if not refactored in the next pass of cleaning up the codebase.
 export const SearchResultValidator = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("TX_HASH"),
@@ -56,6 +94,21 @@ export const SearchResultValidator = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("BLOCK_HEIGHT"),
     value: BlockHeightValidator.optional(),
+    created_at: z.string().datetime().optional(),
+  }),
+  z.object({
+    kind: z.literal("IBC_CLIENT"),
+    value: IbcClientValidator.optional(),
+    created_at: z.string().datetime().optional(),
+  }),
+  z.object({
+    kind: z.literal("IBC_CHANNEL"),
+    value: IbcChannelValidator.optional(),
+    created_at: z.string().datetime().optional(),
+  }),
+  z.object({
+    kind: z.literal("IBC_CONNECTION"),
+    value: IbcConnectionValidator.optional(),
     created_at: z.string().datetime().optional(),
   }),
 ]);

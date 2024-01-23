@@ -5,6 +5,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type VisibilityState,
 } from "@tanstack/react-table";
  
 import {
@@ -17,20 +18,29 @@ import {
 } from "@/components/ui/Table";
 
 interface DataTableProps<TData, TValue> {
-  columns: Array<ColumnDef<TData, TValue>>
+  columns: Array<ColumnDef<TData, TValue>>,
+  columnVisibility?: VisibilityState,
   data: TData[],
 }
  
 export function DataTable<TData, TValue>({
   columns,
+  columnVisibility,
   data,
 }: DataTableProps<TData, TValue>) {
+
+  console.log("columnVisibility", columnVisibility);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    initialState: {
+      columnVisibility,
+    },
   });
+
+  console.log("table state", table.getState());
 
   return (
     <div>

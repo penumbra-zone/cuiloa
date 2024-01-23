@@ -23,7 +23,6 @@ export async function POST(req: Request) {
       const blocksQuery = await db.blocks.findFirst({
         select: {
           height: true,
-          created_at: true,
         },
         where: {
           // value will be bigint when kind is BlockHeight
@@ -33,15 +32,13 @@ export async function POST(req: Request) {
 
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
-        created_at: blocksQuery?.created_at,
-        value: blocksQuery?.height,
+        identifier: blocksQuery?.height,
       }));
 
     } else if (searchQuery.kind === QueryKind.TxHash) {
       const txQuery = await db.tx_results.findFirst({
         select: {
           tx_hash: true,
-          created_at: true,
         },
         where: {
           // value will be string when kind is TxHash
@@ -50,8 +47,48 @@ export async function POST(req: Request) {
       });
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
-        created_at: txQuery?.created_at,
-        value: txQuery?.tx_hash,
+        identifier: txQuery?.tx_hash,
+      }));
+    } else if (searchQuery.kind === QueryKind.IbcClient) {
+      console.log("SEARCHING IBC CLIENT...");
+      const clientQuery = await db.events.findMany({
+        select: {
+          type: true,
+          tx_results: {
+            select: {
+              tx_hash: true,
+            },
+          },
+        },
+        where: {
+          attributes: {
+            some: {
+              AND: [
+                {
+                  key: {
+                    equals: "client_id",
+                  },
+                },
+                {
+                  value: {
+                    equals: searchQuery.value as string,
+                  },
+                },
+              ],
+            },
+          },
+        },
+        orderBy: {
+          block_id: "desc",
+        },
+        take: 10,
+      });
+      console.log("Successfully queried for IBC Client Search Results.", clientQuery);
+      const clientData = clientQuery.map(({ type, tx_results: txResults }) => ({type, identifier: txResults?.tx_hash }));
+      return new Response(JSON.stringify({
+        kind: searchQuery.kind,
+        identifier: searchQuery.value,
+        related: clientData,
       }));
     } else {
       // This should be impossible.

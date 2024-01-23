@@ -1,20 +1,31 @@
 import { columns } from "./columns";
 import { DataTable } from "../ui/data-table";
-// import { type QueryKind } from "@/lib/validators/search";
 import { type FC } from "react";
 
-interface Props {
-  data: Array<{
-    kind: string,
-    created_at?: string,
-    value?: string | bigint
-  }>,
+
+export interface RelatedQuery {
+  type: string,
+  identifier: string,
 }
 
-const SearchResultsTable : FC<Props> = ({ data }) => {
+export interface SearchResult {
+  kind: string,
+  identifier: string,
+  related?: RelatedQuery[],
+}
+// TODO?
+// interface TransactionSearchResult {}
+// interface BlockSearchResult {}
+interface SearchResultsTableProps {
+  data: SearchResult[]
+}
+
+const SearchResultsTable : FC<SearchResultsTableProps> = ({ data }) => {
+  const relatedVisible = !!data[0].related;
+  console.log("relatedVisible", relatedVisible);
   return (
     <div>
-      <DataTable columns={columns} data={data}/>
+      <DataTable columns={columns} data={data} columnVisibility={{ "related": relatedVisible }}/>
     </div>
   );
 };
