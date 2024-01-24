@@ -4,6 +4,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 // import Link from "next/link";
 import { type RelatedQuery, type SearchResult } from ".";
+import Link from "next/link";
 
 
 type SearchResultsColumns = SearchResult;
@@ -22,7 +23,9 @@ export const columns : Array<ColumnDef<SearchResultsColumns>> = [
     header: () => <div className="font-semibold text-gray-800 text-center">ID</div>,
     cell: ({ row }) => {
       const identifier : string = row.getValue("identifier");
-      return <p className="text-xs text-center">{identifier}</p>;
+      const kind : string = row.getValue("kind");
+      const prefix = kind === "TX_HASH" ? "/transaction" : (kind === "BLOCK_HEIGHT" ? "/block" : (kind === "IBC_CLIENT" ? "/ibc/client" : (kind === "IBC_CHANNEL" ? "/ibc/channel" : "/ibc/connection")));
+      return <Link href={`${prefix}/${identifier}`}><p className="text-xs text-center underline">{identifier}</p></Link>;
     },
   },
   {
@@ -42,12 +45,13 @@ export const columns : Array<ColumnDef<SearchResultsColumns>> = [
       //   return <Link href={`/transaction/${txHash}`} className="underline">{txHash}</Link>;
       // }
       if (related !== undefined) {
-        console.log(related);
-        console.log(related.map);
         return (
         <ul>
           {/* {related.map(({ type, indentifier }, i) => <li key={i}>{type} : {indentifier}</li>)} */}
-          {related.map(({ type, identifier }, i) => (<div key={i}>{type}: {identifier}</div>))}
+          {related.map(({ type, identifier }, i) => {
+            return <li key={i}>{type}: <Link href={`/transaction/${identifier}`}><p className="underline">{identifier}</p></Link></li>;
+          })
+          }
         </ul>
         );
       }
