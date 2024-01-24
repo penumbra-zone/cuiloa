@@ -20,18 +20,22 @@ const toNonNegInt = z.number().or(z.string()).pipe(z.coerce.number().int().nonne
 // `blocks` table defined in cometbft's psql indexer schema. The final .pipe() doesn't require a nonnegative check because of toNonNegInt.
 export const BlockHeightValidator = z.bigint().nonnegative({ message: "Block height must be a non-negative integer."}).or(toNonNegInt).pipe(z.coerce.bigint());
 
-// Validator for IBC Complient *Client* Identifiers.[0]
-// [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
-export const IbcClientValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{9,64})$/);
+// Validator for IBC Complient *Client* Identifiers as *emitted by Penumbra*.
+// I went through the trouble of specifying it to this detail because it ensures that validator checks are NOT sensitive to the order of regex evaluation :).
+// Broken down by capture group:
+// 1. Ensure that the identifier does not start with `connection` or `channel`, which is how Penumbra names identifiers for IBC Connections and IBC Channels.
+// 2. Ensure that the identifier only consists of characters as specified for valid IBC identifiers *and* is a valid length.
+// 3. Finally, ensure that the identifier is some number of valid characters followed by a `-<number>`, which is how Penumbra generates Client IDs.
+export const IbcClientValidator = z.string().regex(/^(?!connection|channel)(?=[A-Za-z0-9.[\]<>_+\-#]{9,64})([A-Za-z0-9.[\]<>_+\-#]+-[0-9]+)$/);
 
 // Validator for IBC Complient *Channel* Identifiers.[0]
 // [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
-export const IbcChannelValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{8,64})$/);
+// export const IbcChannelValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{8,64})$/);
+export const IbcChannelValidator = z.string().regex(/^(channel-[0-9]){1,56}$/);
 
 // Validator for IBC Complient *Connection* Identifiers.[0]
 // [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
-export const IbcConnectionValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{10,64})$/);
-
+export const IbcConnectionValidator = z.string().regex(/^(connection-[0-9]){1,53}$/);
 export type HashResultQuery = z.infer<typeof HashResultValidator>;
 export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
 export type IbcClientValidatorT = z.infer<typeof IbcClientValidator>;
