@@ -28,14 +28,12 @@ export const BlockHeightValidator = z.bigint().nonnegative({ message: "Block hei
 // 3. Finally, ensure that the identifier is some number of valid characters followed by a `-<number>`, which is how Penumbra generates Client IDs.
 export const IbcClientValidator = z.string().regex(/^(?!connection|channel)(?=[A-Za-z0-9.[\]<>_+\-#]{9,64})([A-Za-z0-9.[\]<>_+\-#]+-[0-9]+)$/);
 
-// Validator for IBC Complient *Channel* Identifiers.[0]
-// [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
-// export const IbcChannelValidator = z.string().regex(/^([A-Za-z0-9.[\]<>_+\-#]{8,64})$/);
+// Validator for IBC Complient *Channel* Identifiers emitted by Penumbra.
 export const IbcChannelValidator = z.string().regex(/^(channel-[0-9]){1,56}$/);
 
-// Validator for IBC Complient *Connection* Identifiers.[0]
-// [0]: https://github.com/cosmos/ibc/tree/main/spec/core/ics-024-host-requirements#paths-identifiers-separators
+// Validator for IBC Complient *Connection* Identifiers emmitted by Penumbra.
 export const IbcConnectionValidator = z.string().regex(/^(connection-[0-9]){1,53}$/);
+
 export type HashResultQuery = z.infer<typeof HashResultValidator>;
 export type BlockHeightQuery = z.infer<typeof BlockHeightValidator>;
 export type IbcClientValidatorT = z.infer<typeof IbcClientValidator>;

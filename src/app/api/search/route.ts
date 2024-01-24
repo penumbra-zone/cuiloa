@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     const url = new URL(req.url);
     const queryParam = url.searchParams.get("q")?.trim() ?? "";
-    console.log(queryParam);
+    console.log("Search paramater: ", queryParam);
 
     const res = SearchValidator.safeParse(queryParam);
     if (!res.success) {
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         identifier: txQuery?.tx_hash,
       }));
     } else if (searchQuery.kind === QueryKind.IbcClient) {
-      console.log("SEARCHING IBC CLIENT...");
+      console.log("Searching for IBC Clients...");
       const clientQuery = await db.events.findMany({
         select: {
           type: true,
@@ -89,6 +89,82 @@ export async function POST(req: Request) {
         kind: searchQuery.kind,
         identifier: searchQuery.value,
         related: clientData,
+      }));
+    } else if (searchQuery.kind === QueryKind.IbcChannel) {
+      console.log("Searching for IBC Channels...");
+      const recentTransactions = await db.events.findMany({
+        select: {
+          block_id: true,
+        },
+        where: {
+          attributes: {
+            some: {
+              value: {
+                equals: searchQuery.value as string,
+              },
+            },
+          },
+        },
+      });
+      console.log("Recent transactions involving IBC Channel.", recentTransactions);
+      const channelQuery = await db.events.findMany({
+        select: {
+          type: true,
+          tx_results: {
+            select: {
+              tx_hash: true,
+            },
+          },
+        },
+        where: {
+          block_id: {
+            in: recentTransactions.map(({ block_id: blockId }) => blockId),
+          },
+        },
+        orderBy: {
+          block_id: "desc",
+        },
+        take: 10,
+      });
+      console.log("Successfully queried for IBC Channel Search Results.", channelQuery);
+      const channelData = channelQuery.map(({ type, tx_results: txResults }) => ({type, identifier: txResults?.tx_hash }));
+      return new Response(JSON.stringify({
+        kind: searchQuery.kind,
+        identifier: searchQuery.value,
+        related: channelData,
+      }));
+    } else if (searchQuery.kind === QueryKind.IBCConnection) {
+      console.log("Searching for IBC Connections...");
+      const connectionQuery = await db.events.findFirst({
+        select: {
+          attributes: {
+            select: {
+              value: true,
+            },
+            where: {
+              AND: [
+                {
+                  key: {
+                    equals: "connection_id",
+                  },
+                },
+                {
+                  value: {
+                    equals: searchQuery.value as string,
+                  },
+                },
+              ],
+            },
+          },
+        },
+        orderBy: {
+          block_id: "desc",
+        },
+      });
+      console.log("Successfully queried for IBC Connection Search Results.", connectionQuery);
+      return new Response(JSON.stringify({
+        kind: searchQuery.kind,
+        identifier: searchQuery.value,
       }));
     } else {
       // This should be impossible.
