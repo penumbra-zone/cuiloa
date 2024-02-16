@@ -1,5 +1,7 @@
 import TransactionsTable from "@/components/TransactionsTable";
 
+export const dynamic = "force-dynamic";
+
 const Page = async () => {
   return (
     <div className="flex flex-col gap-5">

@@ -1,5 +1,7 @@
 import BlocksTable from "@/components/BlocksTable";
 
+export const dynamic = "force-dynamic";
+
 const Page = () => {
 
   return (
