@@ -1,5 +1,7 @@
 import db from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   console.log("Success: POST /api/events");
   try {

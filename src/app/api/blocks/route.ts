@@ -1,5 +1,8 @@
 import db from "@/lib/db";
 
+// Without forcing no-cache on the route, even downstream components will render stale data without a hard-refresh of the page. This holds true for /transactions as well.
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   console.log("POST req on /api/blocks/", req);
   try {
