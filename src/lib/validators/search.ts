@@ -1,4 +1,4 @@
-import { Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1alpha1/transaction_pb";
+import { Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { z } from "zod";
 // This validator is to check whether a sha256 hash conforms to what is expected by the `tx_hash` column
 // of the `tx_result` table defined in cometbft's psql indexer schema.

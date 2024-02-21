@@ -42,7 +42,7 @@ export async function GET(_req: NextRequest) {
     });
 
     console.log("Successfully queried for IBC channels.", channelsQuery);
-    console.log(channelsQuery[0].attributes);
+    // console.log(channelsQuery[0].attributes);
 
     console.log("Searching for connections associated with IBC Channels...");
     // TODO: I currently don't know of a good way to find the last known consensus height for every channel's counterparty chain.
@@ -78,7 +78,7 @@ export async function GET(_req: NextRequest) {
       },
     });
 
-    console.log("Successfully queried for associated IBC Connections.", connections[0].attributes);
+    console.log("Successfully queried for associated IBC Connections.", connections);
 
     // NOTE: Entry #5000 in why Prisma is being ripped out, please ignore the precariously bad and borderline incorrect code, this will be removed in due time.
     console.log("Searching for client updates associated with IBC Channels...");

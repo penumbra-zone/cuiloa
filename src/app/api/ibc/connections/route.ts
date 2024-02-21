@@ -31,7 +31,7 @@ export async function GET(_req: NextRequest) {
     });
 
     console.log("Successfully queried for IBC connections.", connectionsQuery);
-    console.log(connectionsQuery[0].attributes);
+    // console.log(connectionsQuery[0].attributes);
 
     const connections = connectionsQuery.map(({ attributes }) => attributes).flat();
 

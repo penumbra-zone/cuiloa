@@ -1,6 +1,6 @@
 import { TxResult } from "@buf/cosmos_cosmos-sdk.bufbuild_es/tendermint/abci/types_pb";
 // import { MsgCreateClient } from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/tx_pb";
-import { Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1alpha1/transaction_pb";
+import { Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 // import { IbcRelay } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1alpha1/ibc_pb";
 
 
