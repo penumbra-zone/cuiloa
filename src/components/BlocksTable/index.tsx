@@ -12,7 +12,7 @@ export interface BlocksTableRow {
   // events: any[],
 };
 
-const BlocksTable = async () => {
+const BlocksTable = async ({ className } : { className: string }) => {
   const queryClient = new QueryClient();
 
   const defaultQueryOptions = {
@@ -34,6 +34,7 @@ const BlocksTable = async () => {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <PaginatedDataTable
+        className={className}
         queryName={queryName}
         defaultQueryOptions={defaultQueryOptions}
         columns={columns}

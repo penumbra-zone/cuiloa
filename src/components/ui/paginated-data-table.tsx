@@ -94,7 +94,7 @@ export function PaginatedDataTable<TData, TValue, Z extends z.ZodTypeAny>({
   return (
     <div className={`${className}`}>
       <div className="rounded-md border">
-        <Table className="rounded-md border-0">
+        <Table>
           <TableHeader className="bg-slate-200">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

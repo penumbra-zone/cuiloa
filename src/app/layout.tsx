@@ -24,7 +24,7 @@ export default function RootLayout({
           <div className="container xs-container min-h-[668px]">
             <div className="bg-slate-100 p-1 sm:p-2 rounded-lg border-solid border-[1px] border-slate-200 shadow-sm">
             {children}
-          </div>
+            </div>
           </div>
         </Providers>
       </body>

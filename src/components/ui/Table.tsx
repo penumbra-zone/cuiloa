@@ -7,7 +7,8 @@ const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
+  // NOTE: had to add rounded-b-md to get rounded corners on the bottom. Should wrap this if styling this outer div becomes a common pattern of concern.
+  <div className="relative w-full overflow-auto rounded-b-md">
     <table
       ref={ref}
       className={cn("w-full caption-bottom text-sm", className)}
