@@ -35,6 +35,7 @@ interface FetcherParams {
 type Fetcher<Z extends z.ZodTypeAny> = ({ endpoint, pageIndex} : FetcherParams) => Promise<z.infer<Z>>;
 
 interface PaginatedDataTableProps<TData, TValue, Z extends z.ZodTypeAny> {
+  className?: string,
   columns: Array<ColumnDef<TData, TValue>>
   queryName: string,
   defaultQueryOptions: QueryOptions,
@@ -44,6 +45,7 @@ interface PaginatedDataTableProps<TData, TValue, Z extends z.ZodTypeAny> {
 }
  
 export function PaginatedDataTable<TData, TValue, Z extends z.ZodTypeAny>({
+  className,
   columns,
   queryName,
   defaultQueryOptions,
@@ -90,7 +92,7 @@ export function PaginatedDataTable<TData, TValue, Z extends z.ZodTypeAny>({
   });
 
   return (
-    <div>
+    <div className={`${className}`}>
       <div className="rounded-md border">
         <Table>
           <TableHeader className="bg-slate-200">
