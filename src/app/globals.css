@@ -76,4 +76,10 @@
 }
 
 @layer utilities {
+  .xs-container {
+    @media (max-width: 639px) {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
 }

@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className="min-w-full min-h-screen">
         <Providers>
           <Navbar />
-          <div className="container min-h-[668px]">
+          <div className="container xs-container min-h-[668px]">
             <div className="bg-slate-100 p-1 sm:p-2 rounded-lg border-solid border-[1px] border-slate-200 shadow-sm">
             {children}
           </div>
