@@ -37,7 +37,7 @@ const SearchBar : FC = () => {
       shouldFilter={false}>
       <CommandInput
         ref={inputRef}
-        placeholder="Search by height or tx hash..."
+        placeholder="Search by height, hash, or IBC identifier..."
         value={input}
         onValueChange={(text) => {
           setInput(text);
