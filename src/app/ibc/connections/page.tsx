@@ -31,13 +31,11 @@ const Page = () => {
   return (
     <div>
       {isFetched ? (
-        <div className="flex flex-col justify-center w-full">
-          <h1 className="text-3xl mx-auto py-5 font-semibold">IBC Connections</h1>
+        <div className="flex flex-col gap-5 items-center pt-5">
+          <h1 className="sm:text-2xl font-bold">IBC Connections</h1>
         {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         data  ? (
-          <div className="flex flex-col justify-center w-1/5 ml-auto mr-auto">
-            <ConnectionsTable data={data} />
-          </div>
+          <ConnectionsTable className="sm:w-1/2 w-full" data={data} />
         ) : (
           <p>No results</p>
         )}

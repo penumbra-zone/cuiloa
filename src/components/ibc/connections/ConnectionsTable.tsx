@@ -3,17 +3,16 @@ import { DataTable } from "../../ui/data-table";
 import { type FC } from "react";
 
 interface Props {
+  className?: string,
   data: Array<{
     key: string,
     value: string | null,
   }>,
 }
 
-const ConnectionsTable : FC<Props> = ({ data }) => {
+const ConnectionsTable : FC<Props> = ({ className, data }) => {
   return (
-    <div>
-      <DataTable columns={columns} data={data}/>
-    </div>
+    <DataTable className={className} columns={columns} data={data}/>
   );
 };
 

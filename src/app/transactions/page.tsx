@@ -4,9 +4,9 @@ export const dynamic = "force-dynamic";
 
 const Page = async () => {
   return (
-    <div className="flex flex-col gap-5">
-      <h1 className="text-lg font-bold self-center">Recent Transactions</h1>
-      <TransactionsTable/>
+    <div className="flex flex-col gap-5 pt-5 items-center">
+      <h1 className="sm:text-2xl font-bold">Recent Transactions</h1>
+      <TransactionsTable className="sm:w-11/12 w-full"/>
     </div>
   );
 };

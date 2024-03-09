@@ -18,12 +18,14 @@ import {
 } from "@/components/ui/Table";
 
 interface DataTableProps<TData, TValue> {
+  className?: string,
   columns: Array<ColumnDef<TData, TValue>>,
   columnVisibility?: VisibilityState,
   data: TData[],
 }
  
 export function DataTable<TData, TValue>({
+  className,
   columns,
   columnVisibility,
   data,
@@ -43,7 +45,7 @@ export function DataTable<TData, TValue>({
   console.log("table state", table.getState());
 
   return (
-    <div>
+    <div className={`${className}`}>
       <div className="rounded-md border">
         <Table>
           <TableHeader className="bg-slate-200">
@@ -73,7 +75,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="sm:p-4 p-1">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

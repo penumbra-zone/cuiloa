@@ -17,16 +17,15 @@ export interface SearchResult {
 // interface TransactionSearchResult {}
 // interface BlockSearchResult {}
 interface SearchResultsTableProps {
+  className?: string,
   data: SearchResult[]
 }
 
-const SearchResultsTable : FC<SearchResultsTableProps> = ({ data }) => {
+const SearchResultsTable : FC<SearchResultsTableProps> = ({ className, data }) => {
   const relatedVisible = !!data[0].related;
   console.log("relatedVisible", relatedVisible);
   return (
-    <div>
-      <DataTable columns={columns} data={data} columnVisibility={{ "related": relatedVisible }}/>
-    </div>
+    <DataTable className={className} columns={columns} data={data} columnVisibility={{ "related": relatedVisible }}/>
   );
 };
 

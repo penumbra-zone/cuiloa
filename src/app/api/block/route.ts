@@ -91,7 +91,9 @@ export async function GET(req: Request) {
 
       // eslint-disable-next-line @typescript-eslint/naming-convention
       tx_hash = tx.tx_hash;
-      return new Response(JSON.stringify([{tx_hash, ...block}, penumbraTx.toJsonString()]));
+      // BUG: Liable to throw the same `Error: ... cannot encode field penumbra.core.component.ibc.v1.IbcRelay.raw_action to JSON: cannot encode message google.protobuf.Any to JSON: "/ibc.core.client.v1.MsgCreateClient" is not in the type registry`
+      //      error for transactions associated with an e.g. `update_client` event.
+      return new Response(JSON.stringify([{tx_hash, ...block}, penumbraTx.toJson()]));
     }
 
     console.log("No Transaction associated with block.");

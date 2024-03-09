@@ -31,7 +31,7 @@ export interface TransactionResult {
 
 // TODO: Could try extracting out a minimal data table representation that can then be modified for different query types
 //       such as Blocks vs Block Events vs Transaction Results vs Transaction Events etc.
-const TransactionsTable = async () => {
+const TransactionsTable = async ({ className } : { className?: string })  => {
   const queryClient = new QueryClient();
 
   const defaultQueryOptions = {
@@ -53,6 +53,7 @@ const TransactionsTable = async () => {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <PaginatedDataTable
+        className={className}
         queryName={queryName}
         defaultQueryOptions={defaultQueryOptions}
         columns={columns}

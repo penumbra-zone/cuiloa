@@ -46,13 +46,11 @@ const Page : FC<PageProps> = ({ params }) => {
   return (
     <div>
       {isFetched ? (
-        <div>
-          <h1 className="text-3xl mx-auto py-5 font-semibold">Search results</h1>
+        <div className="flex flex-col gap-5 pt-5 items-center">
+          <h1 className="sm:text-2xl font-bold">Search results</h1>
         {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         searchResultData ? (
-          <div className="flex flex-col justify-center w-full">
-            <SearchResultsTable data={[searchResultData]}/>
-          </div>
+          <SearchResultsTable className="sm:w-1/2 w-full" data={[searchResultData]}/>
         ) : (
           <p>No results</p>
         )}
