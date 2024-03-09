@@ -28,16 +28,15 @@ const Page = () => {
     );
   }
 
+  // TODO: clean this up.
   return (
     <div>
       {isFetched ? (
-        <div>
-          <h1 className="text-3xl mx-auto py-5 font-semibold">IBC Channels</h1>
+        <div className="flex flex-col gap-5 pt-5 items-center">
+          <h1 className="sm:text-2xl font-bold">IBC Channels</h1>
         {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         data  ? (
-          <div className="flex flex-col justify-center w-full">
-            <ChannelsTable data={data} />
-          </div>
+          <ChannelsTable className="sm:w-11/12 w-full" data={data} />
         ) : (
           <p>No results</p>
         )}
