@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import { transactionFromBytes } from "@/lib/protobuf";
+// import { transactionFromBytes } from "@/lib/protobuf";
 import { BlockHeightValidator } from "@/lib/validators/search";
 import { z } from "zod";
 
@@ -15,16 +15,17 @@ export async function GET(req: Request) {
     // NOTE: This endpoint doesn't return the plain data of a single block. It finds the block by height and, if they exist, attaches any associated events and transaction results.
     //       Duplicate height event attributes are also filtered out.
     console.log(`querying database for block with height ${ht}.`);
-    const query = await db.blocks.findFirstOrThrow({
+
+    const block = await db.blocks.findFirstOrThrow({
       where: {
         height: ht,
       },
       select: {
-        chain_id: true,
         created_at: true,
         height: true,
         events: {
           select: {
+            block_id: true,
             type: true,
             attributes: {
               select: {
@@ -34,70 +35,23 @@ export async function GET(req: Request) {
             },
           },
           where: {
-            AND: [
-              {
-                type: {
-                  not: "block",
-                },
-              },
-              {
-                NOT: {
-                  AND: [
-                    {
-                      type: "tx",
-                    },
-                    {
-                      attributes: {
-                        some: {
-                          OR: [
-                            {
-                              key: {
-                                equals: "height",
-                              },
-                            },
-                            {
-                              key: {
-                                equals: "hash",
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
+            tx_id: {
+              equals: null,
+            },
           },
         },
         tx_results: {
           select: {
             tx_hash: true,
-            tx_result: true,
           },
         },
       },
     });
 
-    console.log("Successfully queried block:", query);
+    console.log("Successfully queried block data: ", block, block.events);
 
-    const tx = query.tx_results.at(0);
-    const {tx_results : _, ...block} = query;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    let tx_hash = "";
-    if (tx !== undefined) {
-      const penumbraTx = transactionFromBytes(tx.tx_result);
-      console.log("Successfully decoded Transaction from blockEvent.tx_results:", penumbraTx);
-
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      tx_hash = tx.tx_hash;
-      // BUG: Liable to throw the same `Error: ... cannot encode field penumbra.core.component.ibc.v1.IbcRelay.raw_action to JSON: cannot encode message google.protobuf.Any to JSON: "/ibc.core.client.v1.MsgCreateClient" is not in the type registry`
-      //      error for transactions associated with an e.g. `update_client` event.
-      return new Response(JSON.stringify([{tx_hash, ...block}, penumbraTx.toJson()]));
-    }
-
-    console.log("No Transaction associated with block.");
-    return new Response(JSON.stringify([{tx_hash, ...block}, null]));
+    console.log("Serializing result...");
+    return new Response(JSON.stringify(block));
   } catch (error) {
     console.log(error);
     if (error instanceof z.ZodError) {

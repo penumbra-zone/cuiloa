@@ -3,7 +3,7 @@
 import { type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { BlockResult } from "@/lib/validators/search";
+import { BlockData } from "@/lib/validators/search";
 import Block from "@/components/Block";
 
 interface PageProps {
@@ -20,8 +20,7 @@ const Page : FC<PageProps> = ({ params }) => {
       console.log(`Fetching: GET /api/block?q=${ht}`);
       const { data } = await axios.get(`/api/block?q=${ht}`);
       console.log("Fetching result:", data);
-      const result = BlockResult.safeParse(data);
-      console.log(result);
+      const result = BlockData.safeParse(data);
       if (result.success) {
         return result.data;
       } else {
@@ -49,9 +48,9 @@ const Page : FC<PageProps> = ({ params }) => {
       {isFetched ? (
         <div>
           {blockData ? (
-          <div className="flex flex-col justify-center w-full">
-            <h1 className="text-3xl mx-auto py-5 font-semibold">Block Summary</h1>
-            <Block blockPayload={blockData}/>
+          <div className="flex flex-col gap-5 pt-5 items-center">
+            <h1 className="sm:text-2xl font-bold">Block Summary</h1>
+            <Block blockData={blockData}/>
           </div>
           ) : (
             <div>
