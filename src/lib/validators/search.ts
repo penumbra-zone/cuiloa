@@ -140,26 +140,22 @@ export const TransactionResult = z.tuple([
 ]);
 
 // zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/block?q=<height>
-// NOTE: This definition is meaningfully different from TransactionResult in that the Transaction value may not exist at all.
-export const BlockResult = z.tuple([
-  z.object({
-    chain_id: z.string(),
-    created_at: z.string().datetime(),
-    height: z.coerce.bigint(),
-    events: z.array(z.object({
+export const BlockData = z.object({
+  created_at: z.string().datetime(),
+  height: z.coerce.bigint(),
+  events: z.array(
+    z.object({
       type: z.string(),
-      attributes: z.array(z.object({
-        value: z.string().nullable(),
-        key: z.string(),
-      })),
-    })),
-    tx_hash: z.string(),
-  }),
-  z.string().transform((jsonString) => {
-    const parsed = Transaction.fromJsonString(jsonString);
-    return parsed;
-  }).nullable(),
-]);
+      attributes: z.array(
+        z.object({
+          value: z.string().nullable(),
+          key: z.string(),
+        }),
+      ),
+    }),
+  ),
+  tx_results: z.array(z.object({ tx_hash: z.string() })),
+});
 
 export type TransactionResultPayload = z.infer<typeof TransactionResult>;
-export type BlockResultPayload = z.infer<typeof BlockResult>;
+export type BlockDataPayload = z.infer<typeof BlockData>;
