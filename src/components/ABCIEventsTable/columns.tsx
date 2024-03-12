@@ -10,8 +10,6 @@ export type ABCIEventsColumns = Record<number, {
 
 export const columns : Array<ColumnDef<ABCIEventsColumns>> = [
   {
-    id: "type",
-    // accessorFn: (row) => row[0].value,
     accessorKey: "type",
     header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">Type</div>,
     cell: ({ getValue }) => {
@@ -20,8 +18,6 @@ export const columns : Array<ColumnDef<ABCIEventsColumns>> = [
     },
   },
   {
-    id: "key",
-    // accessorFn: (row) => row[0].value,
     accessorKey: "key",
     header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">Key</div>,
     cell: ({ getValue }) => {
@@ -30,7 +26,6 @@ export const columns : Array<ColumnDef<ABCIEventsColumns>> = [
     },
   },
   {
-    id: "value",
     accessorKey: "value",
     header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">Value</div>,
     cell: ({ getValue }) => {

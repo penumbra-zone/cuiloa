@@ -13,7 +13,7 @@ interface Props {
 
 const ABCIEventsTable : FC<Props> = ({ className, data }) => {
   return (
-    <DataTable className={className} columns={columns} data={data}/>
+    <DataTable className={className ?? ""} columns={columns} data={data}/>
   );
 };
 
