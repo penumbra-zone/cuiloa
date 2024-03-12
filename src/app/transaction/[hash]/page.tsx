@@ -50,9 +50,11 @@ const Page : FC<PageProps> = ({ params }) => {
       {isFetched ? (
         <div>
         {txData ? (
-          <div className="flex flex-col items-center gap-5">
+          <div className="flex flex-col items-center gap-5 pt-5">
             <h1 className="sm:text-2xl font-bold">Transaction Event Summary</h1>
-            <Transaction txData={txData} />
+            <div className="sm:w-11/12 w-full">
+              <Transaction txData={txData} />
+            </div>
           </div>
         ) : (
           <p>No results</p>
