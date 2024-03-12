@@ -50,7 +50,6 @@ export async function GET(req: Request) {
 
     console.log("Successfully queried block data: ", block, block.events);
 
-    console.log("Serializing result...");
     return new Response(JSON.stringify(block));
   } catch (error) {
     console.log(error);
