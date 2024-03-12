@@ -122,10 +122,8 @@ export const TransactionResult = z.tuple([
     created_at: z.string().datetime(),
     events: z.array(z.object({
       type: z.string(),
-      attributes: z.array(z.object({
-        value: z.string().nullable(),
-        key: z.string(),
-      })),
+      value: z.string().nullable(),
+      key: z.string(),
     })),
     blocks: z.object({
       height: z.coerce.bigint(),
@@ -146,12 +144,8 @@ export const BlockData = z.object({
   events: z.array(
     z.object({
       type: z.string(),
-      attributes: z.array(
-        z.object({
-          value: z.string().nullable(),
-          key: z.string(),
-        }),
-      ),
+      value: z.string().nullable(),
+      key: z.string(),
     }),
   ),
   tx_results: z.array(z.object({ tx_hash: z.string() })),

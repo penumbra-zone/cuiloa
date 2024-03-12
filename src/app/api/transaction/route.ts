@@ -41,14 +41,28 @@ export async function GET(req: Request) {
       },
     });
 
-    console.log("Successfully queried transaction event:", query);
-
     const penumbraTx = transactionFromBytes(query.tx_result);
     console.log("Successfully decoded Transaction from tx_result:", penumbraTx);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { tx_result, ...tx} = query;
-    return new Response(JSON.stringify([tx, penumbraTx.toJsonString()]));
+    const { tx_result, events: _events, ...tx} = query;
+
+    // NOTE: I Cannot Wait To Remove PrismaJS.
+    // This flattens our ABCI data such that:
+    // { type: string, 
+    //   attributes: Array<{
+    //     key: string,
+    //     value: string | null }>}
+    // } becomes:
+    // { type: string,
+    //   key: string,
+    //   value: string | null }
+    // Whether or not it would be better to nest this day for rendering in the table is TBD.
+    const events = _events.map(({ type, attributes }) => {
+      return attributes.map(({ key, value }) => ({ type, key, value }));
+    }).flat();
+
+    return new Response(JSON.stringify([{...tx, events}, penumbraTx.toJsonString()]));
   } catch (error) {
     console.log(error);
     if (error instanceof z.ZodError) {
