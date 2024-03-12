@@ -28,11 +28,6 @@ export async function GET(req: Request) {
               },
             },
           },
-          where: {
-            NOT: {
-              type: "tx",
-            },
-          },
         },
         blocks: {
           select: {

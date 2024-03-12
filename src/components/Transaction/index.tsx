@@ -1,13 +1,14 @@
 import { type TransactionResultPayload } from "@/lib/validators/search";
 import ReactJson from "@microlink/react-json-view";
+import Link from "next/link";
 import { type FC } from "react";
 
 interface TransactionProps {
-  txPayload: TransactionResultPayload
+  txData: TransactionResultPayload
 }
 
-const Transaction : FC<TransactionProps> = ({ txPayload }) => {
-  const [txEvent, penumbraTx] = txPayload;
+const Transaction : FC<TransactionProps> = ({ txData }) => {
+  const [txEvent, penumbraTx] = txData;
   return (
     <div className="bg-white rounded-sm">
       <div className="flex flex-wrap justify-between p-5 gap-y-10 w-full">
@@ -17,7 +18,7 @@ const Transaction : FC<TransactionProps> = ({ txPayload }) => {
         </div>
         <div className="flex justify-start w-full">
           <p className="w-1/6">Block Height</p>
-          <pre>{txEvent.blocks.height.toString()}</pre>
+          <Link href={`/block/${txEvent.blocks.height}`}><pre className="underline">{txEvent.blocks.height.toString()}</pre></Link>
         </div>
         <div className="flex justify-start w-full">
           <p className="w-1/6">Timestamp</p>
