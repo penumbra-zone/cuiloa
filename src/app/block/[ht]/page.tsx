@@ -49,7 +49,7 @@ const Page : FC<PageProps> = ({ params }) => {
         <div>
           {blockData ? (
           <div className="flex flex-col gap-5 pt-5 items-center">
-            <h1 className="sm:text-2xl font-bold">Block Summary</h1>
+            <h1 className="sm:text-2xl text-lg font-bold">Block Summary</h1>
             <div className="sm:w-11/12 w-full">
               <Block blockData={blockData}/>
             </div>
