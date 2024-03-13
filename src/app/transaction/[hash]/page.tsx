@@ -51,7 +51,7 @@ const Page : FC<PageProps> = ({ params }) => {
         <div>
         {txData ? (
           <div className="flex flex-col items-center gap-5 pt-5">
-            <h1 className="sm:text-2xl font-bold">Transaction Event Summary</h1>
+            <h1 className="sm:text-2xl text-lg font-bold">Transaction Event Summary</h1>
             <div className="sm:w-11/12 w-full">
               <Transaction txData={txData} />
             </div>

@@ -31,8 +31,6 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
 
-  console.log("columnVisibility", columnVisibility);
-
   const table = useReactTable({
     data,
     columns,
@@ -41,8 +39,6 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   });
-
-  console.log("table state", table.getState());
 
   return (
     <div className={`${className}`}>

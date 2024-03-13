@@ -11,24 +11,27 @@ interface TransactionProps {
 const Transaction : FC<TransactionProps> = ({ txData }) => {
   const [txResult, penumbraTx] = txData;
   const abciEvents = txResult.events;
+
   return (
-    <div className="bg-white rounded-sm">
-      <div className="flex flex-wrap justify-between p-5 gap-y-10 w-full">
-        <div className="flex justify-start w-full">
-          <p className="w-1/6">Hash</p>
-          <pre>{txResult.tx_hash}</pre>
+    <div className="bg-white rounded-sm shadow-md">
+      <div className="flex flex-wrap justify-between sm:p-5 p-2 sm:gap-y-10 gap-y-5 w-full">
+        <div className="flex flex-wrap justify-start w-full">
+          <p className="sm:w-1/6 w-full font-semibold">Hash</p>
+          {/* TODO: this width on smaller screens is pretty arbitrary and there's a few instances of this now through the codebase. revisit and implement as consistent tailwind variables. */}
+          {/* TODO: also at the point where JS should be used for copying to clipboard which mitigates most text overflow issues and opens up stylings for improvement. */}
+          <pre className="sm:w-5/6 w-[300px] sm:text-base text-sm break-all whitespace-pre-wrap">{txResult.tx_hash}</pre>
         </div>
-        <div className="flex justify-start w-full">
-          <p className="w-1/6">Block Height</p>
-          <Link href={`/block/${txResult.blocks.height}`}><pre className="underline">{txResult.blocks.height.toString()}</pre></Link>
+        <div className="flex flex-wrap justify-start w-full">
+          <p className="sm:w-1/6 w-full font-semibold">Block Height</p>
+          <Link href={`/block/${txResult.blocks.height}`}><pre className="underline sm:w-0 w-full">{txResult.blocks.height.toString()}</pre></Link>
         </div>
-        <div className="flex justify-start w-full">
-          <p className="w-1/6">Timestamp</p>
-          <pre>{txResult.created_at}</pre>
+        <div className="flex flex-wrap justify-start w-full">
+          <p className="sm:w-1/6 w-full font-semibold">Timestamp</p>
+          <pre className="sm:w-0 w-full">{txResult.created_at}</pre>
         </div>
-        <div className="flex justify-start w-full">
-          <p className="w-1/6 shrink-0">Transaction Data</p>
-          <pre className="w-5/6 break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
+        <div className="flex flex-wrap justify-start w-full">
+          <p className="sm:w-1/6 sm:shrink-0 w-full font-semibold">Transaction Data</p>
+          <pre className="sm:w-5/6 w-full break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
             <ReactJson src={penumbraTx.toJson() as object} name={"transaction"} displayDataTypes={false} collapseStringsAfterLength={20} collapsed={5} enableClipboard={true} displayObjectSize={false}/>
           </pre>
         </div>
