@@ -39,37 +39,33 @@ const Page : FC<PageProps> = ({ params }) => {
   return (
     <div>
       {isFetched ? (
-        <div className="flex flex-col justify-center w-full">
-          <h1 className="text-3xl mx-auto py-5 font-semibold">IBC Client</h1>
+        <div className="flex flex-col items-center gap-5 pt-5">
+          <h1 className="sm:text-2xl text-lg font-bold">IBC Client</h1>
         {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         data  ? (
-          <div className="bg-white rounded-sm flex flex-wrap justify-between p-5 max-w-5xl ml-auto mr-auto gap-2">
-            <div className="flex justify-start w-full">
-              <p className="w-1/6">Client ID</p>
-              <pre>{data.clientId}</pre>
-            </div>
-            <div className="flex justify-start w-full">
-              <p className="w-1/6">Client Type</p>
-              <pre>{data.clientType}</pre>
-            </div>
-            <div className="flex justify-start w-full">
-              <p className="w-1/6">Counterparty Height</p>
-              <pre>{data.consensusHeight}</pre>
-            </div>
-            <div className="flex justify-start w-full">
-              <p className="w-1/6">Channel ID</p>
-              <Link href={`/ibc/channel/${data.channelId}`} className="underline"><pre>{data.clientId}</pre></Link>
-            </div>
-            <div className="flex justify-start w-full">
-              <p className="w-1/6">Connection IDs</p>
-              <Link href={`/ibc/connection/${data.connectionId}`} className="underline"><pre>{data.connectionId}</pre></Link>
-            </div>
-            {/* <div className="flex justify-start w-full">
-              <p className="w-1/6">Header</p>
-              <div className="overflow-hidden">
-                {data.recentTransactions.map(({ hash }, i) => <Link href={`/transaction/${hash}`} key={i} className="underline"><pre>{hash}</pre></Link>)}
+          <div className="sm:w-11/12 w-full bg-white rounded-sm shadow-md">
+            <div className="flex flex-col justify-start p-5 gap-y-5 w-full">
+              <div className="flex flex-wrap justify-start w-full">
+                <p className="sm:w-1/6 w-full font-semibold">Client ID</p>
+                <pre className="sm:w-0 w-full">{data.clientId}</pre>
               </div>
-            </div> */}
+              <div className="flex flex-wrap justify-start w-full">
+                <p className="sm:w-1/6 w-full font-semibold">Client Type</p>
+                <pre className="sm:w-0 w-full">{data.clientType}</pre>
+              </div>
+              <div className="flex flex-wrap justify-start w-full">
+                <p className="sm:w-1/6 w-full font-semibold">Counterparty Height</p>
+                <pre className="sm:w-0 w-full">{data.consensusHeight}</pre>
+              </div>
+              <div className="flex flex-wrap justify-start w-full">
+                <p className="sm:w-1/6 w-full font-semibold">Channel ID</p>
+                <Link href={`/ibc/channel/${data.channelId}`} className="underline sm:w-0 w-full"><pre>{data.clientId}</pre></Link>
+              </div>
+              <div className="flex flex-wrap justify-start w-full">
+                <p className="sm:w-1/6 w-full font-semibold">Connection IDs</p>
+                <Link href={`/ibc/connection/${data.connectionId}`} className="underline sm:w-0 w-full"><pre>{data.connectionId}</pre></Link>
+              </div>
+            </div>
           </div>
         ) : (
           <p>No results</p>
