@@ -5,7 +5,6 @@ import { type FC } from "react";
 interface Props {
   className?: string,
   data: Array<{
-    type: string,
     key: string,
     value: string | null,
   }>,

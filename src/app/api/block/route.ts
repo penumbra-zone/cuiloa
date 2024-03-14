@@ -49,13 +49,8 @@ export async function GET(req: Request) {
     });
 
     console.log("Successfully queried block data: ", query, query.events);
-    // NOTE: doing this for the same reason outlined in /api/transaction/route.ts#L50
-    const { events: _events, ...block} = query;
-    const events = _events.map(({ type, attributes }) => {
-      return attributes.map(({ key, value }) => ({ type, key, value }));
-    }).flat();
 
-    return new Response(JSON.stringify({...block, events}));
+    return new Response(JSON.stringify(query));
   } catch (error) {
     console.log(error);
     if (error instanceof z.ZodError) {
