@@ -30,12 +30,11 @@ const Block : FC<BlockEventProps> = ({ blockData }) => {
               <Link href={`/transaction/${tx_hash}`} key={i}><pre className="underline sm:max-w-full max-w-[200px] overflow-hidden overflow-ellipsis sm:text-base">{tx_hash}</pre></Link>
           )) : <p className="sm:w-0 w-full overflow-hidden text-ellipsis">None</p>}
         </div>
-        <div className="flex justify-start flex-wrap w-full">
+        <div className="flex justify-start flex-wrap w-full gap-y-5">
           <p className="font-bold text-base">Block Event Attributes</p>
           {abciEvents.length !== 0 ? abciEvents.map(({ type, attributes }, i) => (
             <div key={i} className="flex flex-col sm:items-start items-center w-full gap-y-1">
-              <p className="font-mono whitespace-pre-wrap break-all sm:text-base text-sm pt-5">{type}</p>
-              <ABCIEventsTable className="sm:w-2/3 w-full" data={attributes}/>
+              <ABCIEventsTable className="sm:w-2/3 w-full" type={type} attributes={attributes}/>
             </div>
           )) : <p>None</p>}
         </div>

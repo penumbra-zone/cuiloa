@@ -17,19 +17,21 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 
-interface DataTableProps<TData, TValue> {
+interface AttributeTableProps<TData, TValue> {
   className?: string,
+  header?: string,
   columns: Array<ColumnDef<TData, TValue>>,
   columnVisibility?: VisibilityState,
   data: TData[],
 }
 
-export function DataTable<TData, TValue>({
+export function AttributeTable<TData, TValue>({
   className,
+  header,
   columns,
   columnVisibility,
   data,
-}: DataTableProps<TData, TValue>) {
+}: AttributeTableProps<TData, TValue>) {
 
   const table = useReactTable({
     data,
@@ -40,25 +42,26 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  console.log("Header groups: ", table.getHeaderGroups());
+
+
   return (
     <div className={`${className}`}>
       <div className="rounded-md border">
         <Table>
           <TableHeader className="bg-slate-200">
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups()[0].headers.map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
+                {
+                    <TableHead key={headerGroup.id} colSpan={2}>
+                      {headerGroup.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
+                            headerGroup.column.columnDef.header,
+                            headerGroup.getContext(),
                           )}
                     </TableHead>
-                  );
-                })}
+                }
               </TableRow>
             ))}
           </TableHeader>

@@ -35,19 +35,14 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
             <ReactJson src={penumbraTx.toJson() as object} name={"transaction"} displayDataTypes={false} collapseStringsAfterLength={20} collapsed={5} enableClipboard={true} displayObjectSize={false}/>
           </pre>
         </div>
-        <div className="flex justify-start flex-wrap w-full">
+        <div className="flex justify-start flex-wrap w-full gap-y-5">
           <p className="font-bold text-base">Block Event Attributes</p>
           {abciEvents.length !== 0 ? abciEvents.map(({ type, attributes }, i) => (
             <div key={i} className="flex flex-col sm:items-start items-center w-full gap-y-1">
-              <p className="font-mono whitespace-pre-wrap break-all sm:text-base text-sm pt-5">{type}</p>
-              <ABCIEventsTable className="sm:w-2/3 w-full" data={attributes}/>
+              <ABCIEventsTable className="sm:w-2/3 w-full" type={type} attributes={attributes}/>
             </div>
           )) : <p>None</p>}
         </div>
-        {/* <div className="flex flex-col items-center gap-5 w-full">
-          <p className="font-semibold">Event Attributes</p>
-          <ABCIEventsTable className="w-full" data={abciEvents}/>
-        </div> */}
       </div>
     </div>
   );

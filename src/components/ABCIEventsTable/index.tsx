@@ -1,18 +1,20 @@
-import { columns } from "./columns";
-import { DataTable } from "../ui/data-table";
+import { makeColumns } from "./columns";
 import { type FC } from "react";
+import { AttributeTable } from "../ui/attribute-table";
 
 interface Props {
   className?: string,
-  data: Array<{
+  type: string,
+  attributes: Array<{
     key: string,
     value: string | null,
   }>,
 }
 
-const ABCIEventsTable : FC<Props> = ({ className, data }) => {
+const ABCIEventsTable : FC<Props> = ({ className, type, attributes }) => {
+  const columns = makeColumns(type);
   return (
-    <DataTable className={className ?? ""} columns={columns} data={data}/>
+    <AttributeTable className={className ?? ""} header={type} columns={columns} data={attributes}/>
   );
 };
 
