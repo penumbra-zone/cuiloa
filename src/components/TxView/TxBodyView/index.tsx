@@ -5,10 +5,11 @@ interface TxBodyViewProps {
   bodyView: TransactionBodyView,
 }
 
-const TxBodyView : FC<TxBodyViewProps> = ( bodyView ) => {
+const TxBodyView : FC<TxBodyViewProps> = ({ bodyView }) => {
+
   return (
     <div>
-
+      <p className="text-sm font-semibold">TxBodyView</p>
     </div>
   );
 };
