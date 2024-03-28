@@ -44,7 +44,7 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
             </div>
           )) : <p>None</p>}
         </div>
-        <div className="flex justify-start flex-wrap w-full gap-y-5">
+        <div className="flex flex-wrap justify-start w-full">
           <p className="font-bold text-base">TransactionView</p>
           <TxView tx={penumbraTx}/>
         </div>
