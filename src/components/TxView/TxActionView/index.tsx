@@ -1,9 +1,11 @@
 import { type FC } from "react";
 import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapView_Visible, type SwapClaimView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import { SpendView, SpendView_Opaque, OutputView, OutputView_Opaque, type SpendView_Visible, type OutputView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
+import { SpendView, SpendView_Opaque, OutputView, OutputView_Opaque, type SpendView_Visible, type OutputView_Visible, type NoteView, type Spend } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import { type Action, ActionView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
-
+import { createGetter } from "@penumbra-zone/getters/src/utils/create-getter";
+import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
+import type { Address, AddressIndex, AddressView, WalletId } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 
 export const makeActionView = ({ action }: Action) : ActionView | undefined => {
   switch (action.case) {
@@ -103,6 +105,7 @@ export const makeActionView = ({ action }: Action) : ActionView | undefined => {
   }
 };
 
+// TODO: probably better to use the @penumbra-zone/getters at this point now that I see the nature of the problem lol.
 const getSpendView = ({ spendView } : SpendView) : SpendView_Opaque | SpendView_Visible => {
   switch (spendView.case) {
     case "opaque":
@@ -158,6 +161,144 @@ const getSwapClaimView = ({ swapClaimView } : SwapClaimView) : SwapClaimView_Opa
   }
 };
 
+const TxSpend : FC<{spend: Spend}>= ({spend}) => {
+  const spendBody = spend.body;
+  return (
+    <div className="flex flex-col">
+      <p>Spend</p>
+      <div className="flex flex-col">
+        {spend.proof ? (
+          <div className="flex">
+            <p>Proof</p>
+            <pre>{spend.proof.inner}</pre>
+          </div>
+        ) : null}
+        {spend.authSig ? (
+        <div className="flex">
+          <p>AuthSig</p>
+          <pre>{spend.authSig.inner}</pre>
+        </div>
+        ) : null}
+        {spendBody ? (
+          <div className="flex">
+            <p>Body</p>
+            <div className="flex">
+              {spendBody.nullifier ? (
+                <div className="flex">
+                  <p>Nullifier</p>
+                  <pre>{spendBody.nullifier.inner}</pre>
+                </div>
+              ) : spendBody.rk ? (
+                <div className="flex">
+                  <p>Randomized Validating Key</p>
+                  <pre>{spendBody.rk.inner}</pre>
+                </div>
+              ) : <p>None</p>}
+            </div>
+          </div>
+        ): null}
+      </div>
+    </div>
+  );
+};
+
+const getWalletId = createGetter((addressView?: AddressView) =>
+  addressView?.addressView.case === "decoded" && addressView.addressView.value.walletId
+  ? addressView.addressView.value.walletId
+  : undefined,
+);
+
+const getSpendNote = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.case === "visible" ? spendView.spendView.value?.note : undefined,
+);
+
+const getSpend = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend ? spendView.spendView.value.spend : undefined,
+);
+
+const TxAddress :FC<{ address: Address }> = ({ address }) => {
+  return (
+    <div className="flex flex-col">
+      <div className="flex">
+        <p>Altbech32</p>
+        <p>{address.altBech32m}</p>
+      </div>
+      <div className="flex">
+        <p>Inner</p>
+        <pre>{address.inner}</pre>
+      </div>
+    </div>
+  );
+};
+
+const TxAddressIndex : FC<{ index: AddressIndex }> = ({ index }) => {
+  return (
+    <div className="flex flex-col">
+      <div className="flex">
+        <p>Account</p>
+        <p>{index.account}</p>
+      </div>
+      <div className="flex">
+        <p>Randomizer</p>
+        <pre>{index.randomizer}</pre>
+      </div>
+    </div>
+  );
+};
+
+const TxWalletId : FC<{ walletId: WalletId }> = ({ walletId }) => {
+  return (
+    <div className="flex flex-col">
+      <p>WalletID</p>
+      <div className="flex">
+        <p>WalletID inner</p>
+        <pre>{walletId.inner}</pre>
+      </div>
+    </div>
+  );
+};
+
+
+
+const TxNoteView : FC<{note: NoteView}>= ({ note }) => {
+  const address = getAddress.optional()(note.address);
+  const walletId = getWalletId.optional()(note.address);
+  const addressIndex = getAddressIndex.optional()(note.address);
+
+
+
+  return (
+    <div className="flex flex-col">
+      <p>TxNote</p>
+      {address ? (
+        <div className="flex flex-col">
+          <p>Address</p>
+          <TxAddress address={address}/>
+          {walletId ? <TxWalletId walletId={walletId}/> : null}
+          {addressIndex ? <TxAddressIndex index={addressIndex}/> : null}
+        </div>
+      ) : null}
+      <div className="flex flex-col">
+        <p>rseed</p>
+        <pre>{note.rseed}</pre>
+      </div>
+    </div>
+  );
+};
+
+const TxSpendView = (spendView: SpendView) => {
+  const spend = getSpend(spendView);
+  const note = getSpendNote.optional()(spendView);
+  return (
+    <div>
+      <TxSpend spend={spend} />
+      {note !== undefined ? (
+        <TxNoteView note={note}/>
+      ) : null}
+    </div>
+  );
+};
+
 export const getActionView = ({ actionView } : ActionView) => {
   switch (actionView.case) {
     case "spend": {
@@ -205,8 +346,17 @@ export const getActionView = ({ actionView } : ActionView) => {
         );
       } else {
         return (
-          <div>
-            {}
+          <div className="flex flex-col">
+            <div>
+              <p>Spend</p>
+              {spendView.spend ? (
+                <div>
+                </div>
+              ): null}
+            </div>
+            <div>
+              <p>Note</p>
+            </div>
           </div>
         );
       }
@@ -301,7 +451,9 @@ interface TxActionViewProps {
   action: ActionView,
 }
 
+
 const TxActionView : FC<TxActionViewProps> = ({ action }) => {
+  // const getSpendView = createGetter((action: ActionView))
   return (
     <div className="flex flex-wrap w-full">
       {getActionView(action)}
