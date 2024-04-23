@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { type TransactionBodyView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import TxActionView from "../TxActionView";
+import { TxActionView } from "../TxActionView";
 
 interface TxBodyViewProps {
   bodyView: TransactionBodyView,
