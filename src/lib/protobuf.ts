@@ -119,6 +119,14 @@ export const getSpend = createGetter((spendView?: SpendView) =>
   spendView?.spendView.value?.spend ? spendView.spendView.value.spend : undefined,
 );
 
+export const getOutput = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output ? outputView.outputView.value.output : undefined,
+);
+
+export const getOutputNote = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.case === "visible" ? outputView.outputView.value.note : undefined,
+);
+
 export const transactionFromBytes = (txBytes : Buffer) => {
   const txResult = TxResult.fromBinary(txBytes);
   return Transaction.fromBinary(txResult.tx);
