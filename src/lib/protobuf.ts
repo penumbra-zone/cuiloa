@@ -127,6 +127,10 @@ export const getOutputNote = createGetter((outputView?: OutputView) =>
   outputView?.outputView.case === "visible" ? outputView.outputView.value.note : undefined,
 );
 
+export const getOutputKey = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.case === "visible" ? outputView.outputView.value.payloadKey : undefined,
+);
+
 export const transactionFromBytes = (txBytes : Buffer) => {
   const txResult = TxResult.fromBinary(txBytes);
   return Transaction.fromBinary(txResult.tx);

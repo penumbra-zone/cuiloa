@@ -1,11 +1,12 @@
 import { type FC } from "react";
 import { type SwapView, SwapView_Opaque, type SwapClaimView, SwapClaimView_Opaque, type SwapView_Visible, type SwapClaimView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import { type NoteView as NoteViewSchema, type Spend as SpendSchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
-import { type ActionView as ActionViewSchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
+import type { Output as OutputSchema, NoteView as NoteViewSchema, Spend as SpendSchema, NotePayload as NotePayloadSchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
+import type { ActionView as ActionViewSchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { type DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
-import type { Address as AddressSchema, AddressIndex as AddressIndexSchema, WalletId as WalletIdSchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
-import { getOutput, getOutputNote, getSpend, getSpendNote, getWalletId } from "@/lib/protobuf";
+import type { Address as AddressSchema, AddressIndex as AddressIndexSchema, WalletId as WalletIdSchema, PayloadKey as PayloadKeySchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
+import { getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getWalletId } from "@/lib/protobuf";
+import type { BalanceCommitment as BalanceCommitmentSchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 
 const getSwapView = ({ swapView } : SwapView) : SwapView_Opaque | SwapView_Visible => {
   switch (swapView.case) {
@@ -40,11 +41,91 @@ const getSwapClaimView = ({ swapClaimView } : SwapClaimView) : SwapClaimView_Opa
   }
 };
 
+const PayloadKey: FC<{ payloadKey: PayloadKeySchema }> = ({ payloadKey }) => {
+  return (
+    <div className="flex">
+      <p>Payload Key</p>
+      <pre>{payloadKey.inner}</pre>
+    </div>
+  );
+};
+
+const GenericKey: FC<{ name: string, _key: Uint8Array }> = ({ name, _key }) => {
+  return (
+    <div className="flex">
+      <p>{name}</p>
+      <pre>{_key}</pre>
+    </div>
+  );
+};
+
+const OvkWrappedKey = GenericKey;
+const WrappedMemoKey = GenericKey;
+const EphemeralKey = GenericKey;
+
+const NotePayload: FC<{ notePayload: NotePayloadSchema }> = ({ notePayload }) => {
+  return (
+    <div className="flex">
+      <p>NotePayload</p>
+      <div className="flex">
+        {notePayload.noteCommitment ? (
+          <div className="flex">
+            <p>Note Commitment</p>
+            <pre>{notePayload.noteCommitment.inner}</pre>
+          </div>
+        ) : null}
+        <EphemeralKey _key={notePayload.ephemeralKey} name="Ephemeral Key"/>
+        {notePayload.encryptedNote ? (
+          <div className="flex">
+            <p>Encrypted Note</p>
+            <pre>{notePayload.encryptedNote.inner}</pre>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+const BalanceCommittment: FC<{ balance: BalanceCommitmentSchema }> = ({ balance }) => {
+  return (
+    <div className="flex">
+      <p>Balance Commitment</p>
+      <pre>{balance.inner}</pre>
+    </div>
+  );
+};
+
+const Output: FC<{ output: OutputSchema }> = ({ output }) => {
+  const body = output.body;
+  return (
+    <div className="flex flex-col">
+      {body ? (
+        <div className="flex">
+          <p>OutputBody</p>
+          {body.notePayload ? (
+            <NotePayload notePayload={body.notePayload}/>
+          ) : null}
+          {body.balanceCommitment ? (
+            <BalanceCommittment balance={body.balanceCommitment}/>
+          ) : null}
+          <WrappedMemoKey _key={body.wrappedMemoKey} name="Wrapped Memo Key"/>
+          <OvkWrappedKey _key={body.ovkWrappedKey} name="Ovk Wrapped Key"/>
+        </div>
+      ) : null}
+      {output.proof ? (
+        <div className="flex">
+          <p>Proof</p>
+          <pre>{output.proof.inner}</pre>
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 const Spend : FC<{spend: SpendSchema}>= ({spend}) => {
   const spendBody = spend.body;
   return (
     <div className="flex flex-col">
-      <p>Spend</p>
       <div className="flex flex-col">
         {spend.proof ? (
           <div className="flex">
@@ -160,6 +241,21 @@ const SpendView : FC<{ spend: SpendSchema, noteView?: NoteViewSchema}> = ({spend
   );
 };
 
+const OutputView: FC<{ output: OutputSchema, noteView?: NoteViewSchema, payloadKey?: PayloadKeySchema }> = ({ output, noteView, payloadKey }) => {
+  return (
+    <div className="flex flex-col">
+      <p>Output View</p>
+      <Output output={output} />
+      {noteView !== undefined ? (
+        <NoteView note={noteView}/>
+      ) : null}
+      {payloadKey ? (
+        <PayloadKey payloadKey={payloadKey}/>
+      ) : null}
+    </div>
+  );
+};
+
 export const getActionView = ({ actionView } : ActionViewSchema) => {
   switch (actionView.case) {
     case "spend": {
@@ -168,9 +264,10 @@ export const getActionView = ({ actionView } : ActionViewSchema) => {
       return <SpendView spend={spendView} noteView={noteView}/>;
     }
     case "output": {
-      // const outputView = getOutput(actionView.value);
-      // const noteView = getOutputNote(actionView.value);
-      return null;
+      const outputView = getOutput(actionView.value);
+      const noteView = getOutputNote.optional()(actionView.value);
+      const outputKey = getOutputKey.optional()(actionView.value);
+      return <OutputView output={outputView} noteView={noteView} payloadKey={outputKey}/>;
     }
     case "swap": {
       const outputView = getSwapView(actionView.value);
