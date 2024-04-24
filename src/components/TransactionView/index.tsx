@@ -1,9 +1,9 @@
 import { type FC } from "react";
-import { TransactionView, type Transaction, TransactionBodyView, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
+import { TransactionView as TransactionViewSchema, type Transaction, TransactionBodyView, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { makeActionView } from "@/lib/protobuf";
 import TxBodyView from "./TxBodyView";
 
-const makeTxView = ({ body, ...tx }: Transaction) : TransactionView => {
+const makeTransactionView = ({ body, ...tx }: Transaction) : TransactionViewSchema => {
 
   const actionViews = body?.actions.map((action) => makeActionView(action)).flatMap(view => view ? [view] : []) ?? undefined;
 
@@ -21,19 +21,19 @@ const makeTxView = ({ body, ...tx }: Transaction) : TransactionView => {
     }),
   }) : undefined;
 
-  return new TransactionView({
+  return new TransactionViewSchema({
     bodyView,
     anchor: tx.anchor,
     bindingSig: tx.bindingSig,
   });
 };
 
-interface TxViewProps {
+interface TransactionViewProps {
   tx: Transaction
 }
 
-const TxView : FC<TxViewProps> = ({ tx }) => {
-  const txView = makeTxView(tx);
+export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
+  const txView = makeTransactionView(tx);
   // console.log("TransactionView", txView);
   return (
     <div className="flex flex-col sm:items-start items-center w-full gap-y-1">
@@ -52,5 +52,3 @@ const TxView : FC<TxViewProps> = ({ tx }) => {
     </div>
   );
 };
-
-export default TxView;
