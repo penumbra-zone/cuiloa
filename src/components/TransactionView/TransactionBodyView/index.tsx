@@ -1,12 +1,12 @@
 import { type FC } from "react";
-import { type TransactionBodyView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
+import { type TransactionBodyView as TransactionBodyViewSchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { ActionView } from "../../ActionView";
 
-interface TxBodyViewProps {
-  bodyView: TransactionBodyView,
+interface TransactionBodyViewProps {
+  bodyView: TransactionBodyViewSchema,
 }
 
-const TxBodyView : FC<TxBodyViewProps> = ({ bodyView }) => {
+export const TransactionBodyView : FC<TransactionBodyViewProps> = ({ bodyView }) => {
   return (
     <div className="flex flex-col sm:items-start items-center w-full gap-y-1">
       <p>Action Views</p>
@@ -16,5 +16,3 @@ const TxBodyView : FC<TxBodyViewProps> = ({ bodyView }) => {
     </div>
   );
 };
-
-export default TxBodyView;

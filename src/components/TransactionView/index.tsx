@@ -1,13 +1,13 @@
 import { type FC } from "react";
-import { TransactionView as TransactionViewSchema, type Transaction, TransactionBodyView, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
+import { TransactionView as TransactionViewSchema, type Transaction, TransactionBodyView as TransactionBodyViewSchema, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { makeActionView } from "@/lib/protobuf";
-import TxBodyView from "./TxBodyView";
+import { TransactionBodyView } from "./TransactionBodyView";
 
 const makeTransactionView = ({ body, ...tx }: Transaction) : TransactionViewSchema => {
 
   const actionViews = body?.actions.map((action) => makeActionView(action)).flatMap(view => view ? [view] : []) ?? undefined;
 
-  const bodyView = body ? new TransactionBodyView({
+  const bodyView = body ? new TransactionBodyViewSchema({
     actionViews,
     transactionParameters: body.transactionParameters,
     detectionData: body.detectionData,
@@ -34,12 +34,11 @@ interface TransactionViewProps {
 
 export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
   const txView = makeTransactionView(tx);
-  // console.log("TransactionView", txView);
   return (
     <div className="flex flex-col sm:items-start items-center w-full gap-y-1">
       <div>
         <p className="text-sm font-semibold">TxBodyView</p>
-        {txView.bodyView ? (<TxBodyView bodyView={txView.bodyView}/>) : "None"}
+        {txView.bodyView ? (<TransactionBodyView bodyView={txView.bodyView}/>) : "None"}
       </div>
       <div>
         <p>Binding Signature</p>
