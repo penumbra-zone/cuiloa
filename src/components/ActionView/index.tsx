@@ -1,110 +1,11 @@
 import { type FC } from "react";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapView_Visible, type SwapClaimView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import { SpendView, SpendView_Opaque, OutputView, OutputView_Opaque, type OutputView_Visible, type NoteView, type Spend } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
-import { type Action, ActionView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import { DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { type SwapView, SwapView_Opaque, type SwapClaimView, SwapClaimView_Opaque, type SwapView_Visible, type SwapClaimView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { type OutputView, OutputView_Opaque, type OutputView_Visible, type NoteView, type Spend } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
+import { type ActionView as ActionViewSchema } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
+import { type DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import type { Address, AddressIndex, WalletId } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { getSpend, getSpendNote, getWalletId } from "@/lib/protobuf";
-
-export const makeActionView = ({ action }: Action) : ActionView | undefined => {
-  switch (action.case) {
-    case "spend":
-      return new ActionView({
-        actionView: {
-          case: "spend",
-          value: new SpendView({
-            spendView: {
-              case: "opaque",
-              value: new SpendView_Opaque({
-                spend: action.value,
-              }),
-            },
-          }),
-        },
-      });
-    case "output":
-      return new ActionView({
-        actionView: {
-          case: "output",
-          value: new OutputView({
-            outputView: {
-              case: "opaque",
-              value: new OutputView_Opaque({
-                output: action.value,
-              }),
-            },
-          }),
-        },
-      });
-    case "swap":
-      return new ActionView({
-        actionView: {
-          case: "swap",
-          value: new SwapView({
-            swapView: {
-              case: "opaque",
-              value: new SwapView_Opaque({
-                swap: action.value,
-              }),
-            },
-          }),
-        },
-      });
-    case "swapClaim":
-      return new ActionView({
-        actionView: {
-          case: "swapClaim",
-          value: new SwapClaimView({
-            swapClaimView: {
-              case: "opaque",
-              value: new SwapClaimView_Opaque({
-                swapClaim: action.value,
-              }),
-            },
-          }),
-        },
-      });
-    case "delegatorVote":
-      return new ActionView({
-        actionView: {
-          case: "delegatorVote",
-          value: new DelegatorVoteView({
-            delegatorVote: {
-              case: "opaque",
-              value: new DelegatorVoteView_Opaque({
-                delegatorVote: action.value,
-              }),
-            },
-          }),
-        },
-      });
-    // TODO: None of these actions have *View equivalents. Is exhausitively constructing an ActionView from them OK?
-    case "validatorDefinition":
-    case "ibcRelayAction":
-    case "proposalSubmit":
-    case "proposalWithdraw":
-    case "validatorVote":
-    case "proposalDepositClaim":
-    case "positionOpen":
-    case "positionClose":
-    case "positionWithdraw":
-    case "positionRewardClaim":
-    case "communityPoolSpend":
-    case "communityPoolOutput":
-    case "communityPoolDeposit":
-    case "undelegateClaim":
-    case "ics20Withdrawal":
-    case "delegate":
-    case "undelegate":
-      return new ActionView({
-        actionView: action,
-      });
-    default:
-      return undefined;
-  }
-};
-
 
 const getOutputView = ({ outputView } : OutputView) : OutputView_Opaque | OutputView_Visible => {
   switch (outputView.case) {
@@ -273,7 +174,7 @@ const TxSpendView : FC<{ spend: Spend, noteView?: NoteView}> = ({spend, noteView
   );
 };
 
-export const getActionView = ({ actionView } : ActionView) => {
+export const getActionView = ({ actionView } : ActionViewSchema) => {
   switch (actionView.case) {
     case "spend": {
       const spendView = getSpend(actionView.value);
@@ -366,13 +267,12 @@ export const getActionView = ({ actionView } : ActionView) => {
   }
 };
 
-interface TxActionViewProps {
-  action: ActionView,
+interface ActionViewProps {
+  action: ActionViewSchema,
 }
 
 
-export const TxActionView : FC<TxActionViewProps> = ({ action }) => {
-  // const getSpendView = createGetter((action: ActionView))
+export const ActionView : FC<ActionViewProps> = ({ action }) => {
   return (
     <div className="flex flex-wrap w-full">
       {getActionView(action)}

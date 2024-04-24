@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { TransactionView, type Transaction, TransactionBodyView, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import { makeActionView } from "./TxActionView";
+import { makeActionView } from "@/lib/protobuf";
 import TxBodyView from "./TxBodyView";
 
 const makeTxView = ({ body, ...tx }: Transaction) : TransactionView => {
