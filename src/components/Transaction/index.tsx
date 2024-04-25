@@ -3,6 +3,7 @@ import ReactJson from "@microlink/react-json-view";
 import Link from "next/link";
 import { type FC } from "react";
 import ABCIEventsTable from "../ABCIEventsTable";
+import { TransactionView } from "../TransactionView";
 
 interface TransactionProps {
   txData: TransactionResultPayload
@@ -42,6 +43,10 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
               <ABCIEventsTable className="sm:w-2/3 w-full" type={type} attributes={attributes}/>
             </div>
           )) : <p>None</p>}
+        </div>
+        <div className="flex flex-wrap justify-start w-full">
+          <p className="font-bold text-base">TransactionView</p>
+          <TransactionView tx={penumbraTx}/>
         </div>
       </div>
     </div>

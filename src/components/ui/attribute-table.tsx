@@ -42,9 +42,6 @@ export function AttributeTable<TData, TValue>({
     },
   });
 
-  console.log("Header groups: ", table.getHeaderGroups());
-
-
   return (
     <div className={`${className}`}>
       <div className="rounded-md border">
