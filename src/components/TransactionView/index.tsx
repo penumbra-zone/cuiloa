@@ -37,13 +37,13 @@ export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
   return (
     <div className="flex flex-col sm:items-start items-center w-full gap-y-1">
       <div>
-        <p className="text-sm font-semibold">TxBodyView</p>
+        <p className="text-sm font-semibold">TransactionBodyView</p>
         {txView.bodyView ? (<TransactionBodyView bodyView={txView.bodyView}/>) : "None"}
       </div>
       <div>
         <p>Binding Signature</p>
-        <pre>{txView.bindingSig ? txView.bindingSig.inner : "None"}</pre>
-      </div>
+        <pre>{txView.bindingSig ? txView.bindingSig.inner: "None"}</pre>
+        </div>
       <div>
         <p>Anchor</p>
         <pre>{txView.anchor ? txView.anchor.inner : "None"}</pre>

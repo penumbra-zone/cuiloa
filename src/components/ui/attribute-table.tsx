@@ -1,5 +1,5 @@
 "use client";
- 
+
 import {
   type ColumnDef,
   flexRender,
@@ -7,7 +7,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
- 
+
 import {
   Table,
   TableBody,
@@ -43,7 +43,7 @@ export function AttributeTable<TData, TValue>({
   });
 
   return (
-    <div className={`${className}`}>
+    <div className={`${className ?? ""}`}>
       <div className="rounded-md border">
         <Table>
           <TableHeader className="bg-slate-200">
