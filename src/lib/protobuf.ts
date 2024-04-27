@@ -3,7 +3,7 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, SwapBody, Swap } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { DelegatorVoteView, DelegatorVoteView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
@@ -78,7 +78,7 @@ export const makeActionView = ({ action }: Action): ActionView | undefined => {
           }),
         },
       });
-    // TODO: None of these actions have *View equivalents. Is exhausitively constructing an ActionView from them OK?
+    // TODO: None of these actions have *View equivalents (and, transatively, Opaque/Decoded variants). Is exhausitively constructing an ActionView from them OK?
     case "validatorDefinition":
     case "ibcRelayAction":
     case "proposalSubmit":
@@ -129,6 +129,25 @@ export const getOutputNote = createGetter((outputView?: OutputView) =>
 
 export const getOutputKey = createGetter((outputView?: OutputView) =>
   outputView?.outputView.case === "visible" ? outputView.outputView.value.payloadKey : undefined,
+);
+
+export const getSwap = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.value?.swap ? swapView.swapView.value.swap : undefined,
+);
+
+export const getSwapMetadata = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" ? swapView.swapView.value.asset1Metadata : undefined,
+);
+
+export const getSwapBodyAmounts = createGetter((swapBody?: SwapBody) =>
+  swapBody?.delta1I && swapBody.delta2I ? { delta1I: swapBody.delta1I, delta2I: swapBody.delta2I }: undefined,
+);
+
+export const getSwapBodyPayload = createGetter((swapBody?: SwapBody) =>
+  swapBody?.payload ? swapBody.payload : undefined,
+);
+export const getSwapBodyFeeCommitment = createGetter((swapBody?: SwapBody) =>
+  swapBody?.feeCommitment ? swapBody.feeCommitment : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {
