@@ -1,12 +1,16 @@
 import type { FC } from "react";
-import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type Swap as SwapT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { type DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
+import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
+import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import type { Address as AddressT, AddressIndex as AddressIndexT, WalletId as WalletIdT, PayloadKey as PayloadKeyT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
-import { getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getWalletId } from "@/lib/protobuf";
-import type { BalanceCommitment as BalanceCommitmentT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
+import { getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getWalletId } from "@/lib/protobuf";
+import type { AssetId as AssetIdT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
+import { FlexCol, FlexRow } from "../ui/flex";
+import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
 
 const getDelegatorVoteView = ({ delegatorVote } : DelegatorVoteView) : DelegatorVoteView_Opaque | DelegatorVoteView_Visible => {
   switch (delegatorVote.case) {
@@ -28,18 +32,22 @@ const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
   );
 };
 
-const GenericKey: FC<{ name: string, _key: Uint8Array }> = ({ name, _key }) => {
+const GenericKV: FC<{ name: string, _key: Uint8Array }> = ({ name, _key }) => {
   return (
-    <div className="flex">
+    <FlexRow>
       <p>{name}</p>
       <pre>{_key}</pre>
-    </div>
+    </FlexRow>
   );
 };
 
-const OvkWrappedKey = GenericKey;
-const WrappedMemoKey = GenericKey;
-const EphemeralKey = GenericKey;
+const OvkWrappedKey = GenericKV;
+const WrappedMemoKey = GenericKV;
+const EphemeralKey = GenericKV;
+const ZKSwapProof = GenericKV;
+const StateCommitment = GenericKV;
+const BalanceCommitment = GenericKV;
+const EncryptedSwap = GenericKV;
 
 const NotePayload: FC<{ notePayload: NotePayloadT }> = ({ notePayload }) => {
   return (
@@ -64,14 +72,6 @@ const NotePayload: FC<{ notePayload: NotePayloadT }> = ({ notePayload }) => {
   );
 };
 
-const BalanceCommittment: FC<{ balance: BalanceCommitmentT }> = ({ balance }) => {
-  return (
-    <div className="flex">
-      <p>Balance Commitment</p>
-      <pre>{balance.inner}</pre>
-    </div>
-  );
-};
 
 const Output: FC<{ output: OutputT }> = ({ output }) => {
   const body = output.body;
@@ -84,7 +84,7 @@ const Output: FC<{ output: OutputT }> = ({ output }) => {
             <NotePayload notePayload={body.notePayload}/>
           ) : null}
           {body.balanceCommitment ? (
-            <BalanceCommittment balance={body.balanceCommitment}/>
+            <BalanceCommitment _key={body.balanceCommitment.inner} name="Balance Commitment"/>
           ) : null}
           <WrappedMemoKey _key={body.wrappedMemoKey} name="Wrapped Memo Key"/>
           <OvkWrappedKey _key={body.ovkWrappedKey} name="Ovk Wrapped Key"/>
@@ -224,13 +224,110 @@ const OutputView: FC<{ output: OutputT, noteView?: NoteViewT, payloadKey?: Paylo
     <div className="flex flex-col">
       <p>Output View</p>
       <Output output={output} />
-      {noteView !== undefined ? (
+      {noteView ? (
         <NoteView note={noteView}/>
       ) : null}
       {payloadKey ? (
         <PayloadKey payloadKey={payloadKey}/>
       ) : null}
     </div>
+  );
+};
+
+const AssetId: FC<{ assetId: AssetIdT, label: string }> = ({ assetId, label }) => {
+  return (
+    <FlexRow>
+      <p>{label}</p>
+      <FlexRow>
+        <p>inner</p>
+        <p>{assetId.inner}</p>
+      </FlexRow>
+      <FlexRow>
+        <p>Alt Bech32</p>
+        <p>{assetId.altBech32m}</p>
+      </FlexRow>
+      <FlexRow>
+        <p>Alt Base Denomination</p>
+        <p>{assetId.altBaseDenom}</p>
+      </FlexRow>
+    </FlexRow>
+  );
+};
+
+const TradingPair: FC<{ tradingPair?: TradingPairT }> = ({ tradingPair }) => {
+  const asset1 = getAsset1(tradingPair);
+  const asset2 = getAsset2(tradingPair);
+  return (
+    <FlexCol>
+      <p>Trading Pair</p>
+      <AssetId assetId={asset1} label="Asset 1"/>
+      <AssetId assetId={asset2} label="Asset 2"/>
+    </FlexCol>
+  );
+};
+
+const Amount: FC<{ amount: AmountT, label: string }> = ({ amount, label }) => {
+  return (
+    <FlexRow>
+      <p>{label}</p>
+      <p>{joinLoHiAmount(amount).toString()}</p>
+    </FlexRow>
+  );
+};
+
+const SwapPayload: FC<{ swapPayload: SwapPayloadT }> = ({ swapPayload }) => {
+  return (
+    <FlexCol>
+      {swapPayload.commitment ? <StateCommitment _key={swapPayload.commitment?.inner} name="Commitment"/> : null}
+      <EncryptedSwap _key={swapPayload.encryptedSwap} name="Encrypted Swap"/>
+    </FlexCol>
+  );
+};
+
+const Swap: FC<{ swap: SwapT}> = ({ swap }) => {
+  const swapBody = swap.body;
+  const { delta1I, delta2I } = getSwapBodyAmounts(swapBody);
+  const feeCommitment = getSwapBodyFeeCommitment(swapBody);
+  const payload = getSwapBodyPayload(swapBody);
+  return (
+    <FlexCol>
+      {swap.proof ? <ZKSwapProof name="ZK Proof" _key={swap.proof.inner}/> : null}
+      {swapBody ? (
+        <FlexCol>
+          <p>Swap Body</p>
+          <TradingPair tradingPair={swapBody.tradingPair}/>
+          <Amount amount={delta1I} label="delta_1_i"/>
+          <Amount amount={delta2I} label="delta_2_i"/>
+          <BalanceCommitment _key={feeCommitment.inner} name="Fee Commitment"/>
+          <SwapPayload swapPayload={payload}/>
+        </FlexCol>
+      ) : null}
+    </FlexCol>
+  );
+};
+
+
+const SwapView: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
+  const swap = getSwap(swapView);
+
+  return (
+    <FlexCol>
+      <p>Swap View</p>
+      <Swap swap={swap}/>
+      {swapView.swapView.case === "opaque" ? (
+        <div></div>
+      ) : (
+        <div></div>
+      )}
+    </FlexCol>
+  );
+};
+
+const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) => {
+  return (
+    <FlexCol>
+      <p>Swap Claim View</p>
+    </FlexCol>
   );
 };
 
@@ -248,7 +345,7 @@ export const getActionView = ({ actionView } : ActionViewT) => {
       return <OutputView output={outputView} noteView={noteView} payloadKey={outputKey}/>;
     }
     case "swap": {
-      return undefined;
+      return <SwapView swapView={actionView.value}/>;
     }
     case "swapClaim": {
       return undefined;
