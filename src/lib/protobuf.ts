@@ -3,7 +3,7 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, SwapBody, Swap } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type SwapView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { DelegatorVoteView, DelegatorVoteView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
@@ -135,8 +135,16 @@ export const getSwap = createGetter((swapView?: SwapView) =>
   swapView?.swapView.value?.swap ? swapView.swapView.value.swap : undefined,
 );
 
-export const getSwapMetadata = createGetter((swapView?: SwapView) =>
-  swapView?.swapView.case === "visible" ? swapView.swapView.value.asset1Metadata : undefined,
+export const getSwapMetadata1 = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" || swapView?.swapView.case === "opaque"
+  ? swapView.swapView.value.asset1Metadata
+  : undefined,
+);
+
+export const getSwapMetadata2 = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" || swapView?.swapView.case === "opaque"
+  ? swapView.swapView.value.asset2Metadata
+  : undefined,
 );
 
 export const getSwapBodyAmounts = createGetter((swapBody?: SwapBody) =>
@@ -146,8 +154,15 @@ export const getSwapBodyAmounts = createGetter((swapBody?: SwapBody) =>
 export const getSwapBodyPayload = createGetter((swapBody?: SwapBody) =>
   swapBody?.payload ? swapBody.payload : undefined,
 );
+
 export const getSwapBodyFeeCommitment = createGetter((swapBody?: SwapBody) =>
   swapBody?.feeCommitment ? swapBody.feeCommitment : undefined,
+);
+
+export const getBatchSwapOutputData = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" || swapView?.swapView.case === "opaque"
+  ? swapView.swapView.value.batchSwapOutputData
+  : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {
