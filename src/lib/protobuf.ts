@@ -165,6 +165,14 @@ export const getBatchSwapOutputData = createGetter((swapView?: SwapView) =>
   : undefined,
 );
 
+export const getOutputValue1FromSwapView = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "opaque" ? swapView.swapView.value.output1Value : undefined,
+);
+
+export const getOutputValue2FromSwapView = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "opaque" ? swapView.swapView.value.output2Value : undefined,
+);
+
 export const transactionFromBytes = (txBytes : Buffer) => {
   const txResult = TxResult.fromBinary(txBytes);
   return Transaction.fromBinary(txResult.tx);
