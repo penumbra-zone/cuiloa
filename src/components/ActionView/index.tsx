@@ -2,29 +2,18 @@ import type { FC } from "react";
 import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT, Swap as SwapT, TradingPair as TradingPairT, SwapPayload as SwapPayloadT, BatchSwapOutputData as BatchSwapOutputDataT, SwapPlaintext as SwapPlaintextT, SwapClaim as SwapClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import { type DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import type { DelegatorVoteView as DelegatorVoteViewT, Vote as VoteT, } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
 import type { Address as AddressT, AddressIndex as AddressIndexT, WalletId as WalletIdT, PayloadKey as PayloadKeyT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
-import type { AssetId as AssetIdT, EquivalentValue as EquivalentValueT, Metadata as MetadataT, ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
+import type { AssetId as AssetIdT, EquivalentValue as EquivalentValueT, Metadata as MetadataT, Value as ValueT, ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
 import type { Fee as FeeT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
-
-const getDelegatorVoteView = ({ delegatorVote } : DelegatorVoteView) : DelegatorVoteView_Opaque | DelegatorVoteView_Visible => {
-  switch (delegatorVote.case) {
-    case "opaque":
-      return delegatorVote.value;
-    case "visible":
-      return delegatorVote.value;
-    default:
-      throw new Error("DelegatorVoteView exhaustive check failed. This should be impossible.");
-  }
-};
 
 const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
   return (
@@ -54,6 +43,9 @@ const EncryptedSwap = GenericKV;
 const RSeed = GenericKV;
 const TransactionId = GenericKV;
 const Nullifier = GenericKV;
+const SpendAuthSignature = GenericKV;
+const SpendVerificationKey = GenericKV;
+const ZKDelegatorVoteProof = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -79,7 +71,7 @@ const ValueView: FC<{ valueView: ValueViewT, label?: "Asset 1" | "Asset 2" }> = 
   const assetId = getAssetIdFromValueView(valueView);
   return (
     <FlexCol>
-      {label ? <p>{label} Value</p> : <p>Value</p>}
+      {label ? <p>{label} ValueView</p> : <p>ValueView</p>}
       <Amount amount={amount} label={label ? `${label} Amount` : "Amount"}/>
       {metadata ? <Metadata metaData={metadata} label={label}/> : null}
       {equivalentValues ? (
@@ -96,6 +88,16 @@ const ValueView: FC<{ valueView: ValueViewT, label?: "Asset 1" | "Asset 2" }> = 
       {valueView.valueView.case === "unknownAssetId" ? (
         <AssetId assetId={assetId}/>
       ) : null}
+    </FlexCol>
+  );
+};
+
+const Value: FC<{ value: ValueT, label?: string }> = ({ value, label }) => {
+  return (
+    <FlexCol>
+      {(label ?? "") ? <p>{label}</p> : <p>Value</p>}
+      {value.amount ? <Amount amount={value.amount}/> : null}
+      {value.assetId ? <AssetId assetId={value.assetId}/> : null}
     </FlexCol>
   );
 };
@@ -406,6 +408,15 @@ const Metadata: FC<{ metaData: MetadataT, label?: "Asset 1" | "Asset 2" }> = ({ 
   );
 };
 
+const Vote: FC<{ vote: VoteT }> = ({ vote }) => {
+  return (
+    <FlexRow>
+      <p>Vote</p>
+      <pre>{vote.vote.toString()}</pre>
+    </FlexRow>
+  );
+};
+
 const Fee: FC<{ fee: FeeT}> = ({ fee }) => {
   const amount = getFeeAmount(fee);
   const assetId = getFeeAssetId.optional()(fee);
@@ -526,8 +537,8 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
   // SwapClaimBody fields
   const bodyNullifier = getSwapClaimBodyNullifier.optional()(swapClaimView);
   const bodyFee = getSwapClaimBodyFee.optional()(swapClaimView);
-  const bodyOutput1Commitment = getSwapClaimBodyOutput1Commitment.optional()(swapClaimView)
-  const bodyOutput2Commitment = getSwapClaimBodyOutput2Commitment.optional()(swapClaimView)
+  const bodyOutput1Commitment = getSwapClaimBodyOutput1Commitment.optional()(swapClaimView);
+  const bodyOutput2Commitment = getSwapClaimBodyOutput2Commitment.optional()(swapClaimView);
   const bodyOutputData = getSwapClaimBodyBatchOutputData.optional()(swapClaimView);
   // SwapClaimView_Visible fields
   const isVisible = swapClaimView.swapClaimView.case === "visible";
@@ -563,6 +574,57 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
   );
 };
 
+const DelegatorVoteView: FC<{ delegatorVoteView: DelegatorVoteViewT }> = ({ delegatorVoteView }) => {
+  // DelegatorVoteView fields
+  const delegatorVoteBody = getDelegatorVoteViewBody.optional()(delegatorVoteView);
+  const delegatorVoteAuthSig = getDelegatorVoteViewAuthSig.optional()(delegatorVoteView);
+  const delegatorVoteProof = getDelegatorVoteViewProof.optional()(delegatorVoteView);
+  // DelegatorVoteBody fields
+  // StartPosition and Proposal are the only non-optional fields but they're embedded in DelegatorVoteBody which, itself, is optional.
+  const bodyProposal = getDelegatorVoteBodyProposal.optional()(delegatorVoteView);
+  const bodyStartPosition = getDelegatorVoteBodyStartPosition.optional()(delegatorVoteView);
+  const bodyVote = getDelegatorVoteBodyVote.optional()(delegatorVoteView);
+  const bodyValue = getDelegatorVoteBodyValue.optional()(delegatorVoteView);
+  const bodyUnboundedAmount = getDelegatorVoteBodyUnbondedAmount.optional()(delegatorVoteView);
+  const bodyNullifier = getDelegatorVoteBodyNullifier.optional()(delegatorVoteView);
+  const bodyRK = getDelegatorVoteBodyRK.optional()(delegatorVoteView);
+  // DelegatorVoteView_Visible fields
+  const isVisible = delegatorVoteView.delegatorVote.case === "visible";
+  const delegatorVoteViewNote = getDelegatorVoteViewNote.optional()(delegatorVoteView);
+  return (
+    <FlexCol>
+      <p>Delegator Vote View</p>
+      <FlexCol>
+        {delegatorVoteBody ? (
+          <FlexCol>
+            <p>DelegatorVoteBody</p>
+            {bodyProposal !== undefined ? (
+              <FlexRow>
+                <p>Proposal</p>
+                <pre>{bodyProposal.toString()}</pre>
+              </FlexRow>
+            ) : null}
+            {bodyStartPosition !== undefined ? (
+              <FlexRow>
+                <p>Proposal</p>
+                <pre>{bodyStartPosition.toString()}</pre>
+            </FlexRow>
+            ) : null}
+            {bodyVote ? <Vote vote={bodyVote}/> : null}
+            {bodyValue ? <Value value={bodyValue} label="Delegation Note Value"/> : null}
+            {bodyUnboundedAmount ? <Amount amount={bodyUnboundedAmount} label="Delegation Note Amount"/> : null}
+            {bodyNullifier ? <Nullifier _key={bodyNullifier.inner} name="Input Note Nullifier"/> : null}
+            {bodyRK ? <SpendVerificationKey _key={bodyRK.inner} name="Validating Key"/> : null}
+          </FlexCol>
+        ) : null}
+        {delegatorVoteAuthSig ? <SpendAuthSignature _key={delegatorVoteAuthSig.inner} name="Auth Signature"/> : null}
+        {delegatorVoteProof ? <ZKDelegatorVoteProof _key={delegatorVoteProof.inner} name="Delegator Vote Proof"/> : null}
+      </FlexCol>
+      {isVisible && delegatorVoteViewNote ? <NoteView note={delegatorVoteViewNote}/> : null}
+    </FlexCol>
+  );
+};
+
 export const getActionView = ({ actionView } : ActionViewT) => {
   switch (actionView.case) {
     case "spend": {
@@ -583,18 +645,7 @@ export const getActionView = ({ actionView } : ActionViewT) => {
       return <SwapClaimView swapClaimView={actionView.value}/>;
     }
     case "delegatorVote": {
-      const outputView = getDelegatorVoteView(actionView.value);
-      if (outputView instanceof DelegatorVoteView_Opaque) {
-        return (
-          <div>
-          </div>
-        );
-      } else {
-        return (
-          <div>
-          </div>
-        );
-      }
+      return <DelegatorVoteView delegatorVoteView={actionView.value}/>;
     }
     case "validatorDefinition": {
       return (

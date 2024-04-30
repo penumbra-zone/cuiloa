@@ -239,6 +239,8 @@ export const getFeeAmount = createGetter((fee?: Fee) => fee?.amount ? fee.amount
 
 export const getFeeAssetId = createGetter((fee?: Fee) => fee?.assetId ? fee.assetId : undefined);
 
+
+// SwapClaimView getters
 export const getSwapClaimViewBody = createGetter((swapClaimView?: SwapClaimView) =>
   swapClaimView?.swapClaimView.value?.swapClaim?.body
   ? swapClaimView.swapClaimView.value.swapClaim?.body
@@ -302,6 +304,74 @@ export const getSwapClaimNoteOutput2 = createGetter((swapClaimView?: SwapClaimVi
 export const getSwapClaimTransactionId = createGetter((swapClaimView?: SwapClaimView) =>
   swapClaimView?.swapClaimView.case === "visible"
   ? swapClaimView.swapClaimView.value.swapTx
+  : undefined,
+);
+
+// DelegatorVoteView getters
+export const getDelegatorVoteViewBody = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body
+  : undefined,
+);
+
+export const getDelegatorVoteViewAuthSig = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.authSig
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.authSig
+  : undefined,
+);
+
+export const getDelegatorVoteViewProof = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.proof
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.proof
+  : undefined,
+);
+
+export const getDelegatorVoteBodyProposal = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.proposal
+  : undefined,
+);
+
+export const getDelegatorVoteBodyStartPosition = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.startPosition
+  : undefined,
+);
+
+export const getDelegatorVoteBodyVote = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.vote
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.vote
+  : undefined,
+);
+
+export const getDelegatorVoteBodyValue = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.value
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.value
+  : undefined,
+);
+
+export const getDelegatorVoteBodyUnbondedAmount = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.unbondedAmount
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.unbondedAmount
+  : undefined,
+);
+
+export const getDelegatorVoteBodyNullifier = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.nullifier
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.nullifier
+  : undefined,
+);
+
+export const getDelegatorVoteBodyRK = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.rk
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.rk
+  : undefined,
+);
+
+// DelegatorVoteView_Visible getter
+export const getDelegatorVoteViewNote = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.case === "visible"
+  ? delegatorVoteView.delegatorVote.value.note
   : undefined,
 );
 
