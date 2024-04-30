@@ -104,20 +104,20 @@ const Value: FC<{ value: ValueT, label?: string }> = ({ value, label }) => {
 
 const NotePayload: FC<{ notePayload: NotePayloadT }> = ({ notePayload }) => {
   return (
-    <div className="flex">
-      <p>NotePayload</p>
-      <div className="flex">
+    <div className="flex flex-wrap w-full">
+      <p className="w-full">NotePayload</p>
+      <div className="flex flex-wrap w-full">
         {notePayload.noteCommitment ? (
           <div className="flex">
-            <p>Note Commitment</p>
-            <pre>{notePayload.noteCommitment.inner}</pre>
+            <p className="w-full">Note Commitment</p>
+            <pre className="w-full">{notePayload.noteCommitment.inner}</pre>
           </div>
         ) : null}
         <EphemeralKey _key={notePayload.ephemeralKey} name="Ephemeral Key"/>
         {notePayload.encryptedNote ? (
-          <div className="flex">
-            <p>Encrypted Note</p>
-            <pre>{notePayload.encryptedNote.inner}</pre>
+          <div className="flex flex-wrap w-full">
+            <p className="w-full">Encrypted Note</p>
+            <pre className="w-full">{notePayload.encryptedNote.inner}</pre>
           </div>
         ) : null}
       </div>
@@ -129,10 +129,10 @@ const NotePayload: FC<{ notePayload: NotePayloadT }> = ({ notePayload }) => {
 const Output: FC<{ output: OutputT }> = ({ output }) => {
   const body = output.body;
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-wrap w-full">
       {body ? (
-        <div className="flex">
-          <p>OutputBody</p>
+        <div className="flex flex-wrap w-full">
+          <p className="w-full">OutputBody</p>
           {body.notePayload ? (
             <NotePayload notePayload={body.notePayload}/>
           ) : null}
@@ -144,9 +144,9 @@ const Output: FC<{ output: OutputT }> = ({ output }) => {
         </div>
       ) : null}
       {output.proof ? (
-        <div className="flex">
-          <p>Proof</p>
-          <pre>{output.proof.inner}</pre>
+        <div className="flex flex-wrap w-full">
+          <p className="w-full">Proof</p>
+          <pre className="w-full">{output.proof.inner}</pre>
         </div>
       ) : null}
     </div>
@@ -156,33 +156,33 @@ const Output: FC<{ output: OutputT }> = ({ output }) => {
 const Spend : FC<{spend: SpendT}>= ({spend}) => {
   const spendBody = spend.body;
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-col">
+    <div className="flex flex-col flex-wrap w-full">
+      <div className="flex flex-col flex-wrap w-full">
         {spend.proof ? (
-          <div className="flex">
-            <p>Proof</p>
-            <pre>{spend.proof.inner}</pre>
+          <div className="flex flex-wrap w-full">
+            <p className="w-full">Proof</p>
+            <pre className="w-full">{spend.proof.inner}</pre>
           </div>
         ) : null}
         {spend.authSig ? (
-        <div className="flex">
-          <p>AuthSig</p>
-          <pre>{spend.authSig.inner}</pre>
+        <div className="flex flex-wrap w-full">
+          <p className="w-full">AuthSig</p>
+          <pre className="w-full">{spend.authSig.inner}</pre>
         </div>
         ) : null}
         {spendBody ? (
-          <div className="flex">
-            <p>Body</p>
-            <div className="flex">
+          <div className="flex flex-wrap w-full">
+            <p className="w-full">Body</p>
+            <div className="flex flex-wrap w-full">
               {spendBody.nullifier ? (
-                <div className="flex">
-                  <p>Nullifier</p>
-                  <pre>{spendBody.nullifier.inner}</pre>
+                <div className="flex flex-wrap w-full">
+                  <p className="w-full">Nullifier</p>
+                  <pre className="w-full">{spendBody.nullifier.inner}</pre>
                 </div>
               ) : spendBody.rk ? (
-                <div className="flex">
-                  <p>Randomized Validating Key</p>
-                  <pre>{spendBody.rk.inner}</pre>
+                <div className="flex flex-wrap w-full">
+                  <p className="w-full">Randomized Validating Key</p>
+                  <pre className="w-full">{spendBody.rk.inner}</pre>
                 </div>
               ) : <p>None</p>}
             </div>
@@ -242,18 +242,18 @@ const NoteView : FC<{note: NoteViewT}>= ({ note }) => {
   const addressIndex = getAddressIndex.optional()(note.address);
 
   return (
-    <div className="flex flex-col">
-      <p>TxNote</p>
+    <div className="flex flex-col flex-wrap w-full">
+      <p className="w-full">TxNote</p>
       {address ? (
-        <div className="flex flex-col">
-          <p>Address</p>
+        <div className="flex flex-col flex-wrap w-full">
+          <p className="w-full">Address</p>
           <Address address={address}/>
           {walletId ? <WalletId walletId={walletId}/> : null}
           {addressIndex ? <AddressIndex index={addressIndex}/> : null}
         </div>
       ) : null}
-      <div className="flex flex-col">
-        <p>rseed</p>
+      <div className="flex flex-col flex-wrap">
+        <p className="w-full">rseed</p>
         <pre>{note.rseed}</pre>
       </div>
     </div>
@@ -262,8 +262,8 @@ const NoteView : FC<{note: NoteViewT}>= ({ note }) => {
 
 const SpendView : FC<{ spend: SpendT, noteView?: NoteViewT}> = ({spend, noteView}) => {
   return (
-    <div className="flex flex-col">
-      <p>Spend View</p>
+    <div className="flex flex-col flex-wrap w-full">
+      <p className="w-full">Spend View</p>
       <Spend spend={spend} />
       {noteView ? (
         <NoteView note={noteView}/>
@@ -274,8 +274,8 @@ const SpendView : FC<{ spend: SpendT, noteView?: NoteViewT}> = ({spend, noteView
 
 const OutputView: FC<{ output: OutputT, noteView?: NoteViewT, payloadKey?: PayloadKeyT }> = ({ output, noteView, payloadKey }) => {
   return (
-    <div className="flex flex-col">
-      <p>Output View</p>
+    <div className="flex flex-col flex-wrap w-full">
+      <p className="w-full">Output View</p>
       <Output output={output} />
       {noteView ? (
         <NoteView note={noteView}/>
@@ -684,7 +684,7 @@ interface ActionViewProps {
 
 export const ActionView : FC<ActionViewProps> = ({ action }) => {
   return (
-    <div className="flex flex-wrap w-full">
+    <div className="flex flex-col flex-wrap w-full">
       {getActionView(action)}
     </div>
   );
