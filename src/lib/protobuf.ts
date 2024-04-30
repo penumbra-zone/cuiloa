@@ -3,7 +3,7 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, SwapPlaintext } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, SwapPlaintext, SwapClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { DelegatorVoteView, DelegatorVoteView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
@@ -238,6 +238,72 @@ export const getSwapPlaintextAddress = createGetter((swapPlaintext?: SwapPlainte
 export const getFeeAmount = createGetter((fee?: Fee) => fee?.amount ? fee.amount : undefined);
 
 export const getFeeAssetId = createGetter((fee?: Fee) => fee?.assetId ? fee.assetId : undefined);
+
+export const getSwapClaimViewBody = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body
+  ? swapClaimView.swapClaimView.value.swapClaim?.body
+  : undefined,
+);
+
+export const getSwapClaimViewZKProof = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.proof
+  ? swapClaimView.swapClaimView.value.swapClaim.proof
+  : undefined,
+);
+
+export const getSwapClaimViewEpochDuration = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim
+  ? swapClaimView.swapClaimView.value.swapClaim.epochDuration
+  : undefined,
+);
+
+export const getSwapClaimBodyNullifier = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.nullifier
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.nullifier
+  : undefined,
+);
+
+export const getSwapClaimBodyFee = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.fee
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.fee
+  : undefined,
+);
+
+export const getSwapClaimBodyOutput1Commitment = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.output1Commitment
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.output1Commitment
+  : undefined,
+);
+
+export const getSwapClaimBodyOutput2Commitment = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.output2Commitment
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.output2Commitment
+  : undefined,
+);
+
+export const getSwapClaimBodyBatchOutputData = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.outputData
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.outputData
+  : undefined,
+);
+
+export const getSwapClaimNoteOutput1 = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.case === "visible"
+  ? swapClaimView.swapClaimView.value.output1
+  : undefined,
+);
+
+export const getSwapClaimNoteOutput2 = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.case === "visible"
+  ? swapClaimView.swapClaimView.value.output2
+  : undefined,
+);
+
+export const getSwapClaimTransactionId = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.case === "visible"
+  ? swapClaimView.swapClaimView.value.swapTx
+  : undefined,
+);
 
 export const transactionFromBytes = (txBytes : Buffer) => {
   const txResult = TxResult.fromBinary(txBytes);

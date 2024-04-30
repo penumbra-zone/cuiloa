@@ -1,11 +1,11 @@
 import type { FC } from "react";
-import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT, Swap as SwapT, TradingPair as TradingPairT, SwapPayload as SwapPayloadT, SwapView_Visible, BatchSwapOutputData as BatchSwapOutputDataT, SwapPlaintext as SwapPlaintextT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT, Swap as SwapT, TradingPair as TradingPairT, SwapPayload as SwapPayloadT, BatchSwapOutputData as BatchSwapOutputDataT, SwapPlaintext as SwapPlaintextT, SwapClaim as SwapClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { type DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
@@ -53,6 +53,7 @@ const BalanceCommitment = GenericKV;
 const EncryptedSwap = GenericKV;
 const RSeed = GenericKV;
 const TransactionId = GenericKV;
+const Nullifier = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -514,10 +515,50 @@ const SwapView: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   );
 };
 
+
 const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) => {
+  // TODO: Need to clarify what is truly optional because the buf.build comments do not imply these are all optional
+  //       but the source code for the protobufs has *everything* BUT EpochDuration as optional.
+  // SwapClaim fields
+  const swapClaimProof = getSwapClaimViewZKProof.optional()(swapClaimView);
+  const swapClaimBody = getSwapClaimViewBody.optional()(swapClaimView);
+  const swapEpochDuration = getSwapClaimViewEpochDuration(swapClaimView);
+  // SwapClaimBody fields
+  const bodyNullifier = getSwapClaimBodyNullifier.optional()(swapClaimView);
+  const bodyFee = getSwapClaimBodyFee.optional()(swapClaimView);
+  const bodyOutput1Commitment = getSwapClaimBodyOutput1Commitment.optional()(swapClaimView)
+  const bodyOutput2Commitment = getSwapClaimBodyOutput2Commitment.optional()(swapClaimView)
+  const bodyOutputData = getSwapClaimBodyBatchOutputData.optional()(swapClaimView);
+  // SwapClaimView_Visible fields
+  const isVisible = swapClaimView.swapClaimView.case === "visible";
+  const swapClaimNoteOutput1 = getSwapClaimNoteOutput1.optional()(swapClaimView);
+  const swapClaimNoteOutput2 = getSwapClaimNoteOutput2.optional()(swapClaimView);
+  const swapClaimTxId = getSwapClaimTransactionId.optional()(swapClaimView);
+
+  // NOTE: This might be a good model to copy for SwapView. Cleanly eliminates the unnecessary nesting of Opaque & Visible variants.
   return (
     <FlexCol>
       <p>Swap Claim View</p>
+      <FlexCol>
+        {swapClaimProof ? <ZKSwapProof _key={swapClaimProof.inner} name="SwapClaim Proof"/> : null}
+        {swapClaimBody ? (
+          <FlexCol>
+            <p>SwapClaimBody</p>
+            {bodyNullifier ? <Nullifier _key={bodyNullifier.inner} name="Nullifier"/> : null}
+            {bodyFee ? <Fee fee={bodyFee}/> : null}
+            {bodyOutput1Commitment ? <StateCommitment _key={bodyOutput1Commitment.inner} name="Output 1 Commitment"/> : null}
+            {bodyOutput2Commitment ? <StateCommitment _key={bodyOutput2Commitment.inner} name="Output 2 Commitment"/> : null}
+            {bodyOutputData ? <BatchSwapOutputData batchSwapOutput={bodyOutputData}/> : null}
+          </FlexCol>
+        ) : null}
+        <FlexRow>
+          <p>Epoch Duration</p>
+          <pre>{swapEpochDuration.toString()}</pre>
+        </FlexRow>
+        {isVisible && swapClaimNoteOutput1 ? <NoteView note={swapClaimNoteOutput1}/> : null}
+        {isVisible && swapClaimNoteOutput2 ? <NoteView note={swapClaimNoteOutput2}/> : null}
+        {isVisible && swapClaimTxId ? <TransactionId _key={swapClaimTxId.inner} name="Swap Transaction ID"/> : null}
+      </FlexCol>
     </FlexCol>
   );
 };
@@ -539,7 +580,7 @@ export const getActionView = ({ actionView } : ActionViewT) => {
       return <SwapView swapView={actionView.value}/>;
     }
     case "swapClaim": {
-      return undefined;
+      return <SwapClaimView swapClaimView={actionView.value}/>;
     }
     case "delegatorVote": {
       const outputView = getDelegatorVoteView(actionView.value);
