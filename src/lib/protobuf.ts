@@ -3,9 +3,10 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, SwapPlaintext } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { DelegatorVoteView, DelegatorVoteView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
+import { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -175,7 +176,7 @@ export const getOutputValue2FromSwapView = createGetter((swapView?: SwapView) =>
 );
 
 // SwapView_Visible getters
-export const getSwapPlainText = createGetter((swapView?: SwapView) =>
+export const getSwapPlaintext = createGetter((swapView?: SwapView) =>
   swapView?.swapView.case === "visible" ? swapView.swapView.value.swapPlaintext : undefined,
 );
 
@@ -209,6 +210,34 @@ export const getBatchSwapOutputLambda2Amount = createGetter((b?: BatchSwapOutput
 export const getBatchSwapOutputUnfilled1Amount = createGetter((b?: BatchSwapOutputData) => b?.unfilled1);
 
 export const getBatchSwapOutputUnfilled2Amount = createGetter((b?: BatchSwapOutputData) => b?.unfilled2);
+
+export const getSwapPlaintextTradingPair = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.tradingPair ? swapPlaintext.tradingPair : undefined,
+);
+
+export const getSwapPlainTextAsset1 = getSwapPlaintextTradingPair.pipe(getAsset1);
+
+export const getSwapPlainTextAsset2 = getSwapPlaintextTradingPair.pipe(getAsset2);
+
+export const getSwapPlaintextDelta1 = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.delta1I ? swapPlaintext.delta1I : undefined,
+);
+
+export const getSwapPlaintextDelta2 = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.delta2I ? swapPlaintext.delta2I : undefined,
+);
+
+export const getSwapPlaintextFee = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.claimFee ? swapPlaintext.claimFee : undefined,
+);
+
+export const getSwapPlaintextAddress = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.claimAddress ? swapPlaintext.claimAddress : undefined,
+);
+
+export const getFeeAmount = createGetter((fee?: Fee) => fee?.amount ? fee.amount : undefined);
+
+export const getFeeAssetId = createGetter((fee?: Fee) => fee?.assetId ? fee.assetId : undefined);
 
 export const transactionFromBytes = (txBytes : Buffer) => {
   const txResult = TxResult.fromBinary(txBytes);

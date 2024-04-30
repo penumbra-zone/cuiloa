@@ -5,7 +5,7 @@ import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufb
 import { type DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlainText, getSwapNoteViewOutput1, getSwapNoteViewOutput2 } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
@@ -13,6 +13,7 @@ import type { Address as AddressT, AddressIndex as AddressIndexT, WalletId as Wa
 import type { AssetId as AssetIdT, EquivalentValue as EquivalentValueT, Metadata as MetadataT, ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
+import type { Fee as FeeT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 
 const getDelegatorVoteView = ({ delegatorVote } : DelegatorVoteView) : DelegatorVoteView_Opaque | DelegatorVoteView_Visible => {
   switch (delegatorVote.case) {
@@ -50,6 +51,8 @@ const ZKSwapProof = GenericKV;
 const StateCommitment = GenericKV;
 const BalanceCommitment = GenericKV;
 const EncryptedSwap = GenericKV;
+const RSeed = GenericKV;
+const TransactionId = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -402,11 +405,32 @@ const Metadata: FC<{ metaData: MetadataT, label?: "Asset 1" | "Asset 2" }> = ({ 
   );
 };
 
-const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext }) => {
-
+const Fee: FC<{ fee: FeeT}> = ({ fee }) => {
+  const amount = getFeeAmount(fee);
+  const assetId = getFeeAssetId.optional()(fee);
   return (
     <FlexCol>
+      <p>Fee</p>
+      <Amount amount={amount}/>
+      {assetId ? <AssetId assetId={assetId} label="Token ID"/> : null}
+    </FlexCol>
+  );
+};
 
+const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext }) => {
+  const tradingPair = getSwapPlaintextTradingPair(swapPlaintext);
+  const delta1I = getSwapPlaintextDelta1(swapPlaintext);
+  const delta2I = getSwapPlaintextDelta2(swapPlaintext);
+  const claimFee = getSwapPlaintextFee(swapPlaintext);
+  const claimAddress = getSwapPlaintextAddress(swapPlaintext);
+  return (
+    <FlexCol>
+      <TradingPair tradingPair={tradingPair}/>
+      <Amount amount={delta1I} label="Delta 1"/>
+      <Amount amount={delta2I} label="Delta 2"/>
+      <Fee fee={claimFee}/>
+      <Address address={claimAddress}/>
+      <RSeed _key={swapPlaintext.rseed} name="rseed"/>
     </FlexCol>
   );
 };
@@ -451,7 +475,7 @@ const SwapViewOpaque: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
 };
 
 const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
-  const swapPlaintext = getSwapPlainText(swapView);
+  const swapPlaintext = getSwapPlaintext(swapView);
   const transactionId = getSwapTransactionId.optional()(swapView);
   const batchSwapOutput = getBatchSwapOutputData.optional()(swapView);
   const noteOuput1 = getSwapNoteViewOutput1.optional()(swapView);
@@ -460,6 +484,13 @@ const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   const metadata2 = getSwapMetadata2.optional()(swapView);
   return (
     <FlexCol>
+      <SwapPlaintext swapPlaintext={swapPlaintext}/>
+      {transactionId ? <TransactionId _key={transactionId.inner} name="Transaction ID"/> : null}
+      {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
+      {noteOuput1 ? <NoteView note={noteOuput1}/> : null}
+      {noteOuput2 ? <NoteView note={noteOuput2}/> : null}
+      {metadata1 ? <Metadata metaData={metadata1} label="Asset 1"/> : null}
+      {metadata2 ? <Metadata metaData={metadata2} label="Asset 2"/> : null}
     </FlexCol>
   );
 };
