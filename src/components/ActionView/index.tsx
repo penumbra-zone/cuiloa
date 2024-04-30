@@ -1,16 +1,15 @@
 import type { FC } from "react";
-import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT, Swap as SwapT, TradingPair as TradingPairT, SwapPayload as SwapPayloadT, SwapView_Visible, BatchSwapOutputData as BatchSwapOutputDataT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT, Swap as SwapT, TradingPair as TradingPairT, SwapPayload as SwapPayloadT, SwapView_Visible, BatchSwapOutputData as BatchSwapOutputDataT, SwapPlaintext as SwapPlaintextT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { type DelegatorVoteView, DelegatorVoteView_Opaque, type DelegatorVoteView_Visible } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getDelta1Amount, getDelta2Amount, getTradingPair, getLambda1Amount, getLambda2Amount, getUnfilled1Amount, getUnfilled2Amount } from "@penumbra-zone/getters/src/batch-swap-output-data";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlainText, getSwapNoteViewOutput1, getSwapNoteViewOutput2 } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
 import type { Address as AddressT, AddressIndex as AddressIndexT, WalletId as WalletIdT, PayloadKey as PayloadKeyT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
-import { getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView } from "@/lib/protobuf";
 import type { AssetId as AssetIdT, EquivalentValue as EquivalentValueT, Metadata as MetadataT, ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
@@ -285,7 +284,7 @@ const OutputView: FC<{ output: OutputT, noteView?: NoteViewT, payloadKey?: Paylo
 const AssetId: FC<{ assetId: AssetIdT, label?: string }> = ({ assetId, label }) => {
   return (
     <FlexRow>
-      {label ? <p>{label}</p> : <p>Asset ID</p>}
+      {(label ?? "") ? <p>{label}</p> : <p>Asset ID</p>}
       <FlexRow>
         <p>inner</p>
         <p>{assetId.inner}</p>
@@ -333,13 +332,13 @@ const SwapPayload: FC<{ swapPayload: SwapPayloadT }> = ({ swapPayload }) => {
 };
 
 const BatchSwapOutputData: FC<{ batchSwapOutput: BatchSwapOutputDataT }> = ({ batchSwapOutput }) => {
-  const delta1I = getDelta1Amount(batchSwapOutput);
-  const delta2I = getDelta2Amount(batchSwapOutput);
-  const lambda1 = getLambda1Amount(batchSwapOutput);
-  const lambda2 = getLambda2Amount(batchSwapOutput);
-  const unfilled1 = getUnfilled1Amount(batchSwapOutput);
-  const unfilled2 = getUnfilled2Amount(batchSwapOutput);
-  const tradingPair = getTradingPair(batchSwapOutput);
+  const delta1I = getBatchSwapOutputDelta1Amount(batchSwapOutput);
+  const delta2I = getBatchSwapOutputDelta2Amount(batchSwapOutput);
+  const lambda1 = getBatchSwapOutputLambda1Amount(batchSwapOutput);
+  const lambda2 = getBatchSwapOutputLambda2Amount(batchSwapOutput);
+  const unfilled1 = getBatchSwapOutputUnfilled1Amount(batchSwapOutput);
+  const unfilled2 = getBatchSwapOutputUnfilled2Amount(batchSwapOutput);
+  const tradingPair = getBatchSwapOutputTradingPair(batchSwapOutput);
   const height = batchSwapOutput.height;
   const startingEpoch = batchSwapOutput.epochStartingHeight;
   return (
@@ -403,6 +402,15 @@ const Metadata: FC<{ metaData: MetadataT, label?: "Asset 1" | "Asset 2" }> = ({ 
   );
 };
 
+const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext }) => {
+
+  return (
+    <FlexCol>
+
+    </FlexCol>
+  );
+};
+
 const Swap: FC<{ swap: SwapT}> = ({ swap }) => {
   const swapBody = swap.body;
   const { delta1I, delta2I } = getSwapBodyAmounts(swapBody);
@@ -427,8 +435,8 @@ const Swap: FC<{ swap: SwapT}> = ({ swap }) => {
 
 const SwapViewOpaque: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   const batchSwapOutput = getBatchSwapOutputData.optional()(swapView);
-  const metaData1 = getSwapMetadata1.optional()(swapView);
-  const metaData2 = getSwapMetadata2.optional()(swapView);
+  const metadata1 = getSwapMetadata1.optional()(swapView);
+  const metadata2 = getSwapMetadata2.optional()(swapView);
   const outputValue1 = getOutputValue1FromSwapView.optional()(swapView);
   const outputValue2 = getOutputValue2FromSwapView.optional()(swapView);
   return (
@@ -436,28 +444,38 @@ const SwapViewOpaque: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
       {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
       {outputValue1 ? <ValueView valueView={outputValue1} label="Asset 1"/> : null}
       {outputValue2 ? <ValueView valueView={outputValue2} label="Asset 2"/> : null}
-      {metaData1 ? <Metadata metaData={metaData1} label="Asset 1"/> : null}
-      {metaData2 ? <Metadata metaData={metaData2} label="Asset 2"/> : null}
+      {metadata1 ? <Metadata metaData={metadata1} label="Asset 1"/> : null}
+      {metadata2 ? <Metadata metaData={metadata2} label="Asset 2"/> : null}
     </FlexCol>
   );
 };
 
-const SwapViewVisible: FC<{ swapViewVisible: SwapView_Visible }> = ({ swapViewVisible }) => {
+const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
+  const swapPlaintext = getSwapPlainText(swapView);
+  const transactionId = getSwapTransactionId.optional()(swapView);
+  const batchSwapOutput = getBatchSwapOutputData.optional()(swapView);
+  const noteOuput1 = getSwapNoteViewOutput1.optional()(swapView);
+  const noteOuput2 = getSwapNoteViewOutput2.optional()(swapView);
+  const metadata1 = getSwapMetadata1.optional()(swapView);
+  const metadata2 = getSwapMetadata2.optional()(swapView);
   return (
-    <div></div>
+    <FlexCol>
+    </FlexCol>
   );
 };
 
 const SwapView: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
+  // NOTE: everything but Swap itself and SwapPlaintext (for SwapView_Visible) are optional.
+  //       While less than hygenic, it would theoretically be fine to just have all getters defined here
+  //       and render purely on ternary checks. SwapPlaintext would be made optional but would only render
+  //       if a SwapView_Visible, etc.
   const swap = getSwap(swapView);
-
-
   return (
     <FlexCol>
       <p>Swap View</p>
       <Swap swap={swap}/>
       {swapView.swapView.case === "visible" ? (
-        <SwapViewVisible swapViewVisible={swapView.swapView.value}/>
+        <SwapViewVisible swapView={swapView}/>
       ) : swapView.swapView.case === "opaque" ? (
         <SwapViewOpaque swapView={swapView}/>
       ) : null}
