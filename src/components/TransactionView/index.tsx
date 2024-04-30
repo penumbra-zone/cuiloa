@@ -36,17 +36,17 @@ export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
   const txView = makeTransactionView(tx);
   return (
     <div className="flex flex-col sm:items-start items-center w-full gap-y-1">
-      <div>
-        <p className="text-sm font-semibold">TxBodyView</p>
+      <div className="flex flex-col items-center w-full">
+        <p className="text-sm font-semibold">TransactionBodyView</p>
         {txView.bodyView ? (<TransactionBodyView bodyView={txView.bodyView}/>) : "None"}
       </div>
-      <div>
-        <p>Binding Signature</p>
-        <pre>{txView.bindingSig ? txView.bindingSig.inner : "None"}</pre>
-      </div>
-      <div>
-        <p>Anchor</p>
-        <pre>{txView.anchor ? txView.anchor.inner : "None"}</pre>
+      <div className="flex flex-col items-center w-full">
+        <p className="w-full">Binding Signature</p>
+        <pre className="w-full">{txView.bindingSig ? txView.bindingSig.inner: "None"}</pre>
+        </div>
+      <div className="flex flex-col items-center w-full">
+        <p className="w-full">Anchor</p>
+        <pre className="w-full">{txView.anchor ? txView.anchor.inner : "None"}</pre>
       </div>
     </div>
   );

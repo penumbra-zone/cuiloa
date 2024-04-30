@@ -1,5 +1,5 @@
 "use client";
- 
+
 import {
   type ColumnDef,
   flexRender,
@@ -7,7 +7,7 @@ import {
   useReactTable,
   type PaginationState,
 } from "@tanstack/react-table";
- 
+
 import {
   Table,
   TableBody,
@@ -43,7 +43,7 @@ interface PaginatedDataTableProps<TData, TValue, Z extends z.ZodTypeAny> {
   fetcher: Fetcher<Z>,
   errorMessage: string,
 }
- 
+
 export function PaginatedDataTable<TData, TValue, Z extends z.ZodTypeAny>({
   className,
   columns,
@@ -92,7 +92,7 @@ export function PaginatedDataTable<TData, TValue, Z extends z.ZodTypeAny>({
   });
 
   return (
-    <div className={`${className}`}>
+    <div className={`${className ?? ""}`}>
       <div className="rounded-md border">
         <Table>
           <TableHeader className="bg-slate-200">

@@ -3,8 +3,10 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, SwapPlaintext, SwapClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { DelegatorVoteView, DelegatorVoteView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
+import { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -78,7 +80,7 @@ export const makeActionView = ({ action }: Action): ActionView | undefined => {
           }),
         },
       });
-    // TODO: None of these actions have *View equivalents. Is exhausitively constructing an ActionView from them OK?
+    // TODO: None of these actions have *View equivalents (and, transatively, Opaque/Decoded variants). Is exhausitively constructing an ActionView from them OK?
     case "validatorDefinition":
     case "ibcRelayAction":
     case "proposalSubmit":
@@ -129,6 +131,248 @@ export const getOutputNote = createGetter((outputView?: OutputView) =>
 
 export const getOutputKey = createGetter((outputView?: OutputView) =>
   outputView?.outputView.case === "visible" ? outputView.outputView.value.payloadKey : undefined,
+);
+
+export const getSwap = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.value?.swap ? swapView.swapView.value.swap : undefined,
+);
+
+export const getSwapMetadata1 = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" || swapView?.swapView.case === "opaque"
+  ? swapView.swapView.value.asset1Metadata
+  : undefined,
+);
+
+export const getSwapMetadata2 = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" || swapView?.swapView.case === "opaque"
+  ? swapView.swapView.value.asset2Metadata
+  : undefined,
+);
+
+export const getSwapBodyAmounts = createGetter((swapBody?: SwapBody) =>
+  swapBody?.delta1I && swapBody.delta2I ? { delta1I: swapBody.delta1I, delta2I: swapBody.delta2I }: undefined,
+);
+
+export const getSwapBodyPayload = createGetter((swapBody?: SwapBody) =>
+  swapBody?.payload ? swapBody.payload : undefined,
+);
+
+export const getSwapBodyFeeCommitment = createGetter((swapBody?: SwapBody) =>
+  swapBody?.feeCommitment ? swapBody.feeCommitment : undefined,
+);
+
+export const getBatchSwapOutputData = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" || swapView?.swapView.case === "opaque"
+  ? swapView.swapView.value.batchSwapOutputData
+  : undefined,
+);
+
+export const getOutputValue1FromSwapView = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "opaque" ? swapView.swapView.value.output1Value : undefined,
+);
+
+export const getOutputValue2FromSwapView = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "opaque" ? swapView.swapView.value.output2Value : undefined,
+);
+
+// SwapView_Visible getters
+export const getSwapPlaintext = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" ? swapView.swapView.value.swapPlaintext : undefined,
+);
+
+export const getSwapTransactionId = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" ? swapView.swapView.value.claimTx : undefined,
+);
+
+export const getSwapNoteViewOutput1 = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" ? swapView.swapView.value.output1 : undefined,
+);
+
+export const getSwapNoteViewOutput2 = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.case === "visible" ? swapView.swapView.value.output2 : undefined,
+);
+
+// all BatchSwapOutputData getters
+export const getBatchSwapOutputTradingPair = createGetter((b?: BatchSwapOutputData) => b?.tradingPair);
+
+export const getBatchSwapOutputAsset1 = getBatchSwapOutputTradingPair.pipe(getAsset1);
+
+export const getBatchSwapOutputAsset2 = getBatchSwapOutputTradingPair.pipe(getAsset2);
+
+export const getBatchSwapOutputDelta1Amount = createGetter((b?: BatchSwapOutputData) => b?.delta1);
+
+export const getBatchSwapOutputDelta2Amount = createGetter((b?: BatchSwapOutputData) => b?.delta2);
+
+export const getBatchSwapOutputLambda1Amount = createGetter((b?: BatchSwapOutputData) => b?.lambda1);
+
+export const getBatchSwapOutputLambda2Amount = createGetter((b?: BatchSwapOutputData) => b?.lambda2);
+
+export const getBatchSwapOutputUnfilled1Amount = createGetter((b?: BatchSwapOutputData) => b?.unfilled1);
+
+export const getBatchSwapOutputUnfilled2Amount = createGetter((b?: BatchSwapOutputData) => b?.unfilled2);
+
+export const getSwapPlaintextTradingPair = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.tradingPair ? swapPlaintext.tradingPair : undefined,
+);
+
+export const getSwapPlainTextAsset1 = getSwapPlaintextTradingPair.pipe(getAsset1);
+
+export const getSwapPlainTextAsset2 = getSwapPlaintextTradingPair.pipe(getAsset2);
+
+export const getSwapPlaintextDelta1 = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.delta1I ? swapPlaintext.delta1I : undefined,
+);
+
+export const getSwapPlaintextDelta2 = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.delta2I ? swapPlaintext.delta2I : undefined,
+);
+
+export const getSwapPlaintextFee = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.claimFee ? swapPlaintext.claimFee : undefined,
+);
+
+export const getSwapPlaintextAddress = createGetter((swapPlaintext?: SwapPlaintext) =>
+  swapPlaintext?.claimAddress ? swapPlaintext.claimAddress : undefined,
+);
+
+export const getFeeAmount = createGetter((fee?: Fee) => fee?.amount ? fee.amount : undefined);
+
+export const getFeeAssetId = createGetter((fee?: Fee) => fee?.assetId ? fee.assetId : undefined);
+
+
+// SwapClaimView getters
+export const getSwapClaimViewBody = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body
+  ? swapClaimView.swapClaimView.value.swapClaim?.body
+  : undefined,
+);
+
+export const getSwapClaimViewZKProof = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.proof
+  ? swapClaimView.swapClaimView.value.swapClaim.proof
+  : undefined,
+);
+
+export const getSwapClaimViewEpochDuration = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim
+  ? swapClaimView.swapClaimView.value.swapClaim.epochDuration
+  : undefined,
+);
+
+export const getSwapClaimBodyNullifier = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.nullifier
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.nullifier
+  : undefined,
+);
+
+export const getSwapClaimBodyFee = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.fee
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.fee
+  : undefined,
+);
+
+export const getSwapClaimBodyOutput1Commitment = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.output1Commitment
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.output1Commitment
+  : undefined,
+);
+
+export const getSwapClaimBodyOutput2Commitment = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.output2Commitment
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.output2Commitment
+  : undefined,
+);
+
+export const getSwapClaimBodyBatchOutputData = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.value?.swapClaim?.body?.outputData
+  ? swapClaimView?.swapClaimView.value?.swapClaim?.body?.outputData
+  : undefined,
+);
+
+export const getSwapClaimNoteOutput1 = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.case === "visible"
+  ? swapClaimView.swapClaimView.value.output1
+  : undefined,
+);
+
+export const getSwapClaimNoteOutput2 = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.case === "visible"
+  ? swapClaimView.swapClaimView.value.output2
+  : undefined,
+);
+
+export const getSwapClaimTransactionId = createGetter((swapClaimView?: SwapClaimView) =>
+  swapClaimView?.swapClaimView.case === "visible"
+  ? swapClaimView.swapClaimView.value.swapTx
+  : undefined,
+);
+
+// DelegatorVoteView getters
+export const getDelegatorVoteViewBody = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body
+  : undefined,
+);
+
+export const getDelegatorVoteViewAuthSig = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.authSig
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.authSig
+  : undefined,
+);
+
+export const getDelegatorVoteViewProof = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.proof
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.proof
+  : undefined,
+);
+
+export const getDelegatorVoteBodyProposal = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.proposal
+  : undefined,
+);
+
+export const getDelegatorVoteBodyStartPosition = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.startPosition
+  : undefined,
+);
+
+export const getDelegatorVoteBodyVote = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.vote
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.vote
+  : undefined,
+);
+
+export const getDelegatorVoteBodyValue = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.value
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.value
+  : undefined,
+);
+
+export const getDelegatorVoteBodyUnbondedAmount = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.unbondedAmount
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.unbondedAmount
+  : undefined,
+);
+
+export const getDelegatorVoteBodyNullifier = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.nullifier
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.nullifier
+  : undefined,
+);
+
+export const getDelegatorVoteBodyRK = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.value?.delegatorVote?.body?.rk
+  ? delegatorVoteView.delegatorVote.value.delegatorVote.body.rk
+  : undefined,
+);
+
+// DelegatorVoteView_Visible getter
+export const getDelegatorVoteViewNote = createGetter((delegatorVoteView?: DelegatorVoteView) =>
+  delegatorVoteView?.delegatorVote.case === "visible"
+  ? delegatorVoteView.delegatorVote.value.note
+  : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {
