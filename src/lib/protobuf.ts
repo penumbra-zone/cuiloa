@@ -3,10 +3,11 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, SwapPlaintext, SwapClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { DelegatorVoteView, DelegatorVoteView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { FundingStream, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -373,6 +374,75 @@ export const getDelegatorVoteViewNote = createGetter((delegatorVoteView?: Delega
   delegatorVoteView?.delegatorVote.case === "visible"
   ? delegatorVoteView.delegatorVote.value.note
   : undefined,
+);
+
+// ValidatorDefinition getters
+export const getValidatorAuthSig = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.authSig ? validatorDefinition.authSig: undefined,
+);
+
+export const getValidatorIdentityKey = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator?.identityKey
+  ? validatorDefinition.validator.identityKey
+  : undefined,
+);
+
+export const getValidatorConsensusKey = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator?.consensusKey
+  ? validatorDefinition.validator.consensusKey
+  : undefined,
+);
+
+export const getValidatorName = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.name
+  : undefined,
+);
+
+export const getValidatorWebsite = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.website
+  : undefined,
+);
+
+export const getValidatorDescription = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.description
+  : undefined,
+);
+
+export const getValidatorEnabled = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.enabled
+  : undefined,
+);
+
+// NOTE: protobuf defines FundingStream as non-optional but is still possibly undefined. Is that because it's repeated?
+export const getValidatorFundingStream = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator?.fundingStreams
+  ? validatorDefinition.validator.fundingStreams
+  : undefined,
+);
+
+export const getValidatorSequenceNumber = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.sequenceNumber
+  : undefined,
+);
+
+export const getValidatorGovernanceKey = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator?.governanceKey
+  ? validatorDefinition.validator.governanceKey
+  : undefined,
+);
+
+// FundingStream getters
+export const getFundingStreamToAddress = createGetter((fundingStream?: FundingStream) =>
+  fundingStream?.recipient.case === "toAddress" ? fundingStream.recipient.value.address : undefined,
+);
+
+export const getFundingStreamRateBps = createGetter((fundingStream?: FundingStream) =>
+  fundingStream?.recipient.value ? fundingStream.recipient.value.rateBps : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {

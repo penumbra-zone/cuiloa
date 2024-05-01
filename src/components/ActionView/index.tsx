@@ -5,7 +5,7 @@ import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufb
 import type { DelegatorVoteView as DelegatorVoteViewT, Vote as VoteT, } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidator, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
@@ -14,6 +14,7 @@ import type { AssetId as AssetIdT, EquivalentValue as EquivalentValueT, Metadata
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
 import type { Fee as FeeT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { ValidatorDefinition as ValidatorDefinitionT, FundingStream as FundingStreamT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 
 const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
   return (
@@ -33,6 +34,7 @@ const GenericKV: FC<{ name: string, _key: Uint8Array }> = ({ name, _key }) => {
   );
 };
 
+// TODO: Currently abusing GenericKV. These keys diverge drastically on encoding and should reflect this to the degree possible.
 const OvkWrappedKey = GenericKV;
 const WrappedMemoKey = GenericKV;
 const EphemeralKey = GenericKV;
@@ -46,6 +48,10 @@ const Nullifier = GenericKV;
 const SpendAuthSignature = GenericKV;
 const SpendVerificationKey = GenericKV;
 const ZKDelegatorVoteProof = GenericKV;
+const AuthSignature = GenericKV;
+const IdentityKey = GenericKV;
+const GovernanceKey = GenericKV;
+const ConsensusKey = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -429,6 +435,25 @@ const Fee: FC<{ fee: FeeT}> = ({ fee }) => {
   );
 };
 
+const FundingStream: FC<{ fundingStream: FundingStreamT }> = ({ fundingStream }) => {
+  const fundingStreamToAddress = getFundingStreamToAddress.optional()(fundingStream);
+  const fundingStreamBps = getFundingStreamRateBps.optional()(fundingStream);
+  return (
+    <FlexCol className="flex-overflow w-full">
+      {fundingStreamToAddress !== undefined ?
+        <FlexRow className="flex-overflow w-full">
+          <p>Destination Address</p>
+          <pre>{fundingStreamToAddress}</pre>
+        </FlexRow> : null}
+      {fundingStreamBps !== undefined ?
+        <FlexRow>
+          <p>Reward BPS</p>
+          <pre>{fundingStreamToAddress}</pre>
+        </FlexRow> : null}
+    </FlexCol>
+  );
+};
+
 const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext }) => {
   const tradingPair = getSwapPlaintextTradingPair(swapPlaintext);
   const delta1I = getSwapPlaintextDelta1(swapPlaintext);
@@ -625,6 +650,59 @@ const DelegatorVoteView: FC<{ delegatorVoteView: DelegatorVoteViewT }> = ({ dele
   );
 };
 
+const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = ({ validatorDefinition }) => {
+  const validatorAuthSig = getValidatorAuthSig.optional()(validatorDefinition);
+  // ValidatorDefinition.Validator fields
+  const validatorIdKey = getValidatorIdentityKey.optional()(validatorDefinition);
+  const validatorConsensusKey = getValidatorConsensusKey.optional()(validatorDefinition);
+  // validatorName through validatorEnabled ought to be non-optional but do not currently have a consistent bailing out strategy yet.
+  const validatorName = getValidatorName.optional()(validatorDefinition);
+  const validatorWebsite = getValidatorWebsite.optional()(validatorDefinition);
+  const validatorDescription = getValidatorDescription.optional()(validatorDefinition);
+  const validatorEnabled = getValidatorEnabled.optional()(validatorDefinition);
+  const validatorFundingStreams = getValidatorFundingStream.optional()(validatorDefinition);
+  const validatorSequenceNumber = getValidatorSequenceNumber.optional()(validatorDefinition);
+  const validatorGovernanceKey = getValidatorGovernanceKey.optional()(validatorDefinition);
+
+  return (
+    <FlexCol className="flex-overflow w-full">
+      <p className="w-full">Validator Definition</p>
+      {validatorIdKey ? <IdentityKey _key={validatorIdKey.ik} name="Identity Verification Key"/> : null}
+      {validatorConsensusKey ? <ConsensusKey _key={validatorConsensusKey} name="Consensus PubKey"/> : null}
+      <FlexRow className="flex-overflow w-full">
+        <p className="w-full">Name</p>
+        <p className="w-full">{validatorName}</p>
+      </FlexRow>
+      <FlexRow className="flex-overflow w-full">
+        <p className="w-full">Website</p>
+        <p className="w-full">{validatorWebsite}</p>
+      </FlexRow>
+      <FlexRow className="flex-overflow w-full">
+        <p className="w-full">Description</p>
+        <p className="w-full">{validatorDescription}</p>
+      </FlexRow>
+      <FlexRow className="flex-overflow w-full">
+        <p className="w-full">Enabled?</p>
+        <p className="w-full">{validatorEnabled}</p>
+      </FlexRow>
+      {validatorFundingStreams?.length !== undefined ? (
+        <FlexCol className="flex-overflow w-full">
+          <p>Funding Streams</p>
+          {validatorFundingStreams.map((fundingStream, i) => <FundingStream fundingStream={fundingStream} key={i}/>)}
+        </FlexCol>
+      ) : null}
+      {validatorSequenceNumber !== undefined  ? (
+        <FlexRow className="flex-overflow w-full">
+          <p className="w-full">Enabled?</p>
+          <p className="w-full">{validatorSequenceNumber}</p>
+        </FlexRow>
+      ) : null}
+      {validatorGovernanceKey ? <GovernanceKey _key={validatorGovernanceKey.gk} name="Governance Key"/> : null}
+      {validatorAuthSig ? <AuthSignature _key={validatorAuthSig} name="Auth Signature"/> : null}
+    </FlexCol>
+  );
+};
+
 export const getActionView = ({ actionView } : ActionViewT) => {
   switch (actionView.case) {
     case "spend": {
@@ -648,11 +726,7 @@ export const getActionView = ({ actionView } : ActionViewT) => {
       return <DelegatorVoteView delegatorVoteView={actionView.value}/>;
     }
     case "validatorDefinition": {
-      return (
-        <div>
-          {}
-        </div>
-      );
+      return <ValidatorDefinition validatorDefinition={actionView.value}/>;
     }
     case "ibcRelayAction":
     case "proposalSubmit":
