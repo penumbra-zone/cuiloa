@@ -4,7 +4,7 @@ import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumb
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
 import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import { DelegatorVoteView, DelegatorVoteView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { FundingStream, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
@@ -443,6 +443,72 @@ export const getFundingStreamToAddress = createGetter((fundingStream?: FundingSt
 
 export const getFundingStreamRateBps = createGetter((fundingStream?: FundingStream) =>
   fundingStream?.recipient.value ? fundingStream.recipient.value.rateBps : undefined,
+);
+
+// ProposalSubmit getters
+export const getProposalSubmitDepositAmount = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.depositAmount ? proposalSubmit.depositAmount : undefined,
+);
+
+export const getProposalId = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.proposal ? proposalSubmit.proposal.id : undefined,
+);
+
+export const getProposalTitle = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.proposal ? proposalSubmit.proposal.title : undefined,
+);
+
+export const getProposalDescription = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.proposal ? proposalSubmit.proposal.description : undefined,
+);
+
+export const getProposalPayload = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.proposal?.payload ? proposalSubmit.proposal.payload : undefined,
+);
+
+// ChangeAppParameters getters
+export const getChangeAppSctParameter = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.sctParams ? changeAppParameter.sctParams : undefined,
+);
+
+export const getChangeAppCommunityPoolParameter = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.communityPoolParams ? changeAppParameter.communityPoolParams : undefined,
+);
+
+export const getChangeAppGovernanceParameter = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.governanceParams ? changeAppParameter.governanceParams : undefined,
+);
+
+export const getChangeAppIbcParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.ibcParams ? changeAppParameter.ibcParams : undefined,
+);
+
+export const getChangeAppStakeParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.stakeParams ? changeAppParameter.stakeParams : undefined,
+);
+
+export const getChangeAppFeeParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.feeParams ? changeAppParameter.feeParams : undefined,
+);
+
+export const getChangeAppDistributionParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.distributionsParams ? changeAppParameter.distributionsParams : undefined,
+);
+
+export const getChangeAppFundingParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.fundingParams ? changeAppParameter.fundingParams : undefined,
+);
+
+export const getChangeAppShieldedParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.shieldedPoolParams ? changeAppParameter.shieldedPoolParams : undefined,
+);
+
+export const getChangeAppDexParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.dexParams ? changeAppParameter.dexParams : undefined,
+);
+
+export const getChangeAppAuctionParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.auctionParams ? changeAppParameter.auctionParams : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {

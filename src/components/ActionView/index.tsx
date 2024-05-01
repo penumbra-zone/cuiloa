@@ -2,10 +2,10 @@ import type { FC } from "react";
 import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT, Swap as SwapT, TradingPair as TradingPairT, SwapPayload as SwapPayloadT, BatchSwapOutputData as BatchSwapOutputDataT, SwapPlaintext as SwapPlaintextT, SwapClaim as SwapClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import type { DelegatorVoteView as DelegatorVoteViewT, Vote as VoteT, } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import type { ChangedAppParameters as ChangeAppParametersT, DelegatorVoteView as DelegatorVoteViewT, ProposalSubmit as ProposalSubmitT, Proposal_CommunityPoolSpend, Proposal_Emergency, Proposal_FreezeIbcClient, Proposal_ParameterChange, Proposal_Signaling, Proposal_UnfreezeIbcClient, Proposal_UpgradePlan, Vote as VoteT, } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidator, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidator, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
@@ -15,7 +15,33 @@ import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
 import type { Fee as FeeT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { ValidatorDefinition as ValidatorDefinitionT, FundingStream as FundingStreamT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
-import { IbcRelay } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
+import type { IbcRelay } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
+
+type ProposalSubmitKind = {
+  value: Proposal_Signaling;
+  case: "signaling";
+} | {
+  value: Proposal_Emergency;
+  case: "emergency";
+} | {
+  value: Proposal_ParameterChange;
+  case: "parameterChange";
+} | {
+  value: Proposal_CommunityPoolSpend;
+  case: "communityPoolSpend";
+} | {
+  value: Proposal_UpgradePlan;
+  case: "upgradePlan";
+} | {
+  value: Proposal_FreezeIbcClient;
+  case: "freezeIbcClient";
+} | {
+  value: Proposal_UnfreezeIbcClient;
+  case: "unfreezeIbcClient";
+} | {
+  case: undefined;
+  value?: undefined
+};
 
 const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
   return (
@@ -473,6 +499,96 @@ const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext })
   );
 };
 
+const ChangeParameters: FC<{
+  parameters: ChangeAppParametersT,
+  label: "Old App Parameters" | "New App Parameters"
+}> = ({ parameters, label }) => {
+  return (
+    <FlexCol>
+    </FlexCol>
+  );
+};
+
+const ProposalPayload: FC<{ payload: ProposalSubmitKind }> = ({ payload }) => {
+  switch (payload.case) {
+    case "signaling":
+      return (
+        <FlexRow>
+          <p>Commit</p>
+          <pre>{payload.value.commit}</pre>
+        </FlexRow>
+      );
+    case "emergency":
+      return (
+        <FlexRow>
+          <p>Emergency Halt Chain</p>
+          <pre>{payload.value.haltChain}</pre>
+        </FlexRow>
+      );
+    case "parameterChange":
+      return (
+        <FlexCol>
+          <p>Change App Parameters</p>
+          {payload.value.oldParameters ?
+            <ChangeParameters
+              parameters={payload.value.oldParameters}
+              label="Old App Parameters"/> : null}
+          {payload.value.newParameters ?
+            <ChangeParameters
+              parameters={payload.value.newParameters}
+              label="New App Parameters"/> : null}
+          <FlexCol>
+            <p>New Parameters</p>
+          </FlexCol>
+        </FlexCol>
+      );
+    case "communityPoolSpend": {
+      const ibcValue = payload.value.transactionPlan?.value;
+      const ibcTypeURL = payload.value.transactionPlan?.typeUrl;
+      return (
+        <FlexCol className="flex-overflow w-full">
+          <p className="w-full">Community Pool Spend</p>
+          {ibcValue ? (
+            <FlexCol className="flex-overflow w-full">
+              <p className="w-full">Value</p>
+              <pre className="w-full">{ibcValue}</pre>
+            </FlexCol>
+          ) : null}
+          {ibcTypeURL?.length !== undefined ? (
+            <FlexCol className="flex-overflow w-full">
+              <p>Proto URL Resource</p>
+              <pre className="w-full">{ibcTypeURL}</pre>
+            </FlexCol>
+          ) : null}
+      </FlexCol>
+      );
+    }
+    case "upgradePlan":
+      return (
+      <FlexRow>
+        <p>Upgrade Height</p>
+        <pre>{payload.value.height.toString()}</pre>
+      </FlexRow>
+      );
+    case "freezeIbcClient":
+      return (
+        <FlexRow>
+          <p>Freeze IBC Client ID</p>
+          <pre>{payload.value.clientId}</pre>
+        </FlexRow>
+      );
+    case "unfreezeIbcClient":
+      return (
+        <FlexRow>
+          <p>Unfreeze IBC Client ID</p>
+          <pre>{payload.value.clientId}</pre>
+        </FlexRow>
+      );
+    default:
+      break;
+  }
+};
+
 const Swap: FC<{ swap: SwapT}> = ({ swap }) => {
   const swapBody = swap.body;
   const { delta1I, delta2I } = getSwapBodyAmounts(swapBody);
@@ -724,6 +840,34 @@ const IBCRelayAction: FC<{ ibcRelayAction: IbcRelay }> = ({ ibcRelayAction }) =>
       ) : null}
     </FlexCol>
   );
+};
+
+const ProposalSubmit: FC<{ proposalSubmit: ProposalSubmitT }> = ({ proposalSubmit }) => {
+  const proposalSubmitAmount = getProposalSubmitDepositAmount(proposalSubmit);
+  const proposalId = getProposalId(proposalSubmit);
+  const proposalTitle = getProposalTitle(proposalSubmit);
+  const proposalDescription = getProposalDescription(proposalSubmit);
+  const proposalPayload = getProposalPayload(proposalSubmit);
+  return (
+    <FlexCol className="flex-wrap w-full">
+      <p className="w-full">Proposal Submit</p>
+      <FlexRow>
+        <p>ID</p>
+        <pre>{proposalId.toString()}</pre>
+      </FlexRow>
+      <FlexRow>
+        <p>Title</p>
+        <p>{proposalTitle}</p>
+      </FlexRow>
+      <FlexRow>
+        <p>Description</p>
+        <p>{proposalDescription}</p>
+      </FlexRow>
+      {proposalPayload ? <ProposalPayload payload={proposalPayload}/> : null}
+      {proposalSubmitAmount ? <Amount amount={proposalSubmitAmount} label="Proposal Deposit Amount"/> : null}
+    </FlexCol>
+  );
+
 };
 
 export const getActionView = ({ actionView } : ActionViewT) => {
