@@ -15,6 +15,7 @@ import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
 import type { Fee as FeeT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { ValidatorDefinition as ValidatorDefinitionT, FundingStream as FundingStreamT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
+import { IbcRelay } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 
 const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
   return (
@@ -703,6 +704,28 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
   );
 };
 
+const IBCRelayAction: FC<{ ibcRelayAction: IbcRelay }> = ({ ibcRelayAction }) =>{
+  const ibcValue = ibcRelayAction.rawAction?.value;
+  const ibcTypeURL = ibcRelayAction.rawAction?.typeUrl;
+  return (
+    <FlexCol className="flex-overflow w-full">
+      <p className="w-full">IBC Relay Raw Action</p>
+      {ibcValue ? (
+        <FlexCol className="flex-overflow w-full">
+          <p className="w-full">Value</p>
+          <pre className="w-full">{ibcValue}</pre>
+        </FlexCol>
+      ) : null}
+      {ibcTypeURL?.length !== undefined ? (
+        <FlexCol className="flex-overflow w-full">
+          <p>Proto URL Resource</p>
+          <pre className="w-full">{ibcTypeURL}</pre>
+        </FlexCol>
+      ) : null}
+    </FlexCol>
+  );
+};
+
 export const getActionView = ({ actionView } : ActionViewT) => {
   switch (actionView.case) {
     case "spend": {
@@ -728,7 +751,9 @@ export const getActionView = ({ actionView } : ActionViewT) => {
     case "validatorDefinition": {
       return <ValidatorDefinition validatorDefinition={actionView.value}/>;
     }
-    case "ibcRelayAction":
+    case "ibcRelayAction": {
+      return <IBCRelayAction ibcRelayAction={actionView.value}/>;
+    }
     case "proposalSubmit":
     case "proposalWithdraw":
     case "validatorVote":
