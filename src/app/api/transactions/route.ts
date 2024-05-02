@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     // Ensure that our pagination doesn't cut off early.
     const pages = Math.floor((count / 10) + 1);
 
-    return new Response(JSON.stringify([pages, blockEvents]));
+    return new Response(JSON.stringify({ pages, blockEvents }));
   } catch (error) {
     console.log(error);
     return new Response("Could not load events.", { status: 404 });
