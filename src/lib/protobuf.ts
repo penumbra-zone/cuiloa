@@ -6,7 +6,7 @@ import { createGetter } from "./getter/create-getter";
 import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import type { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { FundingStream, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
@@ -509,6 +509,22 @@ export const getChangeAppDexParameters = createGetter((changeAppParameter?: Chan
 
 export const getChangeAppAuctionParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
   changeAppParameter?.auctionParams ? changeAppParameter.auctionParams : undefined,
+);
+
+export const getGasPriceBlockSpacePrice = createGetter((feeParameters?: FeeParameters) =>
+  feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.blockSpacePrice : undefined,
+);
+
+export const getGasPriceCompactBlockSpacePrice = createGetter((feeParameters?: FeeParameters) =>
+  feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.compactBlockSpacePrice : undefined,
+);
+
+export const getGasPriceVerificationPrice = createGetter((feeParameters?: FeeParameters) =>
+  feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.verificationPrice : undefined,
+);
+
+export const getGasPriceExecutionPrice = createGetter((feeParameters?: FeeParameters) =>
+  feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.executionPrice : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {
