@@ -4,7 +4,7 @@ import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumb
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
 import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, ValidatorVote } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { FundingStream, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
@@ -525,6 +525,34 @@ export const getGasPriceVerificationPrice = createGetter((feeParameters?: FeePar
 
 export const getGasPriceExecutionPrice = createGetter((feeParameters?: FeeParameters) =>
   feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.executionPrice : undefined,
+);
+
+export const getValidatorVoteBody = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body ? validatorVote.body : undefined,
+);
+
+export const getValidatorVoteAuthSig = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.authSig ? validatorVote.authSig : undefined,
+);
+
+export const getValidatorVoteBodyProposal = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body ? validatorVote.body.proposal : undefined,
+);
+
+export const getValidatorVoteBodyVote = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body?.vote ? validatorVote.body.vote : undefined,
+);
+
+export const getValidatorVoteBodyIdentityKey = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body?.identityKey ? validatorVote.body.identityKey : undefined,
+);
+
+export const getValidatorVoteBodyGovernanceKey = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body?.governanceKey ? validatorVote.body.governanceKey : undefined,
+);
+
+export const getValidatorVoteBodyReason = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body?.reason ? validatorVote.body.reason : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {

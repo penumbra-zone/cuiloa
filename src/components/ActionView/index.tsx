@@ -5,7 +5,7 @@ import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufb
 import type { ChangedAppParameters as ChangeAppParametersT, DelegatorVoteView as DelegatorVoteViewT, ProposalSubmit as ProposalSubmitT, Proposal_CommunityPoolSpend, Proposal_Emergency, Proposal_FreezeIbcClient, Proposal_ParameterChange, Proposal_Signaling, Proposal_UnfreezeIbcClient, Proposal_UpgradePlan, Vote as VoteT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
@@ -1077,6 +1077,58 @@ const ProposalSubmit: FC<{ proposalSubmit: ProposalSubmitT }> = ({ proposalSubmi
     </FlexCol>
   );
 
+};
+
+const ProposalWithdraw: FC<{ proposalWithdraw: ProposalWithdrawT }> = ({ proposalWithdraw }) => {
+  return (
+    <FlexCol>
+      <p>Proposal Withdraw</p>
+      <FlexRow>
+        <p>Proposal</p>
+        <pre>{proposalWithdraw.proposal.toString()}</pre>
+      </FlexRow>
+      <FlexRow>
+        <p>Reason</p>
+        <pre>{proposalWithdraw.reason.toString()}</pre>
+      </FlexRow>
+    </FlexCol>
+  );
+};
+
+const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote }) => {
+  const voteAuthSig = getValidatorVoteAuthSig.optional()(validatorVote);
+  const voteBody = getValidatorVoteBody.optional()(validatorVote);
+  const bodyProposal = getValidatorVoteBodyProposal(validatorVote);
+  const bodyVote = getValidatorVoteBodyVote.optional()(validatorVote);
+  const bodyIdKey = getValidatorVoteBodyIdentityKey.optional()(validatorVote);
+  const bodyGovernanceKey = getValidatorVoteBodyGovernanceKey.optional()(validatorVote);
+  const bodyReason = getValidatorVoteBodyReason.optional()(validatorVote);
+
+  return (
+    <FlexCol>
+      <p>Validator Vote</p>
+      {voteBody ? (
+        <FlexCol className="w-full">
+          {bodyProposal ? (
+            <FlexRow className="flex-wrap w-full">
+              <p>Proposal</p>
+              <pre>{bodyProposal.toString()}</pre>
+            </FlexRow>
+          ) : null}
+          {bodyVote ? <Vote vote={bodyVote}/> : null}
+          {bodyIdKey ? <IdentityKey _key={bodyIdKey.ik} name="Validator Identity"/> : null}
+          {bodyGovernanceKey ? <GovernanceKey _key={bodyGovernanceKey.gk} name="Governance Key"/> : null}
+          {bodyReason ? (
+            <FlexRow className="flex-wrap w-full">
+              <p>Reason</p>
+              <pre>{bodyReason.reason}</pre>
+            </FlexRow>
+          ) : null}
+        </FlexCol>
+      ) : null}
+      {voteAuthSig ? <AuthSignature _key={voteAuthSig.inner} name="Auth Signature"/> : null}
+    </FlexCol>
+  );
 };
 
 export const getActionView = ({ actionView } : ActionViewT) => {
