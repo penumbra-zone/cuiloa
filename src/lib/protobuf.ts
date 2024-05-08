@@ -3,7 +3,7 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext, Position, PositionState_PositionStateEnum, TradingFunction, PositionOpen } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, ValidatorVote, ProposalDepositClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
@@ -564,9 +564,54 @@ export const getProposalDepositClaimOutcome = createGetter((proposalDepositClaim
 );
 
 export const getProposalDepositClaimOutcomeReason = createGetter((proposalDepositClaim?: ProposalDepositClaim) =>
-  proposalDepositClaim?.outcome?.outcome.case === "failed" || proposalDepositClaim?.outcome?.outcome.case === "slashed" && proposalDepositClaim.outcome.outcome.value.withdrawn
+  proposalDepositClaim?.outcome?.outcome.case === "failed" || proposalDepositClaim?.outcome?.outcome.case === "slashed"
+  && proposalDepositClaim.outcome.outcome.value.withdrawn
   ? proposalDepositClaim.outcome.outcome.value.withdrawn?.reason
   : undefined,
+);
+
+export const getPositionTradingFunction = createGetter((position?: Position) =>
+  position?.phi ? position.phi : undefined,
+);
+
+export const getTradingFunctionFee = createGetter((tradingFunction?: TradingFunction) =>
+  tradingFunction?.component ? tradingFunction.component.fee : undefined,
+);
+
+export const getTradingFunctionPair = createGetter((tradingFunction?: TradingFunction) =>
+  tradingFunction?.pair ? tradingFunction.pair : undefined,
+);
+
+export const getTradingFunctionAmountP = createGetter((tradingFunction?: TradingFunction) =>
+  tradingFunction?.component?.p ? tradingFunction.component.p : undefined,
+);
+
+export const getTradingFunctionAmountQ = createGetter((tradingFunction?: TradingFunction) =>
+  tradingFunction?.component?.q ? tradingFunction.component.q : undefined,
+);
+
+export const getPositionNonce = createGetter((position?: Position) => position?.nonce ? position.nonce : undefined);
+
+export const getPositionState = createGetter((position?: Position) => position?.state ? position.state : undefined);
+
+export const getPositionStateSequence = createGetter((position?: Position) =>
+  position?.state && position.state.state === PositionState_PositionStateEnum.WITHDRAWN
+  ? position.state.sequence
+  : undefined,
+);
+
+export const getPositionReservesAmount1 = createGetter((position?: Position) =>
+  position?.reserves?.r1 ? position.reserves.r1 : undefined,
+);
+
+export const getPositionReservesAmount2 = createGetter((position?: Position) =>
+  position?.reserves?.r2 ? position.reserves.r2 : undefined,
+);
+
+export const getPositionCloseOnFill = createGetter((position?: Position) => position ? position.closeOnFill : undefined);
+
+export const getPositionOpen = createGetter((positionOpen?: PositionOpen) =>
+  positionOpen?.position ? positionOpen.position : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {
