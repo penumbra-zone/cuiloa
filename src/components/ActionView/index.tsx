@@ -2,10 +2,10 @@ import type { FC } from "react";
 import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT, Swap as SwapT, TradingPair as TradingPairT, SwapPayload as SwapPayloadT, BatchSwapOutputData as BatchSwapOutputDataT, SwapPlaintext as SwapPlaintextT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import type { ChangedAppParameters as ChangeAppParametersT, DelegatorVoteView as DelegatorVoteViewT, ProposalSubmit as ProposalSubmitT, Proposal_CommunityPoolSpend, Proposal_Emergency, Proposal_FreezeIbcClient, Proposal_ParameterChange, Proposal_Signaling, Proposal_UnfreezeIbcClient, Proposal_UpgradePlan, Vote as VoteT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type Vote as VoteT, ProposalDepositClaim as ProposalDepositClaimT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
@@ -17,6 +17,7 @@ import type { FeeParameters as FeeParametersT, Fee as FeeT } from "@buf/penumbra
 import type { ValidatorDefinition as ValidatorDefinitionT, FundingStream as FundingStreamT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 import type { IbcRelay } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 
+// Explicit typing for the ProposalSubmit.payload field message variants.
 type ProposalSubmitKind = {
   value: Proposal_Signaling;
   case: "signaling";
@@ -1131,6 +1132,40 @@ const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote })
   );
 };
 
+const ProposalDepositClaim: FC<{ proposalDepositClaim: ProposalDepositClaimT }> = ({ proposalDepositClaim }) => {
+  const proposal = proposalDepositClaim.proposal;
+  const proposalDepositAmount = getProposalDepositClaimAmount.optional()(proposalDepositClaim);
+  const proposalDepositOutcome = getProposalDepositClaimOutcome.optional()(proposalDepositClaim);
+  const withdrawReason = getProposalDepositClaimOutcomeReason.optional()(proposalDepositClaim);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Proposal Deposit Claim</p>
+      <FlexRow className="flex-wrap w-full">
+        <p>Proposal</p>
+        <pre>{proposal.toString()}</pre>
+      </FlexRow>
+      {proposalDepositAmount ? <Amount amount={proposalDepositAmount} label="Deposit Amount"/> : null}
+      {proposalDepositOutcome ? (
+        <FlexCol className="w-full">
+          <FlexRow className="flex-wrap w-full">
+            <p>Proposal Outcome</p>
+            {proposalDepositOutcome.case === "passed" ? <pre>Passed</pre>
+            : proposalDepositOutcome.case === "failed" ? <pre>Failed</pre>
+            : proposalDepositOutcome.case === "slashed" ? <pre>Slashed</pre>
+            : null}
+          </FlexRow>
+          {(withdrawReason ?? "") ? (
+            <FlexRow className="flex-wrapp w-full">
+              <p>Reason</p>
+              <pre>{withdrawReason}</pre>
+            </FlexRow>
+          ) : null}
+        </FlexCol>
+      ) : null}
+    </FlexCol>
+  );
+};
+
 export const getActionView = ({ actionView } : ActionViewT) => {
   switch (actionView.case) {
     case "spend": {
@@ -1162,9 +1197,15 @@ export const getActionView = ({ actionView } : ActionViewT) => {
     case "proposalSubmit": {
       return <ProposalSubmit proposalSubmit={actionView.value}/>;
     }
-    case "proposalWithdraw":
-    case "validatorVote":
-    case "proposalDepositClaim":
+    case "proposalWithdraw": {
+      return <ProposalWithdraw proposalWithdraw={actionView.value}/>;
+    }
+    case "validatorVote": {
+      return <ValidatorVote validatorVote={actionView.value}/>;
+    }
+    case "proposalDepositClaim": {
+      return <ProposalDepositClaim proposalDepositClaim={actionView.value}/>;
+    }
     case "positionOpen":
     case "positionClose":
     case "positionWithdraw":
