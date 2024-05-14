@@ -4,7 +4,7 @@ import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumb
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
 import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext, Position, PositionState_PositionStateEnum, TradingFunction, PositionOpen, PositionClose, PositionWithdraw, PositionRewardClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, ValidatorVote, ProposalDepositClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, ValidatorVote, ProposalDepositClaim, CommunityPoolSpend } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { FundingStream, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
@@ -644,6 +644,10 @@ export const transactionFromBytes = (txBytes : Buffer) => {
   const txResult = TxResult.fromBinary(txBytes);
   return Transaction.fromBinary(txResult.tx);
 };
+
+export const getCommunityPoolSpendValue = createGetter((communityPoolSpend?: CommunityPoolSpend) =>
+  communityPoolSpend?.value ? communityPoolSpend.value : undefined,
+);
 
 // NOTE: As of now, cannot completely decode the Protobuf data for an IBC client related transaction
 //       due to ibc.core.client.v1.MsgCreateClient not having a defined URL protobuf schema that can be resolved.
