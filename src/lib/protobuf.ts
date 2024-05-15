@@ -8,6 +8,7 @@ import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque,
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { FundingStream, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
+import { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -679,6 +680,34 @@ export const getUndelegateClaimUnbondingStartHeight = createGetter((undelegateCl
 
 export const getUndelegateClaimProof = createGetter((undelegateClaim?: UndelegateClaim) =>
   undelegateClaim ? undelegateClaim.proof : undefined,
+);
+
+export const getIcs20WithdrawalAmount = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal?.amount ? ics20Withdrawal.amount : undefined,
+);
+
+export const getIcs20WithdrawalDenom = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal?.denom ? ics20Withdrawal.denom.denom : undefined,
+);
+
+export const getIcs20WithdrawalDestinationAddress = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal ? ics20Withdrawal.destinationChainAddress : undefined,
+);
+
+export const getIcs20WithdrawalReturnAddress = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal?.returnAddress ? ics20Withdrawal.returnAddress : undefined,
+);
+
+export const getIcs20WithdrawalTimeoutHeight = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal?.timeoutHeight ? ics20Withdrawal.timeoutHeight : undefined,
+);
+
+export const getIcs20WithdrawalTimeoutTime = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal ? ics20Withdrawal.timeoutTime : undefined,
+);
+
+export const getIcs20WithdrawalSourceChannel = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal ? ics20Withdrawal.sourceChannel : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {
