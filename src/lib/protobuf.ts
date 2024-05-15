@@ -7,7 +7,7 @@ import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type Sw
 import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, ValidatorVote, ProposalDepositClaim, CommunityPoolSpend, CommunityPoolOutput, CommunityPoolDeposit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
-import type { FundingStream, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
+import type { FundingStream, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -654,6 +654,31 @@ export const getCommunityPoolOutputAddress = createGetter((communityPoolOutput?:
 
 export const getCommunityPoolDepositValue = createGetter((communityPoolDeposit?: CommunityPoolDeposit) =>
   communityPoolDeposit?.value ? communityPoolDeposit.value : undefined,
+);
+
+export const getUndelegateClaimIdentityKey = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body?.validatorIdentity ? undelegateClaim.body.validatorIdentity : undefined,
+);
+
+// NOTE: DEPRECATED
+export const getUndelegateClaimStartEpochIndex = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body ? undelegateClaim.body.startEpochIndex : undefined,
+);
+
+export const getUndelegateClaimPenalty = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body?.penalty ? undelegateClaim.body.penalty : undefined,
+);
+
+export const getUndelegateClaimBalanceCommitment = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body?.balanceCommitment ? undelegateClaim.body.balanceCommitment : undefined,
+);
+
+export const getUndelegateClaimUnbondingStartHeight = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body ? undelegateClaim.body.unbondingStartHeight : undefined,
+);
+
+export const getUndelegateClaimProof = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim ? undelegateClaim.proof : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {
