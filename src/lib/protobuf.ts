@@ -7,7 +7,7 @@ import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type Sw
 import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, ValidatorVote, ProposalDepositClaim, CommunityPoolSpend, CommunityPoolOutput, CommunityPoolDeposit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
-import type { FundingStream, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
+import type { Delegate, FundingStream, Undelegate, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 import { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
@@ -708,6 +708,42 @@ export const getIcs20WithdrawalTimeoutTime = createGetter((ics20Withdrawal?: Ics
 
 export const getIcs20WithdrawalSourceChannel = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
   ics20Withdrawal ? ics20Withdrawal.sourceChannel : undefined,
+);
+
+export const getDelegateIdentityKey = createGetter((delegate?: Delegate) =>
+  delegate?.validatorIdentity ? delegate.validatorIdentity : undefined,
+);
+
+export const getDelegateEpochIndex = createGetter((delegate?: Delegate) =>
+  delegate ? delegate.epochIndex : undefined,
+);
+
+export const getDelegateUnbondedAmount = createGetter((delegate?: Delegate) =>
+  delegate?.unbondedAmount ? delegate.unbondedAmount : undefined,
+);
+
+export const getDelegateDelegationAmount = createGetter((delegate?: Delegate) =>
+  delegate?.delegationAmount ? delegate.delegationAmount : undefined,
+);
+
+export const getUndelegateIdentityKey = createGetter((undelegate?: Undelegate) =>
+  undelegate?.validatorIdentity ? undelegate.validatorIdentity : undefined,
+);
+
+export const getUndelegateStartEpochIndex = createGetter((undelegate?: Undelegate) =>
+  undelegate ? undelegate.startEpochIndex: undefined,
+);
+
+export const getUndelegateUnbondedAmount = createGetter((undelegate?: Undelegate) =>
+  undelegate?.unbondedAmount ? undelegate.unbondedAmount : undefined,
+);
+
+export const getUndelegateDelegationAmount = createGetter((undelegate?: Undelegate) =>
+  undelegate?.delegationAmount ? undelegate.delegationAmount : undefined,
+);
+
+export const getUndelegateFromEpoch = createGetter((undelegate?: Undelegate) =>
+  undelegate?.fromEpoch ? undelegate.fromEpoch : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {
