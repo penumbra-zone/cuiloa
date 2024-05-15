@@ -9,7 +9,7 @@ import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { Delegate, FundingStream, Undelegate, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 import type { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
-import type { ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
+import { ActionDutchAuctionEnd, ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, ActionDutchAuctionWithdrawView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -830,6 +830,26 @@ export const getStepCountFromActionDutchAuctionScheduleView = getActionDutchAuct
 export const getNonceFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
   .pipe(getActionDutchAuctionScheduleDescription
     .pipe(getDutchAuctionDescriptionNonce));
+
+export const getAuctionIdFromActionDutchAuctionEnd = createGetter((actionDutchAuctionEnd?: ActionDutchAuctionEnd) =>
+  actionDutchAuctionEnd?.auctionId ? actionDutchAuctionEnd.auctionId : undefined,
+);
+
+export const getReservesFromActionDutchAuctionWithdrawView = createGetter((actionDutchAuctionWithdrawView?: ActionDutchAuctionWithdrawView) =>
+  actionDutchAuctionWithdrawView?.reserves ? actionDutchAuctionWithdrawView.reserves : undefined,
+);
+
+export const getAuctionIdFromActionDutchAuctionWithdrawView = createGetter((actionDutchAuctionWithdrawView?: ActionDutchAuctionWithdrawView) =>
+  actionDutchAuctionWithdrawView?.action?.reservesCommitment ? actionDutchAuctionWithdrawView.action.reservesCommitment : undefined,
+);
+
+export const getSeqFromActionDutchAuctionWithdrawView = createGetter((actionDutchAuctionWithdrawView?: ActionDutchAuctionWithdrawView) =>
+  actionDutchAuctionWithdrawView?.action ? actionDutchAuctionWithdrawView.action.seq : undefined,
+);
+
+export const getReservesCommitmentFromActionDutchAuctionWithdrawView = createGetter((actionDutchAuctionWithdrawView?: ActionDutchAuctionWithdrawView) =>
+  actionDutchAuctionWithdrawView?.action?.reservesCommitment ? actionDutchAuctionWithdrawView.action.reservesCommitment : undefined,
+);
 
 export const transactionFromBytes = (txBytes : Buffer) => {
   const txResult = TxResult.fromBinary(txBytes);
