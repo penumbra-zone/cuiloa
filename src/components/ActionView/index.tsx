@@ -1,19 +1,51 @@
 import type { FC } from "react";
-import type { SwapView as SwapViewT, SwapClaimView as SwapClaimViewT, Swap as SwapT, TradingPair as TradingPairT, SwapPayload as SwapPayloadT, BatchSwapOutputData as BatchSwapOutputDataT, SwapPlaintext as SwapPlaintextT, SwapClaim as SwapClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type Swap as SwapT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT, type BatchSwapOutputData as BatchSwapOutputDataT, type SwapPlaintext as SwapPlaintextT, type PositionOpen as PositionOpenT, type Position as PositionT, type TradingFunction as TradingFunctionT, PositionState_PositionStateEnum, type PositionClose as PositionCloseT, type PositionWithdraw as PositionWithdrawT, type PositionRewardClaim as PositionRewardClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import type { DelegatorVoteView as DelegatorVoteViewT, Vote as VoteT, } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type Vote as VoteT, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
 import type { Address as AddressT, AddressIndex as AddressIndexT, WalletId as WalletIdT, PayloadKey as PayloadKeyT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
-import type { AssetId as AssetIdT, EquivalentValue as EquivalentValueT, Metadata as MetadataT, Value as ValueT, ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
+import { type AssetId as AssetIdT, type EquivalentValue as EquivalentValueT, type Metadata as MetadataT, type Value as ValueT, type ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
-import type { Fee as FeeT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { FeeParameters as FeeParametersT, Fee as FeeT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { ValidatorDefinition as ValidatorDefinitionT, FundingStream as FundingStreamT, UndelegateClaim as UndelegateClaimT, Delegate as DelegateT, Undelegate as UndelegateT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
+import type { IbcRelay, Ics20Withdrawal as Ics20WithdrawalT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
+import type { Height as HeightT} from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/client_pb";
+import type { Epoch as EpochT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/sct/v1/sct_pb";
+import type { ActionDutchAuctionEnd as ActionDutchAuctionEndT, ActionDutchAuctionScheduleView as ActionDutchAuctionScheduleViewT, ActionDutchAuctionWithdrawView as ActionDutchAuctionWithdrawViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
+
+// Explicit typing for the ProposalSubmit.payload field message variants.
+type ProposalSubmitKind = {
+  value: Proposal_Signaling;
+  case: "signaling";
+} | {
+  value: Proposal_Emergency;
+  case: "emergency";
+} | {
+  value: Proposal_ParameterChange;
+  case: "parameterChange";
+} | {
+  value: Proposal_CommunityPoolSpend;
+  case: "communityPoolSpend";
+} | {
+  value: Proposal_UpgradePlan;
+  case: "upgradePlan";
+} | {
+  value: Proposal_FreezeIbcClient;
+  case: "freezeIbcClient";
+} | {
+  value: Proposal_UnfreezeIbcClient;
+  case: "unfreezeIbcClient";
+} | {
+  case: undefined;
+  value?: undefined
+};
 
 const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
   return (
@@ -26,13 +58,14 @@ const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
 
 const GenericKV: FC<{ name: string, _key: Uint8Array }> = ({ name, _key }) => {
   return (
-    <FlexRow>
+    <FlexRow className="flex-wrap w-full">
       <p>{name}</p>
       <pre>{_key}</pre>
     </FlexRow>
   );
 };
 
+// TODO: Currently abusing GenericKV. These keys diverge drastically on encoding and should reflect this to the degree possible.
 const OvkWrappedKey = GenericKV;
 const WrappedMemoKey = GenericKV;
 const EphemeralKey = GenericKV;
@@ -46,6 +79,14 @@ const Nullifier = GenericKV;
 const SpendAuthSignature = GenericKV;
 const SpendVerificationKey = GenericKV;
 const ZKDelegatorVoteProof = GenericKV;
+const AuthSignature = GenericKV;
+const IdentityKey = GenericKV;
+const GovernanceKey = GenericKV;
+const ConsensusKey = GenericKV;
+const PositionId = GenericKV;
+const Penalty = GenericKV;
+const UndelegateClaimProof = GenericKV;
+const AuctionId = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -61,9 +102,41 @@ const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equiva
   );
 };
 
+const Height: FC<{ height: HeightT }> = ({ height }) => {
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Height</p>
+      <FlexRow className="flex-wrap w-full">
+        <p>Revision Number</p>
+        <pre>{height.revisionNumber.toString()}</pre>
+      </FlexRow>
+      <FlexRow className="flex-wrap w-full">
+        <p>Revision Height</p>
+        <pre>{height.revisionHeight.toString()}</pre>
+      </FlexRow>
+    </FlexCol>
+  );
+};
+
+const Epoch: FC<{ epoch: EpochT, label?: string }> = ({ epoch, label }) => {
+  return (
+    <FlexCol className="w-full">
+      {(label ?? "") ? <p className="w-full">{label}</p> : <p className="w-full">Epoch</p>}
+      <FlexRow className="flex-wrap w-full">
+        <p>Index</p>
+        <pre>{epoch.index.toString()}</pre>
+      </FlexRow>
+      <FlexRow className="flex-wrap w-full">
+        <p>Start Height</p>
+        <pre>{epoch.startHeight.toString()}</pre>
+      </FlexRow>
+    </FlexCol>
+  );
+};
+
 // NOTE: the way ValueView's opaque vs visible cases are handled is by the fact that metadata, equivalentValues, and extendedMetadata
 //       should never be defined in the case of an UnknownAssetId and we only render assetId when valueView.case is unknownAssetId.
-const ValueView: FC<{ valueView: ValueViewT, label?: "Asset 1" | "Asset 2" }> = ({ valueView, label }) => {
+const ValueView: FC<{ valueView: ValueViewT, label?: "Asset 1" | "Asset 2" | string }> = ({ valueView, label }) => {
   const amount = getAmount(valueView);
   const metadata = getMetadata.optional()(valueView);
   const equivalentValues = getEquivalentValues.optional()(valueView);
@@ -71,8 +144,8 @@ const ValueView: FC<{ valueView: ValueViewT, label?: "Asset 1" | "Asset 2" }> = 
   const assetId = getAssetIdFromValueView(valueView);
   return (
     <FlexCol>
-      {label ? <p>{label} ValueView</p> : <p>ValueView</p>}
-      <Amount amount={amount} label={label ? `${label} Amount` : "Amount"}/>
+      {(label ?? "") ? <p>{label} ValueView</p> : <p>ValueView</p>}
+      <Amount amount={amount} label={(label ?? "") ? `${label} Amount` : "Amount"}/>
       {metadata ? <Metadata metaData={metadata} label={label}/> : null}
       {equivalentValues ? (
         <FlexRow>
@@ -369,11 +442,11 @@ const BatchSwapOutputData: FC<{ batchSwapOutput: BatchSwapOutputDataT }> = ({ ba
   );
 };
 
-const Metadata: FC<{ metaData: MetadataT, label?: "Asset 1" | "Asset 2" }> = ({ metaData, label }) => {
+const Metadata: FC<{ metaData: MetadataT, label?: string }> = ({ metaData, label }) => {
   const assetId = getAssetId(metaData);
   return (
     <FlexCol>
-      {label ? <p>{`${label} Metadata`}</p> : <p>Asset Metadata</p>}
+      {(label ?? "") ? <p>{label}</p> : <p>Asset Metadata</p>}
       <FlexRow>
         <p>Name</p>
         <p>{metaData.name}</p>
@@ -429,6 +502,53 @@ const Fee: FC<{ fee: FeeT}> = ({ fee }) => {
   );
 };
 
+const FeeParameters: FC<{ feeParameters: FeeParametersT }> = ({ feeParameters }) => {
+  const blockSpacePrice = getGasPriceBlockSpacePrice(feeParameters);
+  const compactBlockSpacePrice = getGasPriceCompactBlockSpacePrice(feeParameters);
+  const verificationPrice = getGasPriceVerificationPrice(feeParameters);
+  const executionPrice = getGasPriceExecutionPrice(feeParameters);
+  return (
+    <FlexCol className="w-full">
+      <p>Gas Prices</p>
+      <FlexRow>
+        <p>Block Space Price</p>
+        <pre>{blockSpacePrice.toString()}</pre>
+      </FlexRow>
+      <FlexRow>
+        <p>Compact Block Space Price</p>
+        <pre>{compactBlockSpacePrice.toString()}</pre>
+      </FlexRow>
+      <FlexRow>
+        <p>Verification Price</p>
+        <pre>{verificationPrice.toString()}</pre>
+      </FlexRow>
+      <FlexRow>
+        <p>Execution Price</p>
+        <pre>{executionPrice.toString()}</pre>
+      </FlexRow>
+    </FlexCol>
+  );
+};
+
+const FundingStream: FC<{ fundingStream: FundingStreamT }> = ({ fundingStream }) => {
+  const fundingStreamToAddress = getFundingStreamToAddress.optional()(fundingStream);
+  const fundingStreamBps = getFundingStreamRateBps.optional()(fundingStream);
+  return (
+    <FlexCol className="flex-overflow w-full">
+      {fundingStreamToAddress !== undefined ?
+        <FlexRow className="flex-overflow w-full">
+          <p>Destination Address</p>
+          <pre>{fundingStreamToAddress}</pre>
+        </FlexRow> : null}
+      {fundingStreamBps !== undefined ?
+        <FlexRow>
+          <p>Reward BPS</p>
+          <pre>{fundingStreamToAddress}</pre>
+        </FlexRow> : null}
+    </FlexCol>
+  );
+};
+
 const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext }) => {
   const tradingPair = getSwapPlaintextTradingPair(swapPlaintext);
   const delta1I = getSwapPlaintextDelta1(swapPlaintext);
@@ -443,6 +563,344 @@ const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext })
       <Fee fee={claimFee}/>
       <Address address={claimAddress}/>
       <RSeed _key={swapPlaintext.rseed} name="rseed"/>
+    </FlexCol>
+  );
+};
+
+const ChangeParameters: FC<{
+  parameters: ChangeAppParametersT,
+  label: "Old App Parameters" | "New App Parameters"
+}> = ({ parameters, label }) => {
+  const sctParameters = getChangeAppSctParameter.optional()(parameters);
+  const communityPoolParameters = getChangeAppCommunityPoolParameter.optional()(parameters);
+  const governanceParameters = getChangeAppGovernanceParameter.optional()(parameters);
+  const ibcParameters = getChangeAppIbcParameters.optional()(parameters);
+  const stakeParameters = getChangeAppStakeParameters.optional()(parameters);
+  const feeParameters = getChangeAppFeeParameters.optional()(parameters);
+  const distributionParameters = getChangeAppDistributionParameters.optional()(parameters);
+  const fundingParameters = getChangeAppFundingParameters.optional()(parameters);
+  const shieldedParameters = getChangeAppShieldedParameters.optional()(parameters);
+  const dexParameters = getChangeAppDexParameters.optional()(parameters);
+  const auctionParameters = getChangeAppAuctionParameters.optional()(parameters);
+  return (
+    <FlexCol className="w-full">
+      <p>{label}</p>
+      {sctParameters ? (
+        <FlexRow className="flex-wrap w-full">
+          <p>SCT Parameters</p>
+          <pre>{sctParameters.epochDuration.toString()}</pre>
+        </FlexRow>
+      ) : null}
+      {communityPoolParameters ? (
+        <FlexRow className="flex-wrap w-full">
+          <p className="w-full">Community Pool Parameter</p>
+          <div className="w-full">
+            <p>Community Pool Spend Proposals Enabled</p>
+            <pre>{communityPoolParameters.communityPoolSpendProposalsEnabled}</pre>
+          </div>
+        </FlexRow>
+      ) : null}
+      {governanceParameters ? (
+        <FlexCol className="w-full">
+          <p>Governance Parameters</p>
+          <FlexRow>
+            <p>Proposal Voting Blocks</p>
+            <pre>{governanceParameters.proposalVotingBlocks.toString()}</pre>
+          </FlexRow>
+          {governanceParameters.proposalDepositAmount ? (
+            <FlexRow>
+              <p>Proposal Deposit Amount</p>
+              <Amount amount={governanceParameters.proposalDepositAmount} label=""/>
+            </FlexRow>
+          ) : null}
+          <FlexRow>
+            <p>Proposal Valid Quorum</p>
+            <pre>{governanceParameters.proposalValidQuorum}</pre>
+          </FlexRow>
+          <FlexRow>
+            <p>Proposal Pass Threshold</p>
+            <pre>{governanceParameters.proposalValidQuorum}</pre>
+          </FlexRow>
+          <FlexRow>
+            <p>Proposal Slash Threshold</p>
+            <pre>{governanceParameters.proposalSlashThreshold}</pre>
+          </FlexRow>
+        </FlexCol>
+      ) : null}
+      {ibcParameters ? (
+        <FlexCol className="w-full">
+          <p className="w-full">IBC Parameters</p>
+          <FlexRow className="flex-wrap w-full">
+            <p>IBC Enabled</p>
+            <pre>{ibcParameters.ibcEnabled}</pre>
+          </FlexRow>
+          <FlexRow className="flex-wrap w-full">
+            <p>Inbound ICS-20 Transfers Enabled</p>
+            <pre>{ibcParameters.inboundIcs20TransfersEnabled}</pre>
+          </FlexRow>
+          <FlexRow className="flex-wrap w-full">
+            <p>Outbound ICS-20 Transfers Enabled</p>
+            <pre>{ibcParameters.outboundIcs20TransfersEnabled}</pre>
+          </FlexRow>
+        </FlexCol>
+      ) : null}
+      {stakeParameters ? (
+        <FlexCol className="w-full">
+          <p>Stake Parameters</p>
+          <FlexRow className="w-full">
+            <p>Unbonding Epochs</p>
+            <pre>{stakeParameters.unbondingDelay.toString()}</pre>
+          </FlexRow>
+          <FlexRow className="w-full">
+            <p>Active Validators Limit</p>
+            <pre>{stakeParameters.activeValidatorLimit.toString()}</pre>
+          </FlexRow>
+          <FlexRow className="w-full">
+            <p>Base Reward Rate</p>
+            <pre>{stakeParameters.baseRewardRate.toString()}</pre>
+          </FlexRow>
+          <FlexRow className="w-full">
+            <p>Slashing Penalty Misbehavior</p>
+            <pre>{stakeParameters.slashingPenaltyMisbehavior.toString()}</pre>
+          </FlexRow>
+          <FlexRow className="w-full">
+            <p>Slashing Penalty Downtown</p>
+            <pre>{stakeParameters.slashingPenaltyDowntime.toString()}</pre>
+          </FlexRow>
+          <FlexRow className="w-full">
+            <p>Signed Blocks Window Length</p>
+            <pre>{stakeParameters.signedBlocksWindowLen.toString()}</pre>
+          </FlexRow>
+          <FlexRow className="w-full">
+            <p>Missed Blocks Maximium</p>
+            <pre>{stakeParameters.missedBlocksMaximum.toString()}</pre>
+          </FlexRow>
+          <FlexRow className="w-full">
+            <p>Minimum Validator Stake</p>
+            {stakeParameters.minValidatorStake ? <Amount amount={stakeParameters.minValidatorStake}/> : null}
+          </FlexRow>
+          <FlexRow className="w-full">
+            <p>Unbonding Delay</p>
+            <pre>{stakeParameters.unbondingDelay.toString()}</pre>
+          </FlexRow>
+        </FlexCol>
+      ) : null}
+      {feeParameters ? (
+        <FlexCol className="w-full">
+          <p>Fee Parameters</p>
+          <FeeParameters feeParameters={feeParameters}/>
+        </FlexCol>
+      ) : null}
+      {distributionParameters ? (
+        <FlexCol>
+          <p>Distribution Parameters</p>
+          <FlexRow>
+            <p>Staking Issuance Per Block</p>
+            <pre>{distributionParameters.stakingIssuancePerBlock.toString()}</pre>
+          </FlexRow>
+        </FlexCol>
+      ) : null}
+      {fundingParameters ? (
+        <FlexRow className="w-full">
+          <p>Funding Parameters</p>
+          {/* TODO?: there are no fields to this message type */}
+          <pre>This message type currently has no fields defined by Penumbra.</pre>
+        </FlexRow>
+      ) : null}
+      {shieldedParameters ? (
+        <FlexCol>
+          <p>Shielded Parameters</p>
+          {shieldedParameters.fixedFmdParams ? (
+            <FlexCol>
+              <p>Fuzzy Message Detection</p>
+              <FlexRow>
+                <p>Precision Bits</p>
+                <pre>{shieldedParameters.fixedFmdParams.precisionBits}</pre>
+              </FlexRow>
+              <FlexRow>
+                <p>As Of Block Height</p>
+                <pre>{shieldedParameters.fixedFmdParams.asOfBlockHeight.toString()}</pre>
+              </FlexRow>
+            </FlexCol>
+          ) : null}
+        </FlexCol>
+      ) : null}
+      {dexParameters ? (
+        <FlexCol>
+          <p>Dex Parameters</p>
+          <FlexRow>
+            <p>Is Enabled</p>
+            <pre>{dexParameters.isEnabled}</pre>
+          </FlexRow>
+          <FlexCol>
+            <p>Fixed Candidates</p>
+            {dexParameters.fixedCandidates.map((assetId, i) => <AssetId assetId={assetId} key={i}/>)}
+          </FlexCol>
+          <FlexRow>
+            <p>Max Hops</p>
+            <pre>{dexParameters.maxHops}</pre>
+          </FlexRow>
+          <FlexRow>
+            <p>Max Positions Per Pair</p>
+            <pre>{dexParameters.maxPositionsPerPair}</pre>
+          </FlexRow>
+        </FlexCol>
+      ) : null}
+      {auctionParameters ? (
+        <FlexRow className="w-full">
+        <p>Auction Parameters</p>
+        {/* TODO?: there are no fields to this message type */}
+        <pre>This message type currently has no fields defined by Penumbra.</pre>
+      </FlexRow>
+      ) : null}
+    </FlexCol>
+  );
+};
+
+const ProposalPayload: FC<{ payload: ProposalSubmitKind }> = ({ payload }) => {
+  switch (payload.case) {
+    case "signaling":
+      return (
+        <FlexRow>
+          <p>Commit</p>
+          <pre>{payload.value.commit}</pre>
+        </FlexRow>
+      );
+    case "emergency":
+      return (
+        <FlexRow>
+          <p>Emergency Halt Chain</p>
+          <pre>{payload.value.haltChain}</pre>
+        </FlexRow>
+      );
+    case "parameterChange":
+      return (
+        <FlexCol>
+          <p>Change App Parameters</p>
+          {payload.value.oldParameters ?
+            <ChangeParameters
+              parameters={payload.value.oldParameters}
+              label="Old App Parameters"/> : null}
+          {payload.value.newParameters ?
+            <ChangeParameters
+              parameters={payload.value.newParameters}
+              label="New App Parameters"/> : null}
+          <FlexCol>
+            <p>New Parameters</p>
+          </FlexCol>
+        </FlexCol>
+      );
+    case "communityPoolSpend": {
+      const ibcValue = payload.value.transactionPlan?.value;
+      const ibcTypeURL = payload.value.transactionPlan?.typeUrl;
+      return (
+        <FlexCol className="flex-overflow w-full">
+          <p className="w-full">Community Pool Spend</p>
+          {ibcValue ? (
+            <FlexCol className="flex-overflow w-full">
+              <p className="w-full">Value</p>
+              <pre className="w-full">{ibcValue}</pre>
+            </FlexCol>
+          ) : null}
+          {ibcTypeURL?.length !== undefined ? (
+            <FlexCol className="flex-overflow w-full">
+              <p>Proto URL Resource</p>
+              <pre className="w-full">{ibcTypeURL}</pre>
+            </FlexCol>
+          ) : null}
+      </FlexCol>
+      );
+    }
+    case "upgradePlan":
+      return (
+      <FlexRow>
+        <p>Upgrade Height</p>
+        <pre>{payload.value.height.toString()}</pre>
+      </FlexRow>
+      );
+    case "freezeIbcClient":
+      return (
+        <FlexRow>
+          <p>Freeze IBC Client ID</p>
+          <pre>{payload.value.clientId}</pre>
+        </FlexRow>
+      );
+    case "unfreezeIbcClient":
+      return (
+        <FlexRow>
+          <p>Unfreeze IBC Client ID</p>
+          <pre>{payload.value.clientId}</pre>
+        </FlexRow>
+      );
+    // TODO: start adding UI motifs/messaging for bad/unlikely outcomes when rendering queried data.
+    default:
+      break;
+  }
+};
+
+const TradingFunction: FC<{ tradingFunction: TradingFunctionT }> = ({ tradingFunction }) => {
+  const tradingFee = getTradingFunctionFee(tradingFunction);
+  // TODO: protobuf defs say that each Amount is not actually an Amount but an integer with the same width of an Amount.
+  //       How should these actually be represented?
+  const amountQ = getTradingFunctionAmountQ.optional()(tradingFunction);
+  const amountP = getTradingFunctionAmountP.optional()(tradingFunction);
+  const tradingPair = getTradingFunctionPair.optional()(tradingFunction);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Trading Function</p>
+      <FlexRow className="flex-wrap w-full">
+        <p>Fee</p>
+        <pre>{tradingFee}</pre>
+      </FlexRow>
+      {/* TODO: Also, how should these values be communicated? Should BareTradingFunction be explicilty described. */}
+      {amountQ ? <Amount amount={amountQ} label="Q"/> : null}
+      {amountP ? <Amount amount={amountP} label="P"/> : null}
+      {tradingPair ? <TradingPair tradingPair={tradingPair}/> : null}
+    </FlexCol>
+  );
+};
+
+const Position: FC<{ position: PositionT }> = ({ position }) => {
+  const phi = getPositionTradingFunction.optional()(position);
+  const nonce = getPositionNonce(position);
+  const positionState = getPositionState.optional()(position);
+  const positionSequence = getPositionStateSequence.optional()(position);
+  const positionReservesAmount1 = getPositionReservesAmount1.optional()(position);
+  const positionReservesAmount2 = getPositionReservesAmount2.optional()(position);
+  const closeOnFill = getPositionCloseOnFill(position);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Position</p>
+      {phi ? <TradingFunction tradingFunction={phi}/> : null}
+      <FlexRow className="flex-wrap w-full">
+        <p>Nonce</p>
+        <pre>{nonce.toString()}</pre>
+      </FlexRow>
+      {positionState ? (
+        <FlexCol>
+          <p>Position State</p>
+          {positionState.state === PositionState_PositionStateEnum.UNSPECIFIED ? <pre>UNSPECIFIED</pre>
+          : positionState.state === PositionState_PositionStateEnum.OPENED ? <pre>OPENED</pre>
+          : positionState.state === PositionState_PositionStateEnum.CLOSED ? <pre>CLOSED</pre>
+          : positionState.state === PositionState_PositionStateEnum.WITHDRAWN ? <pre>WITHDRAWN</pre>
+          : null}
+          {positionSequence !==  undefined && positionState.state === PositionState_PositionStateEnum.WITHDRAWN ? (
+            <FlexRow className="flex-wrap w-full">
+              <p>Sequence</p>
+              <pre>{positionSequence.toString()}</pre>
+            </FlexRow>
+          ) : null}
+        </FlexCol>
+      ) : null}
+      <FlexCol className="w-full">
+        <p className="w-full">Reserves</p>
+        {positionReservesAmount1 ? <Amount amount={positionReservesAmount1} label="r1"/> : null}
+        {positionReservesAmount2 ? <Amount amount={positionReservesAmount2} label="r2"/> : null}
+      </FlexCol>
+      <FlexRow className="flex-wrap w-full">
+        <p>Close On Fill</p>
+        <pre>{closeOnFill}</pre>
+      </FlexRow>
     </FlexCol>
   );
 };
@@ -625,6 +1083,471 @@ const DelegatorVoteView: FC<{ delegatorVoteView: DelegatorVoteViewT }> = ({ dele
   );
 };
 
+const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = ({ validatorDefinition }) => {
+  const validatorAuthSig = getValidatorAuthSig.optional()(validatorDefinition);
+  // ValidatorDefinition.Validator fields
+  const validatorIdKey = getValidatorIdentityKey.optional()(validatorDefinition);
+  const validatorConsensusKey = getValidatorConsensusKey.optional()(validatorDefinition);
+  // validatorName through validatorEnabled ought to be non-optional but do not currently have a consistent bailing out strategy yet.
+  const validatorName = getValidatorName.optional()(validatorDefinition);
+  const validatorWebsite = getValidatorWebsite.optional()(validatorDefinition);
+  const validatorDescription = getValidatorDescription.optional()(validatorDefinition);
+  const validatorEnabled = getValidatorEnabled.optional()(validatorDefinition);
+  const validatorFundingStreams = getValidatorFundingStream.optional()(validatorDefinition);
+  const validatorSequenceNumber = getValidatorSequenceNumber.optional()(validatorDefinition);
+  const validatorGovernanceKey = getValidatorGovernanceKey.optional()(validatorDefinition);
+
+  return (
+    <FlexCol className="flex-overflow w-full">
+      <p className="w-full">Validator Definition</p>
+      {validatorIdKey ? <IdentityKey _key={validatorIdKey.ik} name="Identity Verification Key"/> : null}
+      {validatorConsensusKey ? <ConsensusKey _key={validatorConsensusKey} name="Consensus PubKey"/> : null}
+      <FlexRow className="flex-overflow w-full">
+        <p className="w-full">Name</p>
+        <p className="w-full">{validatorName}</p>
+      </FlexRow>
+      <FlexRow className="flex-overflow w-full">
+        <p className="w-full">Website</p>
+        <p className="w-full">{validatorWebsite}</p>
+      </FlexRow>
+      <FlexRow className="flex-overflow w-full">
+        <p className="w-full">Description</p>
+        <p className="w-full">{validatorDescription}</p>
+      </FlexRow>
+      <FlexRow className="flex-overflow w-full">
+        <p className="w-full">Enabled?</p>
+        <p className="w-full">{validatorEnabled}</p>
+      </FlexRow>
+      {validatorFundingStreams?.length !== undefined ? (
+        <FlexCol className="flex-overflow w-full">
+          <p>Funding Streams</p>
+          {validatorFundingStreams.map((fundingStream, i) => <FundingStream fundingStream={fundingStream} key={i}/>)}
+        </FlexCol>
+      ) : null}
+      {validatorSequenceNumber !== undefined  ? (
+        <FlexRow className="flex-overflow w-full">
+          <p className="w-full">Sequence Number</p>
+          <p className="w-full">{validatorSequenceNumber}</p>
+        </FlexRow>
+      ) : null}
+      {validatorGovernanceKey ? <GovernanceKey _key={validatorGovernanceKey.gk} name="Governance Key"/> : null}
+      {validatorAuthSig ? <AuthSignature _key={validatorAuthSig} name="Auth Signature"/> : null}
+    </FlexCol>
+  );
+};
+
+const IBCRelayAction: FC<{ ibcRelayAction: IbcRelay }> = ({ ibcRelayAction }) =>{
+  const ibcValue = ibcRelayAction.rawAction?.value;
+  const ibcTypeURL = ibcRelayAction.rawAction?.typeUrl;
+  return (
+    <FlexCol className="flex-overflow w-full">
+      <p className="w-full">IBC Relay Raw Action</p>
+      {ibcValue ? (
+        <FlexCol className="flex-overflow w-full">
+          <p className="w-full">Value</p>
+          <pre className="w-full">{ibcValue}</pre>
+        </FlexCol>
+      ) : null}
+      {ibcTypeURL?.length !== undefined ? (
+        <FlexCol className="flex-overflow w-full">
+          <p>Proto URL Resource</p>
+          <pre className="w-full">{ibcTypeURL}</pre>
+        </FlexCol>
+      ) : null}
+    </FlexCol>
+  );
+};
+
+const ProposalSubmit: FC<{ proposalSubmit: ProposalSubmitT }> = ({ proposalSubmit }) => {
+  const proposalSubmitAmount = getProposalSubmitDepositAmount.optional()(proposalSubmit);
+  const proposalId = getProposalId(proposalSubmit);
+  const proposalTitle = getProposalTitle(proposalSubmit);
+  const proposalDescription = getProposalDescription(proposalSubmit);
+  const proposalPayload = getProposalPayload(proposalSubmit);
+  return (
+    <FlexCol className="flex-wrap w-full">
+      <p className="w-full">Proposal Submit</p>
+      <FlexRow>
+        <p>ID</p>
+        <pre>{proposalId.toString()}</pre>
+      </FlexRow>
+      <FlexRow>
+        <p>Title</p>
+        <p>{proposalTitle}</p>
+      </FlexRow>
+      <FlexRow>
+        <p>Description</p>
+        <p>{proposalDescription}</p>
+      </FlexRow>
+      <ProposalPayload payload={proposalPayload}/>
+      {proposalSubmitAmount ? <Amount amount={proposalSubmitAmount} label="Proposal Deposit Amount"/> : null}
+    </FlexCol>
+  );
+
+};
+
+const ProposalWithdraw: FC<{ proposalWithdraw: ProposalWithdrawT }> = ({ proposalWithdraw }) => {
+  return (
+    <FlexCol>
+      <p>Proposal Withdraw</p>
+      <FlexRow>
+        <p>Proposal</p>
+        <pre>{proposalWithdraw.proposal.toString()}</pre>
+      </FlexRow>
+      <FlexRow>
+        <p>Reason</p>
+        <pre>{proposalWithdraw.reason.toString()}</pre>
+      </FlexRow>
+    </FlexCol>
+  );
+};
+
+const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote }) => {
+  const voteAuthSig = getValidatorVoteAuthSig.optional()(validatorVote);
+  const voteBody = getValidatorVoteBody.optional()(validatorVote);
+  const bodyProposal = getValidatorVoteBodyProposal(validatorVote);
+  const bodyVote = getValidatorVoteBodyVote.optional()(validatorVote);
+  const bodyIdKey = getValidatorVoteBodyIdentityKey.optional()(validatorVote);
+  const bodyGovernanceKey = getValidatorVoteBodyGovernanceKey.optional()(validatorVote);
+  const bodyReason = getValidatorVoteBodyReason.optional()(validatorVote);
+
+  return (
+    <FlexCol>
+      <p>Validator Vote</p>
+      {voteBody ? (
+        <FlexCol className="w-full">
+          {bodyProposal ? (
+            <FlexRow className="flex-wrap w-full">
+              <p>Proposal</p>
+              <pre>{bodyProposal.toString()}</pre>
+            </FlexRow>
+          ) : null}
+          {bodyVote ? <Vote vote={bodyVote}/> : null}
+          {bodyIdKey ? <IdentityKey _key={bodyIdKey.ik} name="Validator Identity"/> : null}
+          {bodyGovernanceKey ? <GovernanceKey _key={bodyGovernanceKey.gk} name="Governance Key"/> : null}
+          {bodyReason ? (
+            <FlexRow className="flex-wrap w-full">
+              <p>Reason</p>
+              <pre>{bodyReason.reason}</pre>
+            </FlexRow>
+          ) : null}
+        </FlexCol>
+      ) : null}
+      {voteAuthSig ? <AuthSignature _key={voteAuthSig.inner} name="Auth Signature"/> : null}
+    </FlexCol>
+  );
+};
+
+const ProposalDepositClaim: FC<{ proposalDepositClaim: ProposalDepositClaimT }> = ({ proposalDepositClaim }) => {
+  const proposal = proposalDepositClaim.proposal;
+  const proposalDepositAmount = getProposalDepositClaimAmount.optional()(proposalDepositClaim);
+  const proposalDepositOutcome = getProposalDepositClaimOutcome.optional()(proposalDepositClaim);
+  const withdrawReason = getProposalDepositClaimOutcomeReason.optional()(proposalDepositClaim);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Proposal Deposit Claim</p>
+      <FlexRow className="flex-wrap w-full">
+        <p>Proposal</p>
+        <pre>{proposal.toString()}</pre>
+      </FlexRow>
+      {proposalDepositAmount ? <Amount amount={proposalDepositAmount} label="Deposit Amount"/> : null}
+      {proposalDepositOutcome ? (
+        <FlexCol className="w-full">
+          <FlexRow className="flex-wrap w-full">
+            <p>Proposal Outcome</p>
+            {proposalDepositOutcome.case === "passed" ? <pre>Passed</pre>
+            : proposalDepositOutcome.case === "failed" ? <pre>Failed</pre>
+            : proposalDepositOutcome.case === "slashed" ? <pre>Slashed</pre>
+            : null}
+          </FlexRow>
+          {(withdrawReason ?? "") ? (
+            <FlexRow className="flex-wrapp w-full">
+              <p>Reason</p>
+              <pre>{withdrawReason}</pre>
+            </FlexRow>
+          ) : null}
+        </FlexCol>
+      ) : null}
+    </FlexCol>
+  );
+};
+
+const PositionOpen: FC<{ positionOpen: PositionOpenT }> = ({ positionOpen }) => {
+  const position = getPositionOpen.optional()(positionOpen);
+  return (
+    <FlexCol className="w-full">
+      <p>Position Open</p>
+      {position ? (
+        <Position position={position}/>
+      ) : null}
+    </FlexCol>
+  );
+};
+
+const PositionClose: FC<{ positionClose: PositionCloseT }> = ({ positionClose }) => {
+  const positionId = getPositionClosePositionId.optional()(positionClose);
+  return (
+    <FlexCol className="w-full">
+      <p>Position Close</p>
+      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
+    </FlexCol>
+  );
+};
+
+const PositionWithdraw: FC<{ positionWithdraw: PositionWithdrawT }> = ({ positionWithdraw }) => {
+  const positionId = getPositionWithdrawPositionId.optional()(positionWithdraw);
+  const balanceCommitment = getPositionWithdrawBalanceCommitment.optional()(positionWithdraw);
+  const sequence = getPositionWithdrawSequence(positionWithdraw);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Position Withdraw</p>
+      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
+      {balanceCommitment ? <BalanceCommitment name="Reserves Commitment" _key={balanceCommitment.inner}/> : null}
+      <FlexRow className="flex-wrap w-full">
+          <p>Sequence</p>
+          <pre>{sequence.toString()}</pre>
+      </FlexRow>
+    </FlexCol>
+  );
+};
+
+// NOTE: DEPRECATED
+const PositionRewardClaim: FC<{ positionRewardClaim: PositionRewardClaimT }> = ({ positionRewardClaim }) => {
+  const positionId = getPositionRewardClaimPositionId.optional()(positionRewardClaim);
+  const balanceCommitment = getPositionRewardClaimBalanceCommitment.optional()(positionRewardClaim);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Position Reward Claim</p>
+      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
+      {balanceCommitment ? <BalanceCommitment name="Rewards Commitment" _key={balanceCommitment.inner}/> : null}
+    </FlexCol>
+  );
+};
+
+const CommunityPoolSpend: FC<{ communityPoolSpend: CommunityPoolSpendT }> = ({ communityPoolSpend }) => {
+  const value = getCommunityPoolSpendValue.optional()(communityPoolSpend);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Community Pool Spend</p>
+      {value ? <Value value={value} label="Spend Value"/> : null}
+    </FlexCol>
+  );
+};
+
+const CommunityPoolOutput: FC<{ communityPoolOutput: CommunityPoolOutputT }> = ({ communityPoolOutput }) => {
+  const value = getCommunityPoolOutputValue.optional()(communityPoolOutput);
+  const address = getCommunityPoolOutputAddress.optional()(communityPoolOutput);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Community Pool Output</p>
+      {value ? <Value value={value} label="Output Value"/> : null}
+      {address ? <Address address={address}/> : null}
+    </FlexCol>
+  );
+};
+
+const CommunityPoolDeposit: FC<{ communityPoolDeposit: CommunityPoolDepositT }> = ({ communityPoolDeposit }) => {
+  const value = getCommunityPoolDepositValue.optional()(communityPoolDeposit);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Community Pool Deposit</p>
+      {value ? <Value value={value} label="Desposit Value"/> : null}
+    </FlexCol>
+  );
+};
+
+const UndelegateClaim: FC<{ undelegateClaim: UndelegateClaimT }> = ({ undelegateClaim }) => {
+  const validatorID = getUndelegateClaimIdentityKey.optional()(undelegateClaim);
+  // NOTE: DEPRECATED
+  // NOTE: marked as Deprecated but protos mark it as non-optional so how do deprecations actually get handled at implementation?
+  const startEpochIndex = getUndelegateClaimStartEpochIndex(undelegateClaim);
+  const penalty = getUndelegateClaimPenalty.optional()(undelegateClaim);
+  const balanceCommitment = getUndelegateClaimBalanceCommitment.optional()(undelegateClaim);
+  const unbondingStartHeight = getUndelegateClaimUnbondingStartHeight(undelegateClaim);
+  const undelegateClaimProof = getUndelegateClaimProof(undelegateClaim);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Undelegate Claim</p>
+      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
+      <FlexRow className="flex-wrap w-full">
+        <p>Start Epoch Index (DEPRECATED)</p>
+        <pre>{startEpochIndex.toString()}</pre>
+      </FlexRow>
+      {penalty ? <Penalty _key={penalty.inner} name="Penalty"/> : null}
+      {balanceCommitment ? <BalanceCommitment _key={balanceCommitment.inner} name="Balance Commitment"/> : null}
+      <FlexRow className="flex-wrap w-full">
+        <p>Unbonding Start Height</p>
+        <pre>{unbondingStartHeight.toString()}</pre>
+      </FlexRow>
+      <UndelegateClaimProof _key={undelegateClaimProof} name="Proof"/>
+    </FlexCol>
+  );
+};
+
+const Ics20Withdrawal: FC<{ ics20Withdrawal: Ics20WithdrawalT }> = ({ ics20Withdrawal }) => {
+  const withdrawalAmount = getIcs20WithdrawalAmount.optional()(ics20Withdrawal);
+  const denom = getIcs20WithdrawalDenom.optional()(ics20Withdrawal);
+  const destinationAddress = getIcs20WithdrawalDestinationAddress(ics20Withdrawal);
+  const returnAddress = getIcs20WithdrawalReturnAddress.optional()(ics20Withdrawal);
+  const timeoutHeight = getIcs20WithdrawalTimeoutHeight.optional()(ics20Withdrawal);
+  const timeoutTime = getIcs20WithdrawalTimeoutTime(ics20Withdrawal);
+  const sourceChannel = getIcs20WithdrawalSourceChannel(ics20Withdrawal);
+
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">ICS20 Withdrawal</p>
+      {withdrawalAmount ? <Amount amount={withdrawalAmount}/> : null}
+      {(denom ?? "") ? (
+        <FlexRow className="flex-wrap w-full">
+          <p>Denom</p>
+          <pre>{denom}</pre>
+        </FlexRow>
+      ) : null}
+      <FlexRow className="flex-wrap w-full">
+        <p>Destination Address</p>
+        <pre>{destinationAddress}</pre>
+      </FlexRow>
+      {returnAddress ? (
+        <FlexCol className="w-full">
+          <p className="w-full">Return Address</p>
+          <Address address={returnAddress}/>
+        </FlexCol>
+      ) : null}
+      {timeoutHeight ? <Height height={timeoutHeight}/> : null}
+      <FlexRow className="flex-wrap w-full">
+        <p>Timeout Time</p>
+        <pre>{timeoutTime.toString()}</pre>
+      </FlexRow>
+      <FlexRow className="flex-wrap w-full">
+        <p>Source Channel</p>
+        <pre>{sourceChannel}</pre>
+      </FlexRow>
+    </FlexCol>
+  );
+};
+
+const Delegate: FC<{ delegate: DelegateT }> = ({ delegate }) => {
+  const validatorID = getDelegateIdentityKey.optional()(delegate);
+  const epochIndex = getDelegateEpochIndex(delegate);
+  const unbondedAmount = getDelegateUnbondedAmount.optional()(delegate);
+  const delegationAmount = getDelegateDelegationAmount.optional()(delegate);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Delegate</p>
+      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
+      <FlexRow className="flex-wrap w-full">
+        <p>Epoch Index</p>
+        <pre>{epochIndex.toString()}</pre>
+      </FlexRow>
+      {unbondedAmount ? <Amount amount={unbondedAmount} label="Unbonded Amount"/> : null}
+      {delegationAmount ? <Amount amount={delegationAmount} label="Delegation Amount"/> : null}
+    </FlexCol>
+  );
+};
+
+const Undelegate: FC<{ undelegate: UndelegateT }> = ({ undelegate }) => {
+  const validatorID = getUndelegateIdentityKey.optional()(undelegate);
+  // NOTE: DEPRECATED
+  // NOTE: similar situation to UndelegateClaim, this field is deprecated but, also, non-optional in the protos def.
+  const startEpochIndex = getUndelegateStartEpochIndex(undelegate);
+  const unbondedAmount = getUndelegateUnbondedAmount.optional()(undelegate);
+  const delegationAmount = getUndelegateDelegationAmount.optional()(undelegate);
+  const fromEpoch = getUndelegateFromEpoch.optional()(undelegate);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Undelegate</p>
+      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
+      <FlexRow className="flex-wrap w-full">
+        <p>Start Epoch Index (DEPRECATED)</p>
+        <pre>{startEpochIndex.toString()}</pre>
+      </FlexRow>
+      {unbondedAmount ? <Amount amount={unbondedAmount} label="Unbonded Amount"/> : null}
+      {delegationAmount ? <Amount amount={delegationAmount} label="Delegation Amount"/> : null}
+      {fromEpoch ? <Epoch epoch={fromEpoch} label="From Epoch"/> : null}
+    </FlexCol>
+  );
+};
+
+const ActionDutchActionScheduleView: FC<{ dutchAuctionScheduleView: ActionDutchAuctionScheduleViewT }> = ({ dutchAuctionScheduleView }) => {
+  // AuctionDescription fields
+  const input = getInputFromActionDutchAuctionScheduleView.optional()(dutchAuctionScheduleView);
+  const outputId = getOutputIdFromActionDutchAuctionScheduleView.optional()(dutchAuctionScheduleView);
+  const maxOutput = getMaxOutputFromActionDutchAuctionScheduleView.optional()(dutchAuctionScheduleView);
+  const minOutput = getMinOutputFromActionDutchAuctionScheduleView.optional()(dutchAuctionScheduleView);
+  const startHeight = getStartHeightFromActionDutchAuctionScheduleView(dutchAuctionScheduleView);
+  const endHeight = getEndHeightFromActionDutchAuctionScheduleView(dutchAuctionScheduleView);
+  const stepCount = getStepCountFromActionDutchAuctionScheduleView(dutchAuctionScheduleView);
+  const nonce = getNonceFromActionDutchAuctionScheduleView(dutchAuctionScheduleView);
+  // remaining ActionDutchAuctionScheduleView level fields
+  const auctionId = getActionDutchAuctionScheduleViewAuctionId.optional()(dutchAuctionScheduleView);
+  const inputMetadata = getActionDutchAuctionScheduleViewInputMetadata.optional()(dutchAuctionScheduleView);
+  const outputMetadata = getActionDutchAuctionScheduleViewOutputMetadata.optional()(dutchAuctionScheduleView);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Action Dutch Auction Schedule View</p>
+      <FlexCol className="w-full">
+        <p className="w-full">Dutch Action Description</p>
+        {input ? <Value value={input}/> : null}
+        {outputId ? <AssetId assetId={outputId} label="Target Asset ID"/> : null}
+        {maxOutput ? <Amount amount={maxOutput} label="Maximum Output"/> : null}
+        {minOutput ? <Amount amount={minOutput} label="Minimum Output"/> : null}
+        <FlexRow className="flex-wrap w-full">
+          <p>Start Height</p>
+          <pre>{startHeight.toString()}</pre>
+        </FlexRow>
+        <FlexRow className="flex-wrap w-full">
+          <p>End Height</p>
+          <pre>{endHeight.toString()}</pre>
+        </FlexRow>
+        <FlexRow className="flex-wrap w-full">
+          <p>Step Count</p>
+          <pre>{stepCount.toString()}</pre>
+        </FlexRow>
+        <FlexRow className="flex-wrap w-full">
+          <p>Nonce</p>
+          <pre>{nonce.toString()}</pre>
+        </FlexRow>
+      </FlexCol>
+      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+      {inputMetadata ? <Metadata metaData={inputMetadata} label="Input Metadata"/> : null}
+      {outputMetadata ? <Metadata metaData={outputMetadata} label="Output Metadata"/> : null}
+    </FlexCol>
+  );
+};
+
+const ActionDutchAuctionEnd: FC<{ actionDutchAuctionEnd: ActionDutchAuctionEndT }> = ({ actionDutchAuctionEnd }) => {
+  const auctionId = getAuctionIdFromActionDutchAuctionEnd.optional()(actionDutchAuctionEnd);
+  return (
+    <FlexCol className="w-full">
+      <p className="w-full">Action Dutch Auction End</p>
+      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+    </FlexCol>
+  );
+};
+
+const ActionDutchAuctionWithdrawView: FC<{ actionDutchAuctionWithdrawView: ActionDutchAuctionWithdrawViewT }> = ({ actionDutchAuctionWithdrawView }) => {
+  const auctionId = getAuctionIdFromActionDutchAuctionWithdrawView.optional()(actionDutchAuctionWithdrawView);
+  const seq = getSeqFromActionDutchAuctionWithdrawView(actionDutchAuctionWithdrawView);
+  const reservesCommitment = getReservesCommitmentFromActionDutchAuctionWithdrawView.optional()(actionDutchAuctionWithdrawView);
+  const reserves = getReservesFromActionDutchAuctionWithdrawView(actionDutchAuctionWithdrawView);
+  return (
+    <FlexCol className="w-full">
+      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+      <FlexRow className="flex-wrap w-full">
+        <p>Sequence</p>
+        <pre>{seq.toString()}</pre>
+      </FlexRow>
+      {reservesCommitment ? <BalanceCommitment _key={reservesCommitment.inner} name="Reserves Commitment"/> : null}
+      {reserves.length !== 0 ? (
+        <FlexCol className="w-full">
+          <p className="w-full">Reserves</p>
+          {reserves.map((valueView, i) => <ValueView valueView={valueView} key={i}/>)}
+        </FlexCol>
+      ) : null}
+    </FlexCol>
+  );
+};
+
 export const getActionView = ({ actionView } : ActionViewT) => {
   switch (actionView.case) {
     case "spend": {
@@ -648,29 +1571,65 @@ export const getActionView = ({ actionView } : ActionViewT) => {
       return <DelegatorVoteView delegatorVoteView={actionView.value}/>;
     }
     case "validatorDefinition": {
-      return (
-        <div>
-          {}
-        </div>
-      );
+      return <ValidatorDefinition validatorDefinition={actionView.value}/>;
     }
-    case "ibcRelayAction":
-    case "proposalSubmit":
-    case "proposalWithdraw":
-    case "validatorVote":
-    case "proposalDepositClaim":
-    case "positionOpen":
-    case "positionClose":
-    case "positionWithdraw":
-    case "positionRewardClaim":
-    case "communityPoolSpend":
-    case "communityPoolOutput":
-    case "communityPoolDeposit":
-    case "undelegateClaim":
-    case "ics20Withdrawal":
-    case "delegate":
+    case "ibcRelayAction": {
+      return <IBCRelayAction ibcRelayAction={actionView.value}/>;
+    }
+    case "proposalSubmit": {
+      return <ProposalSubmit proposalSubmit={actionView.value}/>;
+    }
+    case "proposalWithdraw": {
+      return <ProposalWithdraw proposalWithdraw={actionView.value}/>;
+    }
+    case "validatorVote": {
+      return <ValidatorVote validatorVote={actionView.value}/>;
+    }
+    case "proposalDepositClaim": {
+      return <ProposalDepositClaim proposalDepositClaim={actionView.value}/>;
+    }
+    case "positionOpen": {
+      return <PositionOpen positionOpen={actionView.value}/>;
+    }
+    case "positionClose": {
+      return <PositionClose positionClose={actionView.value}/>;
+    }
+    case "positionWithdraw": {
+      return <PositionWithdraw positionWithdraw={actionView.value}/>;
+    }
+    // Deprecated Action
+    case "positionRewardClaim": {
+      return <PositionRewardClaim positionRewardClaim={actionView.value}/>;
+    }
+    case "delegate": {
+      return <Delegate delegate={actionView.value}/>;
+    }
     case "undelegate": {
-      return (<div></div>);
+      return <Undelegate undelegate={actionView.value}/>;
+    }
+    case "communityPoolSpend": {
+      return <CommunityPoolSpend communityPoolSpend={actionView.value}/>;
+    }
+    case "communityPoolOutput": {
+      return <CommunityPoolOutput communityPoolOutput={actionView.value}/>;
+    }
+    case "communityPoolDeposit": {
+      return <CommunityPoolDeposit communityPoolDeposit={actionView.value}/>;
+    }
+    case "actionDutchAuctionSchedule": {
+      return <ActionDutchActionScheduleView dutchAuctionScheduleView={actionView.value}/>;
+    }
+    case "actionDutchAuctionEnd": {
+      return <ActionDutchAuctionEnd actionDutchAuctionEnd={actionView.value}/>;
+    }
+    case "actionDutchAuctionWithdraw": {
+      return <ActionDutchAuctionWithdrawView actionDutchAuctionWithdrawView={actionView.value}/>;
+    }
+    case "undelegateClaim": {
+      return <UndelegateClaim undelegateClaim={actionView.value}/>;
+    }
+    case "ics20Withdrawal": {
+      return <Ics20Withdrawal ics20Withdrawal={actionView.value}/>;
     }
     default:
       return undefined;

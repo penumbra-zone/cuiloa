@@ -3,10 +3,13 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, SwapPlaintext, SwapClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import { DelegatorVoteView, DelegatorVoteView_Opaque } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext, type Position, PositionState_PositionStateEnum, type TradingFunction, type PositionOpen, type PositionClose, type PositionWithdraw, type PositionRewardClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, type ValidatorVote, type ProposalDepositClaim, type CommunityPoolSpend, type CommunityPoolOutput, type CommunityPoolDeposit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { Delegate, FundingStream, Undelegate, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
+import type { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
+import type { ActionDutchAuctionEnd, ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, ActionDutchAuctionWithdrawView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -373,6 +376,479 @@ export const getDelegatorVoteViewNote = createGetter((delegatorVoteView?: Delega
   delegatorVoteView?.delegatorVote.case === "visible"
   ? delegatorVoteView.delegatorVote.value.note
   : undefined,
+);
+
+// ValidatorDefinition getters
+export const getValidatorAuthSig = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.authSig ? validatorDefinition.authSig: undefined,
+);
+
+export const getValidatorIdentityKey = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator?.identityKey
+  ? validatorDefinition.validator.identityKey
+  : undefined,
+);
+
+export const getValidatorConsensusKey = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator?.consensusKey
+  ? validatorDefinition.validator.consensusKey
+  : undefined,
+);
+
+export const getValidatorName = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.name
+  : undefined,
+);
+
+export const getValidatorWebsite = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.website
+  : undefined,
+);
+
+export const getValidatorDescription = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.description
+  : undefined,
+);
+
+export const getValidatorEnabled = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.enabled
+  : undefined,
+);
+
+// NOTE: protobuf defines FundingStream as non-optional but is still possibly undefined. Is that because it's repeated?
+export const getValidatorFundingStream = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator?.fundingStreams
+  ? validatorDefinition.validator.fundingStreams
+  : undefined,
+);
+
+export const getValidatorSequenceNumber = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator
+  ? validatorDefinition.validator.sequenceNumber
+  : undefined,
+);
+
+export const getValidatorGovernanceKey = createGetter((validatorDefinition?: ValidatorDefinition) =>
+  validatorDefinition?.validator?.governanceKey
+  ? validatorDefinition.validator.governanceKey
+  : undefined,
+);
+
+// FundingStream getters
+export const getFundingStreamToAddress = createGetter((fundingStream?: FundingStream) =>
+  fundingStream?.recipient.case === "toAddress" ? fundingStream.recipient.value.address : undefined,
+);
+
+export const getFundingStreamRateBps = createGetter((fundingStream?: FundingStream) =>
+  fundingStream?.recipient.value ? fundingStream.recipient.value.rateBps : undefined,
+);
+
+// ProposalSubmit getters
+export const getProposalSubmitDepositAmount = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.depositAmount ? proposalSubmit.depositAmount : undefined,
+);
+
+export const getProposalId = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.proposal ? proposalSubmit.proposal.id : undefined,
+);
+
+export const getProposalTitle = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.proposal ? proposalSubmit.proposal.title : undefined,
+);
+
+export const getProposalDescription = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.proposal ? proposalSubmit.proposal.description : undefined,
+);
+
+export const getProposalPayload = createGetter((proposalSubmit?: ProposalSubmit) =>
+  proposalSubmit?.proposal?.payload ? proposalSubmit.proposal.payload : undefined,
+);
+
+// ChangeAppParameters getters
+export const getChangeAppSctParameter = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.sctParams ? changeAppParameter.sctParams : undefined,
+);
+
+export const getChangeAppCommunityPoolParameter = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.communityPoolParams ? changeAppParameter.communityPoolParams : undefined,
+);
+
+export const getChangeAppGovernanceParameter = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.governanceParams ? changeAppParameter.governanceParams : undefined,
+);
+
+export const getChangeAppIbcParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.ibcParams ? changeAppParameter.ibcParams : undefined,
+);
+
+export const getChangeAppStakeParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.stakeParams ? changeAppParameter.stakeParams : undefined,
+);
+
+export const getChangeAppFeeParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.feeParams ? changeAppParameter.feeParams : undefined,
+);
+
+export const getChangeAppDistributionParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.distributionsParams ? changeAppParameter.distributionsParams : undefined,
+);
+
+export const getChangeAppFundingParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.fundingParams ? changeAppParameter.fundingParams : undefined,
+);
+
+export const getChangeAppShieldedParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.shieldedPoolParams ? changeAppParameter.shieldedPoolParams : undefined,
+);
+
+export const getChangeAppDexParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.dexParams ? changeAppParameter.dexParams : undefined,
+);
+
+export const getChangeAppAuctionParameters = createGetter((changeAppParameter?: ChangedAppParameters) =>
+  changeAppParameter?.auctionParams ? changeAppParameter.auctionParams : undefined,
+);
+
+export const getGasPriceBlockSpacePrice = createGetter((feeParameters?: FeeParameters) =>
+  feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.blockSpacePrice : undefined,
+);
+
+export const getGasPriceCompactBlockSpacePrice = createGetter((feeParameters?: FeeParameters) =>
+  feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.compactBlockSpacePrice : undefined,
+);
+
+export const getGasPriceVerificationPrice = createGetter((feeParameters?: FeeParameters) =>
+  feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.verificationPrice : undefined,
+);
+
+export const getGasPriceExecutionPrice = createGetter((feeParameters?: FeeParameters) =>
+  feeParameters?.fixedGasPrices ? feeParameters.fixedGasPrices.executionPrice : undefined,
+);
+
+export const getValidatorVoteBody = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body ? validatorVote.body : undefined,
+);
+
+export const getValidatorVoteAuthSig = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.authSig ? validatorVote.authSig : undefined,
+);
+
+export const getValidatorVoteBodyProposal = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body ? validatorVote.body.proposal : undefined,
+);
+
+export const getValidatorVoteBodyVote = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body?.vote ? validatorVote.body.vote : undefined,
+);
+
+export const getValidatorVoteBodyIdentityKey = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body?.identityKey ? validatorVote.body.identityKey : undefined,
+);
+
+export const getValidatorVoteBodyGovernanceKey = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body?.governanceKey ? validatorVote.body.governanceKey : undefined,
+);
+
+export const getValidatorVoteBodyReason = createGetter((validatorVote?: ValidatorVote) =>
+  validatorVote?.body?.reason ? validatorVote.body.reason : undefined,
+);
+
+export const getProposalDepositClaimAmount = createGetter((proposalDepositClaim?: ProposalDepositClaim) =>
+  proposalDepositClaim?.depositAmount ? proposalDepositClaim.depositAmount : undefined,
+);
+
+export const getProposalDepositClaimOutcome = createGetter((proposalDepositClaim?: ProposalDepositClaim) =>
+  proposalDepositClaim?.outcome?.outcome ? proposalDepositClaim.outcome.outcome : undefined,
+);
+
+export const getProposalDepositClaimOutcomeReason = createGetter((proposalDepositClaim?: ProposalDepositClaim) =>
+  proposalDepositClaim?.outcome?.outcome.case === "failed" || proposalDepositClaim?.outcome?.outcome.case === "slashed"
+  && proposalDepositClaim.outcome.outcome.value.withdrawn
+  ? proposalDepositClaim.outcome.outcome.value.withdrawn?.reason
+  : undefined,
+);
+
+export const getPositionTradingFunction = createGetter((position?: Position) =>
+  position?.phi ? position.phi : undefined,
+);
+
+export const getTradingFunctionFee = createGetter((tradingFunction?: TradingFunction) =>
+  tradingFunction?.component ? tradingFunction.component.fee : undefined,
+);
+
+export const getTradingFunctionPair = createGetter((tradingFunction?: TradingFunction) =>
+  tradingFunction?.pair ? tradingFunction.pair : undefined,
+);
+
+export const getTradingFunctionAmountP = createGetter((tradingFunction?: TradingFunction) =>
+  tradingFunction?.component?.p ? tradingFunction.component.p : undefined,
+);
+
+export const getTradingFunctionAmountQ = createGetter((tradingFunction?: TradingFunction) =>
+  tradingFunction?.component?.q ? tradingFunction.component.q : undefined,
+);
+
+export const getPositionNonce = createGetter((position?: Position) => position?.nonce ? position.nonce : undefined);
+
+export const getPositionState = createGetter((position?: Position) => position?.state ? position.state : undefined);
+
+export const getPositionStateSequence = createGetter((position?: Position) =>
+  position?.state && position.state.state === PositionState_PositionStateEnum.WITHDRAWN
+  ? position.state.sequence
+  : undefined,
+);
+
+export const getPositionReservesAmount1 = createGetter((position?: Position) =>
+  position?.reserves?.r1 ? position.reserves.r1 : undefined,
+);
+
+export const getPositionReservesAmount2 = createGetter((position?: Position) =>
+  position?.reserves?.r2 ? position.reserves.r2 : undefined,
+);
+
+export const getPositionCloseOnFill = createGetter((position?: Position) => position ? position.closeOnFill : undefined);
+
+export const getPositionOpen = createGetter((positionOpen?: PositionOpen) =>
+  positionOpen?.position ? positionOpen.position : undefined,
+);
+
+export const getPositionClosePositionId = createGetter((positionClose?: PositionClose) =>
+  positionClose?.positionId ? positionClose.positionId : undefined,
+);
+
+export const getPositionWithdrawPositionId = createGetter((positionWithdraw?: PositionWithdraw) =>
+  positionWithdraw?.positionId ? positionWithdraw.positionId : undefined,
+);
+
+export const getPositionWithdrawBalanceCommitment = createGetter((positionWithdraw?: PositionWithdraw) =>
+  positionWithdraw?.reservesCommitment ? positionWithdraw.reservesCommitment : undefined,
+);
+
+export const getPositionWithdrawSequence = createGetter((positionWithdraw?: PositionWithdraw) =>
+  positionWithdraw ? positionWithdraw.sequence : undefined,
+);
+
+// PositionRewardClaim
+// NOTE: DEPRECATED
+export const getPositionRewardClaimPositionId = createGetter((positionRewardClaim?: PositionRewardClaim) =>
+  positionRewardClaim?.positionId ? positionRewardClaim.positionId : undefined,
+);
+
+export const getPositionRewardClaimBalanceCommitment = createGetter((positionRewardClaim?: PositionRewardClaim) =>
+  positionRewardClaim?.rewardsCommitment ? positionRewardClaim.rewardsCommitment : undefined,
+);
+
+export const getCommunityPoolSpendValue = createGetter((communityPoolSpend?: CommunityPoolSpend) =>
+  communityPoolSpend?.value ? communityPoolSpend.value : undefined,
+);
+
+export const getCommunityPoolOutputValue = createGetter((communityPoolOutput?: CommunityPoolOutput) =>
+  communityPoolOutput?.value ? communityPoolOutput.value : undefined,
+);
+
+export const getCommunityPoolOutputAddress = createGetter((communityPoolOutput?: CommunityPoolOutput) =>
+  communityPoolOutput?.address ? communityPoolOutput.address : undefined,
+);
+
+export const getCommunityPoolDepositValue = createGetter((communityPoolDeposit?: CommunityPoolDeposit) =>
+  communityPoolDeposit?.value ? communityPoolDeposit.value : undefined,
+);
+
+export const getUndelegateClaimIdentityKey = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body?.validatorIdentity ? undelegateClaim.body.validatorIdentity : undefined,
+);
+
+// NOTE: DEPRECATED
+export const getUndelegateClaimStartEpochIndex = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body ? undelegateClaim.body.startEpochIndex : undefined,
+);
+
+export const getUndelegateClaimPenalty = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body?.penalty ? undelegateClaim.body.penalty : undefined,
+);
+
+export const getUndelegateClaimBalanceCommitment = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body?.balanceCommitment ? undelegateClaim.body.balanceCommitment : undefined,
+);
+
+export const getUndelegateClaimUnbondingStartHeight = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim?.body ? undelegateClaim.body.unbondingStartHeight : undefined,
+);
+
+export const getUndelegateClaimProof = createGetter((undelegateClaim?: UndelegateClaim) =>
+  undelegateClaim ? undelegateClaim.proof : undefined,
+);
+
+export const getIcs20WithdrawalAmount = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal?.amount ? ics20Withdrawal.amount : undefined,
+);
+
+export const getIcs20WithdrawalDenom = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal?.denom ? ics20Withdrawal.denom.denom : undefined,
+);
+
+export const getIcs20WithdrawalDestinationAddress = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal ? ics20Withdrawal.destinationChainAddress : undefined,
+);
+
+export const getIcs20WithdrawalReturnAddress = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal?.returnAddress ? ics20Withdrawal.returnAddress : undefined,
+);
+
+export const getIcs20WithdrawalTimeoutHeight = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal?.timeoutHeight ? ics20Withdrawal.timeoutHeight : undefined,
+);
+
+export const getIcs20WithdrawalTimeoutTime = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal ? ics20Withdrawal.timeoutTime : undefined,
+);
+
+export const getIcs20WithdrawalSourceChannel = createGetter((ics20Withdrawal?: Ics20Withdrawal) =>
+  ics20Withdrawal ? ics20Withdrawal.sourceChannel : undefined,
+);
+
+export const getDelegateIdentityKey = createGetter((delegate?: Delegate) =>
+  delegate?.validatorIdentity ? delegate.validatorIdentity : undefined,
+);
+
+export const getDelegateEpochIndex = createGetter((delegate?: Delegate) =>
+  delegate ? delegate.epochIndex : undefined,
+);
+
+export const getDelegateUnbondedAmount = createGetter((delegate?: Delegate) =>
+  delegate?.unbondedAmount ? delegate.unbondedAmount : undefined,
+);
+
+export const getDelegateDelegationAmount = createGetter((delegate?: Delegate) =>
+  delegate?.delegationAmount ? delegate.delegationAmount : undefined,
+);
+
+export const getUndelegateIdentityKey = createGetter((undelegate?: Undelegate) =>
+  undelegate?.validatorIdentity ? undelegate.validatorIdentity : undefined,
+);
+
+export const getUndelegateStartEpochIndex = createGetter((undelegate?: Undelegate) =>
+  undelegate ? undelegate.startEpochIndex: undefined,
+);
+
+export const getUndelegateUnbondedAmount = createGetter((undelegate?: Undelegate) =>
+  undelegate?.unbondedAmount ? undelegate.unbondedAmount : undefined,
+);
+
+export const getUndelegateDelegationAmount = createGetter((undelegate?: Undelegate) =>
+  undelegate?.delegationAmount ? undelegate.delegationAmount : undefined,
+);
+
+export const getUndelegateFromEpoch = createGetter((undelegate?: Undelegate) =>
+  undelegate?.fromEpoch ? undelegate.fromEpoch : undefined,
+);
+
+export const getActionDutchAuctionScheduleViewAction = createGetter((actionDutchAuctionScheduleView?: ActionDutchAuctionScheduleView) =>
+  actionDutchAuctionScheduleView?.action ? actionDutchAuctionScheduleView.action : undefined,
+);
+
+export const getActionDutchAuctionScheduleViewAuctionId = createGetter((actionDutchAuctionScheduleView?: ActionDutchAuctionScheduleView) =>
+  actionDutchAuctionScheduleView?.auctionId ? actionDutchAuctionScheduleView.auctionId : undefined,
+);
+
+export const getActionDutchAuctionScheduleViewInputMetadata = createGetter((actionDutchAuctionScheduleView?: ActionDutchAuctionScheduleView) =>
+  actionDutchAuctionScheduleView?.inputMetadata ? actionDutchAuctionScheduleView.inputMetadata : undefined,
+);
+
+export const getActionDutchAuctionScheduleViewOutputMetadata = createGetter((actionDutchAuctionScheduleView?: ActionDutchAuctionScheduleView) =>
+  actionDutchAuctionScheduleView?.outputMetadata ? actionDutchAuctionScheduleView.outputMetadata : undefined,
+);
+
+export const getActionDutchAuctionScheduleDescription = createGetter((actionDutchAuctionSchedule?: ActionDutchAuctionSchedule) =>
+  actionDutchAuctionSchedule?.description ? actionDutchAuctionSchedule.description : undefined,
+);
+
+export const getDutchAuctionDescriptionInput = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription?.input ? dutchAuctionDescription.input : undefined,
+);
+
+export const getDutchAuctionDescriptionOutputId = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription?.outputId ? dutchAuctionDescription.outputId : undefined,
+);
+
+export const getDutchAuctionDescriptionMaxOutput = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription?.maxOutput ? dutchAuctionDescription.maxOutput : undefined,
+);
+
+export const getDutchAuctionDescriptionMinOutput = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription?.minOutput ? dutchAuctionDescription.minOutput : undefined,
+);
+
+export const getDutchAuctionDescriptionStartHeight = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription ? dutchAuctionDescription.startHeight : undefined,
+);
+
+export const getDutchAuctionDescriptionEndHeight = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription ? dutchAuctionDescription.endHeight : undefined,
+);
+
+export const getDutchAuctionDescriptionStepCount = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription ? dutchAuctionDescription.stepCount : undefined,
+);
+
+export const getDutchAuctionDescriptionNonce = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription ? dutchAuctionDescription.nonce : undefined,
+);
+
+export const getInputFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionInput));
+
+export const getOutputIdFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionOutputId));
+
+export const getMaxOutputFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionMaxOutput));
+
+export const getMinOutputFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionMinOutput));
+
+export const getStartHeightFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionStartHeight));
+
+export const getEndHeightFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionEndHeight));
+
+export const getStepCountFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionStepCount));
+
+export const getNonceFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionNonce));
+
+export const getAuctionIdFromActionDutchAuctionEnd = createGetter((actionDutchAuctionEnd?: ActionDutchAuctionEnd) =>
+  actionDutchAuctionEnd?.auctionId ? actionDutchAuctionEnd.auctionId : undefined,
+);
+
+export const getReservesFromActionDutchAuctionWithdrawView = createGetter((actionDutchAuctionWithdrawView?: ActionDutchAuctionWithdrawView) =>
+  actionDutchAuctionWithdrawView?.reserves ? actionDutchAuctionWithdrawView.reserves : undefined,
+);
+
+export const getAuctionIdFromActionDutchAuctionWithdrawView = createGetter((actionDutchAuctionWithdrawView?: ActionDutchAuctionWithdrawView) =>
+  actionDutchAuctionWithdrawView?.action?.reservesCommitment ? actionDutchAuctionWithdrawView.action.reservesCommitment : undefined,
+);
+
+export const getSeqFromActionDutchAuctionWithdrawView = createGetter((actionDutchAuctionWithdrawView?: ActionDutchAuctionWithdrawView) =>
+  actionDutchAuctionWithdrawView?.action ? actionDutchAuctionWithdrawView.action.seq : undefined,
+);
+
+export const getReservesCommitmentFromActionDutchAuctionWithdrawView = createGetter((actionDutchAuctionWithdrawView?: ActionDutchAuctionWithdrawView) =>
+  actionDutchAuctionWithdrawView?.action?.reservesCommitment ? actionDutchAuctionWithdrawView.action.reservesCommitment : undefined,
 );
 
 export const transactionFromBytes = (txBytes : Buffer) => {

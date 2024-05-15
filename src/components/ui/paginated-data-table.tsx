@@ -69,7 +69,7 @@ export function PaginatedDataTable<TData, TValue, Z extends z.ZodTypeAny>({
     },
   });
 
-  const [pageCount, tableData] : z.infer<Z> = data ?? [0, []];
+  const { pages: pageCount, results: tableData } : z.infer<Z> = data ?? { pages: 0, results: []};
 
   const pagination = useMemo(
     () => ({
