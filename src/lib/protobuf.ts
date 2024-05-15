@@ -3,12 +3,13 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext, Position, PositionState_PositionStateEnum, TradingFunction, PositionOpen, PositionClose, PositionWithdraw, PositionRewardClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, ValidatorVote, ProposalDepositClaim, CommunityPoolSpend, CommunityPoolOutput, CommunityPoolDeposit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext, type Position, PositionState_PositionStateEnum, type TradingFunction, type PositionOpen, type PositionClose, type PositionWithdraw, type PositionRewardClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, type ValidatorVote, type ProposalDepositClaim, type CommunityPoolSpend, type CommunityPoolOutput, type CommunityPoolDeposit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { Delegate, FundingStream, Undelegate, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
-import { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
+import type { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
+import type { ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -745,6 +746,90 @@ export const getUndelegateDelegationAmount = createGetter((undelegate?: Undelega
 export const getUndelegateFromEpoch = createGetter((undelegate?: Undelegate) =>
   undelegate?.fromEpoch ? undelegate.fromEpoch : undefined,
 );
+
+export const getActionDutchAuctionScheduleViewAction = createGetter((actionDutchAuctionScheduleView?: ActionDutchAuctionScheduleView) =>
+  actionDutchAuctionScheduleView?.action ? actionDutchAuctionScheduleView.action : undefined,
+);
+
+export const getActionDutchAuctionScheduleViewAuctionId = createGetter((actionDutchAuctionScheduleView?: ActionDutchAuctionScheduleView) =>
+  actionDutchAuctionScheduleView?.auctionId ? actionDutchAuctionScheduleView.auctionId : undefined,
+);
+
+export const getActionDutchAuctionScheduleViewInputMetadata = createGetter((actionDutchAuctionScheduleView?: ActionDutchAuctionScheduleView) =>
+  actionDutchAuctionScheduleView?.inputMetadata ? actionDutchAuctionScheduleView.inputMetadata : undefined,
+);
+
+export const getActionDutchAuctionScheduleViewOutputMetadata = createGetter((actionDutchAuctionScheduleView?: ActionDutchAuctionScheduleView) =>
+  actionDutchAuctionScheduleView?.outputMetadata ? actionDutchAuctionScheduleView.outputMetadata : undefined,
+);
+
+export const getActionDutchAuctionScheduleDescription = createGetter((actionDutchAuctionSchedule?: ActionDutchAuctionSchedule) =>
+  actionDutchAuctionSchedule?.description ? actionDutchAuctionSchedule.description : undefined,
+);
+
+export const getDutchAuctionDescriptionInput = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription?.input ? dutchAuctionDescription.input : undefined,
+);
+
+export const getDutchAuctionDescriptionOutputId = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription?.outputId ? dutchAuctionDescription.outputId : undefined,
+);
+
+export const getDutchAuctionDescriptionMaxOutput = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription?.maxOutput ? dutchAuctionDescription.maxOutput : undefined,
+);
+
+export const getDutchAuctionDescriptionMinOutput = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription?.minOutput ? dutchAuctionDescription.minOutput : undefined,
+);
+
+export const getDutchAuctionDescriptionStartHeight = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription ? dutchAuctionDescription.startHeight : undefined,
+);
+
+export const getDutchAuctionDescriptionEndHeight = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription ? dutchAuctionDescription.endHeight : undefined,
+);
+
+export const getDutchAuctionDescriptionStepCount = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription ? dutchAuctionDescription.stepCount : undefined,
+);
+
+export const getDutchAuctionDescriptionNonce = createGetter((dutchAuctionDescription?: DutchAuctionDescription) =>
+  dutchAuctionDescription ? dutchAuctionDescription.nonce : undefined,
+);
+
+export const getInputFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionInput));
+
+export const getOutputIdFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionOutputId));
+
+export const getMaxOutputFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionMaxOutput));
+
+export const getMinOutputFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionMinOutput));
+
+export const getStartHeightFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionStartHeight));
+
+export const getEndHeightFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionEndHeight));
+
+export const getStepCountFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionStepCount));
+
+export const getNonceFromActionDutchAuctionScheduleView = getActionDutchAuctionScheduleViewAction
+  .pipe(getActionDutchAuctionScheduleDescription
+    .pipe(getDutchAuctionDescriptionNonce));
 
 export const transactionFromBytes = (txBytes : Buffer) => {
   const txResult = TxResult.fromBinary(txBytes);
