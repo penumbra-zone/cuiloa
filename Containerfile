@@ -1,6 +1,6 @@
 FROM docker.io/library/node:20-alpine
 LABEL maintainer="team@penumbralabs.xyz"
-ARG PNPM_VERSION="8.10.1"
+ARG PNPM_VERSION="9.1.1"
 
 # Create docroot as normal user.
 RUN mkdir -p /home/node/app/ && chown -R node:node /home/node/app
