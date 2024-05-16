@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     const pages = Math.floor((count / 10) + 1);
 
-    return new Response(JSON.stringify({ pages, blocks }));
+    return new Response(JSON.stringify({ pages, results: blocks }));
   } catch (error) {
     console.error("Error occurred while requesting Blocks", error);
     return new Response("Could not query blocks.", { status: 404});
