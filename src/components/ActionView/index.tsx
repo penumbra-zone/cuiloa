@@ -1646,9 +1646,5 @@ interface ActionViewProps {
 
 
 export const ActionView : FC<ActionViewProps> = ({ action }) => {
-  return (
-    <div className="flex flex-col flex-wrap w-full">
-      {getActionView(action)}
-    </div>
-  );
+  return (getActionView(action));
 };
