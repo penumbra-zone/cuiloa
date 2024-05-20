@@ -18,7 +18,7 @@ import type { ValidatorDefinition as ValidatorDefinitionT, FundingStream as Fund
 import type { IbcRelay, Ics20Withdrawal as Ics20WithdrawalT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 import type { Height as HeightT} from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/client_pb";
 import type { Epoch as EpochT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/sct/v1/sct_pb";
-import type { ActionDutchAuctionEnd as ActionDutchAuctionEndT, ActionDutchAuctionScheduleView as ActionDutchAuctionScheduleViewT, ActionDutchAuctionWithdrawView as ActionDutchAuctionWithdrawViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
+import type { ActionDutchAuctionEnd as ActionDutchAuctionEndT, ActionDutchAuctionScheduleView as ActionDutchAuctionScheduleViewT, ActionDutchAuctionWithdrawView as ActionDutchAuctionWithdrawViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1/auction_pb";
 
 // Explicit typing for the ProposalSubmit.payload field message variants.
 type ProposalSubmitKind = {
@@ -56,11 +56,15 @@ const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
   );
 };
 
-const GenericKV: FC<{ name: string, _key: Uint8Array }> = ({ name, _key }) => {
+export const GenericKV: FC<{ name: string, value: Uint8Array, className?: string }> = ({ name, value, className }) => {
   return (
-    <FlexRow className="flex-wrap w-full">
-      <p>{name}</p>
-      <pre>{_key}</pre>
+    <FlexRow className={cn("flex-wrap w-full justify-between border", className ?? "")}>
+      <div className="w-1/2">
+        <p className="text-start p-1">{name}</p>
+      </div>
+      <div className="w-1/2">
+        <pre className="text-start p-1 overflow-hidden overflow-ellipsis">{uint8ArrayToBase64(value)}</pre>
+      </div>
     </FlexRow>
   );
 };
@@ -186,7 +190,7 @@ const NotePayload: FC<{ notePayload: NotePayloadT }> = ({ notePayload }) => {
             <pre className="w-full">{notePayload.noteCommitment.inner}</pre>
           </div>
         ) : null}
-        <EphemeralKey _key={notePayload.ephemeralKey} name="Ephemeral Key"/>
+        <EphemeralKey value={notePayload.ephemeralKey} name="Ephemeral Key"/>
         {notePayload.encryptedNote ? (
           <div className="flex flex-wrap w-full">
             <p className="w-full">Encrypted Note</p>
@@ -210,10 +214,10 @@ const Output: FC<{ output: OutputT }> = ({ output }) => {
             <NotePayload notePayload={body.notePayload}/>
           ) : null}
           {body.balanceCommitment ? (
-            <BalanceCommitment _key={body.balanceCommitment.inner} name="Balance Commitment"/>
+            <BalanceCommitment value={body.balanceCommitment.inner} name="Balance Commitment"/>
           ) : null}
-          <WrappedMemoKey _key={body.wrappedMemoKey} name="Wrapped Memo Key"/>
-          <OvkWrappedKey _key={body.ovkWrappedKey} name="Ovk Wrapped Key"/>
+          <WrappedMemoKey value={body.wrappedMemoKey} name="Wrapped Memo Key"/>
+          <OvkWrappedKey value={body.ovkWrappedKey} name="Ovk Wrapped Key"/>
         </div>
       ) : null}
       {output.proof ? (
@@ -404,8 +408,8 @@ const Amount: FC<{ amount: AmountT, label?: string }> = ({ amount, label }) => {
 const SwapPayload: FC<{ swapPayload: SwapPayloadT }> = ({ swapPayload }) => {
   return (
     <FlexCol>
-      {swapPayload.commitment ? <StateCommitment _key={swapPayload.commitment?.inner} name="Commitment"/> : null}
-      <EncryptedSwap _key={swapPayload.encryptedSwap} name="Encrypted Swap"/>
+      {swapPayload.commitment ? <StateCommitment value={swapPayload.commitment?.inner} name="Commitment"/> : null}
+      <EncryptedSwap value={swapPayload.encryptedSwap} name="Encrypted Swap"/>
     </FlexCol>
   );
 };
@@ -562,7 +566,7 @@ const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext })
       <Amount amount={delta2I} label="Delta 2"/>
       <Fee fee={claimFee}/>
       <Address address={claimAddress}/>
-      <RSeed _key={swapPlaintext.rseed} name="rseed"/>
+      <RSeed value={swapPlaintext.rseed} name="rseed"/>
     </FlexCol>
   );
 };
@@ -912,14 +916,14 @@ const Swap: FC<{ swap: SwapT}> = ({ swap }) => {
   const payload = getSwapBodyPayload(swapBody);
   return (
     <FlexCol>
-      {swap.proof ? <ZKSwapProof name="ZK Proof" _key={swap.proof.inner}/> : null}
+      {swap.proof ? <ZKSwapProof name="ZK Proof" value={swap.proof.inner}/> : null}
       {swapBody ? (
         <FlexCol>
           <p>Swap Body</p>
           <TradingPair tradingPair={swapBody.tradingPair}/>
           <Amount amount={delta1I} label="delta_1_i"/>
           <Amount amount={delta2I} label="delta_2_i"/>
-          <BalanceCommitment _key={feeCommitment.inner} name="Fee Commitment"/>
+          <BalanceCommitment value={feeCommitment.inner} name="Fee Commitment"/>
           <SwapPayload swapPayload={payload}/>
         </FlexCol>
       ) : null}
@@ -955,7 +959,7 @@ const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   return (
     <FlexCol>
       <SwapPlaintext swapPlaintext={swapPlaintext}/>
-      {transactionId ? <TransactionId _key={transactionId.inner} name="Transaction ID"/> : null}
+      {transactionId ? <TransactionId value={transactionId.inner} name="Transaction ID"/> : null}
       {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
       {noteOuput1 ? <NoteView note={noteOuput1}/> : null}
       {noteOuput2 ? <NoteView note={noteOuput2}/> : null}
@@ -1009,14 +1013,14 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
     <FlexCol>
       <p>Swap Claim View</p>
       <FlexCol>
-        {swapClaimProof ? <ZKSwapProof _key={swapClaimProof.inner} name="SwapClaim Proof"/> : null}
+        {swapClaimProof ? <ZKSwapProof value={swapClaimProof.inner} name="SwapClaim Proof"/> : null}
         {swapClaimBody ? (
           <FlexCol>
             <p>SwapClaimBody</p>
-            {bodyNullifier ? <Nullifier _key={bodyNullifier.inner} name="Nullifier"/> : null}
+            {bodyNullifier ? <Nullifier value={bodyNullifier.inner} name="Nullifier"/> : null}
             {bodyFee ? <Fee fee={bodyFee}/> : null}
-            {bodyOutput1Commitment ? <StateCommitment _key={bodyOutput1Commitment.inner} name="Output 1 Commitment"/> : null}
-            {bodyOutput2Commitment ? <StateCommitment _key={bodyOutput2Commitment.inner} name="Output 2 Commitment"/> : null}
+            {bodyOutput1Commitment ? <StateCommitment value={bodyOutput1Commitment.inner} name="Output 1 Commitment"/> : null}
+            {bodyOutput2Commitment ? <StateCommitment value={bodyOutput2Commitment.inner} name="Output 2 Commitment"/> : null}
             {bodyOutputData ? <BatchSwapOutputData batchSwapOutput={bodyOutputData}/> : null}
           </FlexCol>
         ) : null}
@@ -1026,7 +1030,7 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
         </FlexRow>
         {isVisible && swapClaimNoteOutput1 ? <NoteView note={swapClaimNoteOutput1}/> : null}
         {isVisible && swapClaimNoteOutput2 ? <NoteView note={swapClaimNoteOutput2}/> : null}
-        {isVisible && swapClaimTxId ? <TransactionId _key={swapClaimTxId.inner} name="Swap Transaction ID"/> : null}
+        {isVisible && swapClaimTxId ? <TransactionId value={swapClaimTxId.inner} name="Swap Transaction ID"/> : null}
       </FlexCol>
     </FlexCol>
   );
@@ -1071,12 +1075,12 @@ const DelegatorVoteView: FC<{ delegatorVoteView: DelegatorVoteViewT }> = ({ dele
             {bodyVote ? <Vote vote={bodyVote}/> : null}
             {bodyValue ? <Value value={bodyValue} label="Delegation Note Value"/> : null}
             {bodyUnboundedAmount ? <Amount amount={bodyUnboundedAmount} label="Delegation Note Amount"/> : null}
-            {bodyNullifier ? <Nullifier _key={bodyNullifier.inner} name="Input Note Nullifier"/> : null}
-            {bodyRK ? <SpendVerificationKey _key={bodyRK.inner} name="Validating Key"/> : null}
+            {bodyNullifier ? <Nullifier value={bodyNullifier.inner} name="Input Note Nullifier"/> : null}
+            {bodyRK ? <SpendVerificationKey value={bodyRK.inner} name="Validating Key"/> : null}
           </FlexCol>
         ) : null}
-        {delegatorVoteAuthSig ? <SpendAuthSignature _key={delegatorVoteAuthSig.inner} name="Auth Signature"/> : null}
-        {delegatorVoteProof ? <ZKDelegatorVoteProof _key={delegatorVoteProof.inner} name="Delegator Vote Proof"/> : null}
+        {delegatorVoteAuthSig ? <SpendAuthSignature value={delegatorVoteAuthSig.inner} name="Auth Signature"/> : null}
+        {delegatorVoteProof ? <ZKDelegatorVoteProof value={delegatorVoteProof.inner} name="Delegator Vote Proof"/> : null}
       </FlexCol>
       {isVisible && delegatorVoteViewNote ? <NoteView note={delegatorVoteViewNote}/> : null}
     </FlexCol>
@@ -1100,8 +1104,8 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
   return (
     <FlexCol className="flex-overflow w-full">
       <p className="w-full">Validator Definition</p>
-      {validatorIdKey ? <IdentityKey _key={validatorIdKey.ik} name="Identity Verification Key"/> : null}
-      {validatorConsensusKey ? <ConsensusKey _key={validatorConsensusKey} name="Consensus PubKey"/> : null}
+      {validatorIdKey ? <IdentityKey value={validatorIdKey.ik} name="Identity Verification Key"/> : null}
+      {validatorConsensusKey ? <ConsensusKey value={validatorConsensusKey} name="Consensus PubKey"/> : null}
       <FlexRow className="flex-overflow w-full">
         <p className="w-full">Name</p>
         <p className="w-full">{validatorName}</p>
@@ -1130,8 +1134,8 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
           <p className="w-full">{validatorSequenceNumber}</p>
         </FlexRow>
       ) : null}
-      {validatorGovernanceKey ? <GovernanceKey _key={validatorGovernanceKey.gk} name="Governance Key"/> : null}
-      {validatorAuthSig ? <AuthSignature _key={validatorAuthSig} name="Auth Signature"/> : null}
+      {validatorGovernanceKey ? <GovernanceKey value={validatorGovernanceKey.gk} name="Governance Key"/> : null}
+      {validatorAuthSig ? <AuthSignature value={validatorAuthSig} name="Auth Signature"/> : null}
     </FlexCol>
   );
 };
@@ -1223,8 +1227,8 @@ const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote })
             </FlexRow>
           ) : null}
           {bodyVote ? <Vote vote={bodyVote}/> : null}
-          {bodyIdKey ? <IdentityKey _key={bodyIdKey.ik} name="Validator Identity"/> : null}
-          {bodyGovernanceKey ? <GovernanceKey _key={bodyGovernanceKey.gk} name="Governance Key"/> : null}
+          {bodyIdKey ? <IdentityKey value={bodyIdKey.ik} name="Validator Identity"/> : null}
+          {bodyGovernanceKey ? <GovernanceKey value={bodyGovernanceKey.gk} name="Governance Key"/> : null}
           {bodyReason ? (
             <FlexRow className="flex-wrap w-full">
               <p>Reason</p>
@@ -1233,7 +1237,7 @@ const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote })
           ) : null}
         </FlexCol>
       ) : null}
-      {voteAuthSig ? <AuthSignature _key={voteAuthSig.inner} name="Auth Signature"/> : null}
+      {voteAuthSig ? <AuthSignature value={voteAuthSig.inner} name="Auth Signature"/> : null}
     </FlexCol>
   );
 };
@@ -1289,7 +1293,7 @@ const PositionClose: FC<{ positionClose: PositionCloseT }> = ({ positionClose })
   return (
     <FlexCol className="w-full">
       <p>Position Close</p>
-      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
+      {positionId ? <PositionId value={positionId.inner} name="Position ID"/>: null}
     </FlexCol>
   );
 };
@@ -1301,8 +1305,8 @@ const PositionWithdraw: FC<{ positionWithdraw: PositionWithdrawT }> = ({ positio
   return (
     <FlexCol className="w-full">
       <p className="w-full">Position Withdraw</p>
-      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
-      {balanceCommitment ? <BalanceCommitment name="Reserves Commitment" _key={balanceCommitment.inner}/> : null}
+      {positionId ? <PositionId value={positionId.inner} name="Position ID"/>: null}
+      {balanceCommitment ? <BalanceCommitment name="Reserves Commitment" value={balanceCommitment.inner}/> : null}
       <FlexRow className="flex-wrap w-full">
           <p>Sequence</p>
           <pre>{sequence.toString()}</pre>
@@ -1318,8 +1322,8 @@ const PositionRewardClaim: FC<{ positionRewardClaim: PositionRewardClaimT }> = (
   return (
     <FlexCol className="w-full">
       <p className="w-full">Position Reward Claim</p>
-      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
-      {balanceCommitment ? <BalanceCommitment name="Rewards Commitment" _key={balanceCommitment.inner}/> : null}
+      {positionId ? <PositionId value={positionId.inner} name="Position ID"/>: null}
+      {balanceCommitment ? <BalanceCommitment name="Rewards Commitment" value={balanceCommitment.inner}/> : null}
     </FlexCol>
   );
 };
@@ -1368,18 +1372,18 @@ const UndelegateClaim: FC<{ undelegateClaim: UndelegateClaimT }> = ({ undelegate
   return (
     <FlexCol className="w-full">
       <p className="w-full">Undelegate Claim</p>
-      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
+      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
       <FlexRow className="flex-wrap w-full">
         <p>Start Epoch Index (DEPRECATED)</p>
         <pre>{startEpochIndex.toString()}</pre>
       </FlexRow>
-      {penalty ? <Penalty _key={penalty.inner} name="Penalty"/> : null}
-      {balanceCommitment ? <BalanceCommitment _key={balanceCommitment.inner} name="Balance Commitment"/> : null}
+      {penalty ? <Penalty value={penalty.inner} name="Penalty"/> : null}
+      {balanceCommitment ? <BalanceCommitment value={balanceCommitment.inner} name="Balance Commitment"/> : null}
       <FlexRow className="flex-wrap w-full">
         <p>Unbonding Start Height</p>
         <pre>{unbondingStartHeight.toString()}</pre>
       </FlexRow>
-      <UndelegateClaimProof _key={undelegateClaimProof} name="Proof"/>
+      <UndelegateClaimProof value={undelegateClaimProof} name="Proof"/>
     </FlexCol>
   );
 };
@@ -1434,7 +1438,7 @@ const Delegate: FC<{ delegate: DelegateT }> = ({ delegate }) => {
   return (
     <FlexCol className="w-full">
       <p className="w-full">Delegate</p>
-      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
+      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
       <FlexRow className="flex-wrap w-full">
         <p>Epoch Index</p>
         <pre>{epochIndex.toString()}</pre>
@@ -1456,7 +1460,7 @@ const Undelegate: FC<{ undelegate: UndelegateT }> = ({ undelegate }) => {
   return (
     <FlexCol className="w-full">
       <p className="w-full">Undelegate</p>
-      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
+      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
       <FlexRow className="flex-wrap w-full">
         <p>Start Epoch Index (DEPRECATED)</p>
         <pre>{startEpochIndex.toString()}</pre>
@@ -1508,7 +1512,7 @@ const ActionDutchActionScheduleView: FC<{ dutchAuctionScheduleView: ActionDutchA
           <pre>{nonce.toString()}</pre>
         </FlexRow>
       </FlexCol>
-      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
       {inputMetadata ? <Metadata metaData={inputMetadata} label="Input Metadata"/> : null}
       {outputMetadata ? <Metadata metaData={outputMetadata} label="Output Metadata"/> : null}
     </FlexCol>
@@ -1520,7 +1524,7 @@ const ActionDutchAuctionEnd: FC<{ actionDutchAuctionEnd: ActionDutchAuctionEndT 
   return (
     <FlexCol className="w-full">
       <p className="w-full">Action Dutch Auction End</p>
-      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
     </FlexCol>
   );
 };
@@ -1532,12 +1536,12 @@ const ActionDutchAuctionWithdrawView: FC<{ actionDutchAuctionWithdrawView: Actio
   const reserves = getReservesFromActionDutchAuctionWithdrawView(actionDutchAuctionWithdrawView);
   return (
     <FlexCol className="w-full">
-      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
       <FlexRow className="flex-wrap w-full">
         <p>Sequence</p>
         <pre>{seq.toString()}</pre>
       </FlexRow>
-      {reservesCommitment ? <BalanceCommitment _key={reservesCommitment.inner} name="Reserves Commitment"/> : null}
+      {reservesCommitment ? <BalanceCommitment value={reservesCommitment.inner} name="Reserves Commitment"/> : null}
       {reserves.length !== 0 ? (
         <FlexCol className="w-full">
           <p className="w-full">Reserves</p>
