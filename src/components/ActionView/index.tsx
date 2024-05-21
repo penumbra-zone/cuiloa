@@ -47,23 +47,38 @@ type ProposalSubmitKind = {
   value?: undefined
 };
 
-const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
-  return (
-    <div className="flex">
-      <p>Payload Key</p>
-      <pre>{payloadKey.inner}</pre>
-    </div>
-  );
+function useCopyToClipboard() {
+  const [copied, setCopied] = React.useState(false);
+  React.useEffect(() => {
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+    // TODO: pop notification?
+  }, [copied]);
+  async function copyToClipboard(value: string) {
+    await navigator.clipboard.writeText(value);
+    setCopied(true);
+  }
+  return copyToClipboard;
 };
 
 export const GenericKV: FC<{ name: string, value: Uint8Array, className?: string }> = ({ name, value, className }) => {
+
+  const base64Value = uint8ArrayToBase64(value);
+  const copyToClipboard = useCopyToClipboard();
+
   return (
-    <FlexRow className={cn("flex-wrap w-full justify-between border", className ?? "")}>
+    <FlexRow className={cn("flex-wrap w-full justify-between", className ?? "")}>
       <div className="w-1/2">
         <p className="text-start p-1">{name}</p>
       </div>
       <div className="w-1/2">
-        <pre className="text-start p-1 overflow-hidden overflow-ellipsis">{uint8ArrayToBase64(value)}</pre>
+        <pre className="text-start p-1 overflow-hidden overflow-ellipsis"
+          onClick={() => {
+            void (async () => {
+              await copyToClipboard(base64Value);
+            })();
+        }}>{base64Value}</pre>
       </div>
     </FlexRow>
   );
@@ -91,6 +106,7 @@ const PositionId = GenericKV;
 const Penalty = GenericKV;
 const UndelegateClaimProof = GenericKV;
 const AuctionId = GenericKV;
+const PayloadKey = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -358,7 +374,7 @@ const OutputView: FC<{ output: OutputT, noteView?: NoteViewT, payloadKey?: Paylo
         <NoteView note={noteView}/>
       ) : null}
       {payloadKey ? (
-        <PayloadKey payloadKey={payloadKey}/>
+        <PayloadKey name="Payload Key" value={payloadKey.inner}/>
       ) : null}
     </div>
   );
