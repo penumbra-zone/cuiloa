@@ -798,16 +798,16 @@ const ProposalPayload: FC<{ payload: ProposalSubmitKind }> = ({ payload }) => {
       const ibcValue = payload.value.transactionPlan?.value;
       const ibcTypeURL = payload.value.transactionPlan?.typeUrl;
       return (
-        <FlexCol className="flex-overflow w-full">
+        <FlexCol className="flex-wrap w-full">
           <p className="w-full">Community Pool Spend</p>
           {ibcValue ? (
-            <FlexCol className="flex-overflow w-full">
+            <FlexCol className="flex-wrap w-full">
               <p className="w-full">Value</p>
               <pre className="w-full">{ibcValue}</pre>
             </FlexCol>
           ) : null}
           {ibcTypeURL?.length !== undefined ? (
-            <FlexCol className="flex-overflow w-full">
+            <FlexCol className="flex-wrap w-full">
               <p>Proto URL Resource</p>
               <pre className="w-full">{ibcTypeURL}</pre>
             </FlexCol>
@@ -1102,34 +1102,34 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
   const validatorGovernanceKey = getValidatorGovernanceKey.optional()(validatorDefinition);
 
   return (
-    <FlexCol className="flex-overflow w-full">
-      <p className="w-full">Validator Definition</p>
+    <FlexCol className="flex-wrap w-full border rounded-sm shadow-sm">
+      <p className="w-full text-center font-semibold bg-slate-300">Validator Definition</p>
       {validatorIdKey ? <IdentityKey value={validatorIdKey.ik} name="Identity Verification Key"/> : null}
       {validatorConsensusKey ? <ConsensusKey value={validatorConsensusKey} name="Consensus PubKey"/> : null}
-      <FlexRow className="flex-overflow w-full">
+      <FlexRow className="flex-wrap w-full">
         <p className="w-full">Name</p>
         <p className="w-full">{validatorName}</p>
       </FlexRow>
-      <FlexRow className="flex-overflow w-full">
+      <FlexRow className="flex-wrap w-full">
         <p className="w-full">Website</p>
         <p className="w-full">{validatorWebsite}</p>
       </FlexRow>
-      <FlexRow className="flex-overflow w-full">
+      <FlexRow className="flex-wrap w-full">
         <p className="w-full">Description</p>
         <p className="w-full">{validatorDescription}</p>
       </FlexRow>
-      <FlexRow className="flex-overflow w-full">
+      <FlexRow className="flex-wrap w-full">
         <p className="w-full">Enabled?</p>
         <p className="w-full">{validatorEnabled}</p>
       </FlexRow>
       {validatorFundingStreams?.length !== undefined ? (
-        <FlexCol className="flex-overflow w-full">
+        <FlexCol className="flex-wrap w-full">
           <p>Funding Streams</p>
           {validatorFundingStreams.map((fundingStream, i) => <FundingStream fundingStream={fundingStream} key={i}/>)}
         </FlexCol>
       ) : null}
       {validatorSequenceNumber !== undefined  ? (
-        <FlexRow className="flex-overflow w-full">
+        <FlexRow className="flex-wrap w-full">
           <p className="w-full">Sequence Number</p>
           <p className="w-full">{validatorSequenceNumber}</p>
         </FlexRow>
@@ -1144,16 +1144,16 @@ const IBCRelayAction: FC<{ ibcRelayAction: IbcRelay }> = ({ ibcRelayAction }) =>
   const ibcValue = ibcRelayAction.rawAction?.value;
   const ibcTypeURL = ibcRelayAction.rawAction?.typeUrl;
   return (
-    <FlexCol className="flex-overflow w-full">
+    <FlexCol className="flex-wrap w-full">
       <p className="w-full">IBC Relay Raw Action</p>
       {ibcValue ? (
-        <FlexCol className="flex-overflow w-full">
+        <FlexCol className="flex-wrap w-full">
           <p className="w-full">Value</p>
           <pre className="w-full">{ibcValue}</pre>
         </FlexCol>
       ) : null}
       {ibcTypeURL?.length !== undefined ? (
-        <FlexCol className="flex-overflow w-full">
+        <FlexCol className="flex-wrap w-full">
           <p>Proto URL Resource</p>
           <pre className="w-full">{ibcTypeURL}</pre>
         </FlexCol>
