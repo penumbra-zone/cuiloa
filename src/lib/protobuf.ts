@@ -109,6 +109,31 @@ export const makeActionView = ({ action }: Action): ActionView | undefined => {
   }
 };
 
+export const getSpendViewProof = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.proof ? spendView.spendView.value.spend.proof : undefined,
+);
+
+export const getSpendViewAuthSig = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.authSig ? spendView.spendView.value.spend.authSig :  undefined,
+);
+
+export const getSpendViewBodyNullifier = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.body?.nullifier
+  ? spendView.spendView.value.spend.body.nullifier
+  : undefined,
+);
+
+export const getSpendViewBodySpendVerificationKey = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.body?.rk
+  ? spendView.spendView.value.spend.body.rk
+  : undefined,
+);
+
+export const getSpendViewBodyBalanceCommitment = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.body?.balanceCommitment
+  ? spendView.spendView.value.spend.body.balanceCommitment
+  : undefined,
+);
 
 export const getWalletId = createGetter((addressView?: AddressView) =>
   addressView?.addressView.case === "decoded" && addressView.addressView.value.walletId
