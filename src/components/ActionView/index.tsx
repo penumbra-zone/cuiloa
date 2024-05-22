@@ -62,6 +62,36 @@ function useCopyToClipboard() {
   return copyToClipboard;
 };
 
+const TxRow: FC<{ label: string, value?: string | bigint | number, className?: string }> = ({ label: name, value, className }) => {
+  const copyToClipboard = useCopyToClipboard();
+  let text;
+  if (value !== undefined) {
+    if (typeof value === "number" || typeof value === "bigint") {
+      text = value.toString();
+    } else {
+      text = value !== "" ? value : "N/A";
+    }
+  } else {
+    text = "N/A";
+  }
+
+  return (
+    <FlexRow className={cn("flex-wrap w-full justify-between", className ?? "")}>
+      <div className="w-1/2">
+        <p className="text-start p-1">{name}</p>
+      </div>
+      <div className="w-1/2">
+        <pre className="text-start p-1 overflow-hidden overflow-ellipsis"
+          onClick={() => {
+            void (async () => {
+              await copyToClipboard(text);
+            })();
+        }}>{text}</pre>
+      </div>
+    </FlexRow>
+  );
+};
+
 export const GenericKV: FC<{ name: string, value: Uint8Array, className?: string }> = ({ name, value, className }) => {
 
   const base64Value = uint8ArrayToBase64(value);
@@ -553,20 +583,22 @@ const FeeParameters: FC<{ feeParameters: FeeParametersT }> = ({ feeParameters })
 const FundingStream: FC<{ fundingStream: FundingStreamT }> = ({ fundingStream }) => {
   const fundingStreamToAddress = getFundingStreamToAddress.optional()(fundingStream);
   const fundingStreamBps = getFundingStreamRateBps.optional()(fundingStream);
-  return (
-    <FlexCol className="flex-overflow w-full">
-      {fundingStreamToAddress !== undefined ?
-        <FlexRow className="flex-overflow w-full">
-          <p>Destination Address</p>
-          <pre>{fundingStreamToAddress}</pre>
-        </FlexRow> : null}
-      {fundingStreamBps !== undefined ?
-        <FlexRow>
-          <p>Reward BPS</p>
-          <pre>{fundingStreamToAddress}</pre>
-        </FlexRow> : null}
-    </FlexCol>
-  );
+  if (fundingStreamToAddress !== undefined) {
+    return (
+      <FlexCol className="w-full">
+        <TxRow label="Recipient" value="To Address"/>
+        <TxRow label="Destination Address" value={fundingStreamToAddress}/>
+        <TxRow label="Reward BPS" value={fundingStreamBps}/>
+      </FlexCol>
+    );
+  } else {
+    return (
+      <FlexCol className="w-full">
+        <TxRow label="Recipient" value="To Community Pool"/>
+        <TxRow label="Reward BPS" value={fundingStreamBps}/>
+      </FlexCol>
+    );
+  }
 };
 
 const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext }) => {
@@ -1122,34 +1154,17 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
       <p className="w-full text-center font-semibold bg-slate-300">Validator Definition</p>
       {validatorIdKey ? <IdentityKey value={validatorIdKey.ik} name="Identity Verification Key"/> : null}
       {validatorConsensusKey ? <ConsensusKey value={validatorConsensusKey} name="Consensus PubKey"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p className="w-full">Name</p>
-        <p className="w-full">{validatorName}</p>
-      </FlexRow>
-      <FlexRow className="flex-wrap w-full">
-        <p className="w-full">Website</p>
-        <p className="w-full">{validatorWebsite}</p>
-      </FlexRow>
-      <FlexRow className="flex-wrap w-full">
-        <p className="w-full">Description</p>
-        <p className="w-full">{validatorDescription}</p>
-      </FlexRow>
-      <FlexRow className="flex-wrap w-full">
-        <p className="w-full">Enabled?</p>
-        <p className="w-full">{validatorEnabled}</p>
-      </FlexRow>
+      <TxRow label="Name" value={validatorName}/>
+      <TxRow label="Website" value={validatorWebsite}/>
+      <TxRow label="Description" value={validatorDescription}/>
+      <TxRow label="Enabled?" value={validatorEnabled?.toString() ?? undefined }/>
       {validatorFundingStreams?.length !== undefined ? (
-        <FlexCol className="flex-wrap w-full">
-          <p>Funding Streams</p>
+        <FlexCol className="w-full">
+          <p className="text-center bg-gray-200">Funding Streams</p>
           {validatorFundingStreams.map((fundingStream, i) => <FundingStream fundingStream={fundingStream} key={i}/>)}
         </FlexCol>
       ) : null}
-      {validatorSequenceNumber !== undefined  ? (
-        <FlexRow className="flex-wrap w-full">
-          <p className="w-full">Sequence Number</p>
-          <p className="w-full">{validatorSequenceNumber}</p>
-        </FlexRow>
-      ) : null}
+      {validatorSequenceNumber !== undefined  ? <TxRow label="Sequence Number" value={validatorSequenceNumber}/> : null}
       {validatorGovernanceKey ? <GovernanceKey value={validatorGovernanceKey.gk} name="Governance Key"/> : null}
       {validatorAuthSig ? <AuthSignature value={validatorAuthSig} name="Auth Signature"/> : null}
     </FlexCol>
