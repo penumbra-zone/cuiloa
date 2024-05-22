@@ -1,12 +1,12 @@
 import { type FC } from "react";
 import React from "react";
-import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type Swap as SwapT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT, type BatchSwapOutputData as BatchSwapOutputDataT, type SwapPlaintext as SwapPlaintextT, type PositionOpen as PositionOpenT, type Position as PositionT, type TradingFunction as TradingFunctionT, PositionState_PositionStateEnum, type PositionClose as PositionCloseT, type PositionWithdraw as PositionWithdrawT, type PositionRewardClaim as PositionRewardClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT, type BatchSwapOutputData as BatchSwapOutputDataT, type SwapPlaintext as SwapPlaintextT, type PositionOpen as PositionOpenT, type Position as PositionT, type TradingFunction as TradingFunctionT, PositionState_PositionStateEnum, type PositionClose as PositionCloseT, type PositionWithdraw as PositionWithdrawT, type PositionRewardClaim as PositionRewardClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { NoteView as NoteViewT, NotePayload as NotePayloadT, SpendView as SpendViewT, OutputView as OutputViewT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type Vote as VoteT, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutputViewKey, getOutputViewNote, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView, getSpendViewBodyNullifier, getSpendViewAuthSig, getSpendViewProof, getSpendViewBodySpendVerificationKey, getSpendViewBodyBalanceCommitment, getOutputViewBodyNotePayload, getOutputViewProof, getOutputViewBodyBalanceCommitment, getOutputViewBodyWrappedMemoKey, getOutputViewBodyOvkWrappedKey } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutputViewKey, getOutputViewNote, getSpendNote, getSwapViewBodyAmounts, getSwapViewBodyFeeCommitment, getSwapViewBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView, getSpendViewBodyNullifier, getSpendViewAuthSig, getSpendViewProof, getSpendViewBodySpendVerificationKey, getSpendViewBodyBalanceCommitment, getOutputViewBodyNotePayload, getOutputViewProof, getOutputViewBodyBalanceCommitment, getOutputViewBodyWrappedMemoKey, getOutputViewBodyOvkWrappedKey, getSwapViewProof, getSwapViewBodyTradingPair } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { uint8ArrayToBase64 } from "@penumbra-zone/types/src/base64";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
@@ -156,6 +156,7 @@ const IndexRandomizer = GenericKV;
 const AddressBytes = GenericKV;
 const OutputProof = GenericKV;
 const EncryptedNote = GenericKV;
+const AssetIdBytes = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -349,22 +350,14 @@ const OutputView: FC<{ outputView: OutputViewT }> = ({ outputView }) => {
 };
 
 const AssetId: FC<{ assetId: AssetIdT, label?: string }> = ({ assetId, label }) => {
+  const title = label !== undefined && label !== "" ? label : "Asset ID";
   return (
-    <FlexRow>
-      {(label ?? "") ? <p>{label}</p> : <p>Asset ID</p>}
-      <FlexRow>
-        <p>inner</p>
-        <p>{assetId.inner}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Alt Bech32</p>
-        <p>{assetId.altBech32m}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Alt Base Denomination</p>
-        <p>{assetId.altBaseDenom}</p>
-      </FlexRow>
-    </FlexRow>
+    <FlexCol className="w-full">
+      <p className="text-center">{title}</p>
+      <AssetIdBytes name="Inner Bytes" value={assetId.inner}/>
+      <TxRow label="Alternative Bech32-Encoding of Inner Bytes" value={assetId.altBech32m}/>
+      <TxRow label="Alternative Base Denomination String" value={assetId.altBaseDenom}/>
+    </FlexCol>
   );
 };
 
@@ -447,48 +440,22 @@ const BatchSwapOutputData: FC<{ batchSwapOutput: BatchSwapOutputDataT }> = ({ ba
 const Metadata: FC<{ metaData: MetadataT, label?: string }> = ({ metaData, label }) => {
   const assetId = getAssetId(metaData);
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
       {(label ?? "") ? <p>{label}</p> : <p>Asset Metadata</p>}
-      <FlexRow>
-        <p>Name</p>
-        <p>{metaData.name}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Description</p>
-        <p>{metaData.description}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Symbol</p>
-        <p>{metaData.symbol}</p>
-      </FlexRow>
+      <TxRow label="Name" value={metaData.name}/>
+      <TxRow label="Description" value={metaData.description}/>
+      <TxRow label="Symbol" value={metaData.symbol}/>
       <AssetId assetId={assetId} label="Penumbra Asset ID"/>
-      <FlexRow>
-        <p>Display Denomination</p>
-        <pre>{metaData.display}</pre>
-      </FlexRow>
-      <FlexRow>
-        <p>Base Denomination</p>
-        <pre>{metaData.base}</pre>
-      </FlexRow>
+      <TxRow label="Display Denomination" value={metaData.display}/>
+      <TxRow label="Base Denomination" value={metaData.base}/>
       {/* TODO: This needs to be fleshed out. Skipping aliases and information for exponents. Could easily blow up the UI without collapsable elements as it is. */}
-      <FlexRow>
-        {metaData.denomUnits.map((denomUnit, i) => <p key={i}>{denomUnit.denom}</p>)}
-      </FlexRow>
+      <FlexCol className="w-full">
+        <p className="text-center">Denomination Units</p>
+        {metaData.denomUnits.map((denomUnit, i) => <pre key={i}>{denomUnit.denom}</pre>)}
+      </FlexCol>
       {/* TODO: Skipping AssetImage images field entirely */}
-      <FlexRow>
-        <p>Asset Images</p>
-        <p>Unimplemented</p>
-      </FlexRow>
+      <TxRow label="Asset Images" value="NOT CURRENTLY IMPLEMENTED"/>
     </FlexCol>
-  );
-};
-
-const Vote: FC<{ vote: VoteT }> = ({ vote }) => {
-  return (
-    <FlexRow>
-      <p>Vote</p>
-      <pre>{vote.vote.toString()}</pre>
-    </FlexRow>
   );
 };
 
@@ -496,8 +463,8 @@ const Fee: FC<{ fee: FeeT}> = ({ fee }) => {
   const amount = getFeeAmount(fee);
   const assetId = getFeeAssetId.optional()(fee);
   return (
-    <FlexCol>
-      <p>Fee</p>
+    <FlexCol className="w-full">
+      <p className="text-center">Fee</p>
       <Amount amount={amount}/>
       {assetId ? <AssetId assetId={assetId} label="Token ID"/> : null}
     </FlexCol>
@@ -537,7 +504,7 @@ const FundingStream: FC<{ fundingStream: FundingStreamT }> = ({ fundingStream })
   const fundingStreamBps = getFundingStreamRateBps.optional()(fundingStream);
   if (fundingStreamToAddress !== undefined) {
     return (
-      <FlexCol className="w-full">
+      <FlexCol className="w-full border-b">
         <TxRow label="Recipient" value="To Address"/>
         <TxRow label="Destination Address" value={fundingStreamToAddress}/>
         <TxRow label="Reward BPS" value={fundingStreamBps}/>
@@ -545,7 +512,7 @@ const FundingStream: FC<{ fundingStream: FundingStreamT }> = ({ fundingStream })
     );
   } else {
     return (
-      <FlexCol className="w-full">
+      <FlexCol className="w-full border-b">
         <TxRow label="Recipient" value="To Community Pool"/>
         <TxRow label="Reward BPS" value={fundingStreamBps}/>
       </FlexCol>
@@ -560,7 +527,7 @@ const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext })
   const claimFee = getSwapPlaintextFee(swapPlaintext);
   const claimAddress = getSwapPlaintextAddress(swapPlaintext);
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
       <TradingPair tradingPair={tradingPair}/>
       <Amount amount={delta1I} label="Delta 1"/>
       <Amount amount={delta2I} label="Delta 2"/>
@@ -909,28 +876,6 @@ const Position: FC<{ position: PositionT }> = ({ position }) => {
   );
 };
 
-const Swap: FC<{ swap: SwapT}> = ({ swap }) => {
-  const swapBody = swap.body;
-  const { delta1I, delta2I } = getSwapBodyAmounts(swapBody);
-  const feeCommitment = getSwapBodyFeeCommitment(swapBody);
-  const payload = getSwapBodyPayload(swapBody);
-  return (
-    <FlexCol>
-      {swap.proof ? <ZKSwapProof name="ZK Proof" value={swap.proof.inner}/> : null}
-      {swapBody ? (
-        <FlexCol>
-          <p>Swap Body</p>
-          <TradingPair tradingPair={swapBody.tradingPair}/>
-          <Amount amount={delta1I} label="delta_1_i"/>
-          <Amount amount={delta2I} label="delta_2_i"/>
-          <BalanceCommitment value={feeCommitment.inner} name="Fee Commitment"/>
-          <SwapPayload swapPayload={payload}/>
-        </FlexCol>
-      ) : null}
-    </FlexCol>
-  );
-};
-
 const SwapViewOpaque: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   const batchSwapOutput = getBatchSwapOutputData.optional()(swapView);
   const metadata1 = getSwapMetadata1.optional()(swapView);
@@ -938,7 +883,7 @@ const SwapViewOpaque: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   const outputValue1 = getOutputValue1FromSwapView.optional()(swapView);
   const outputValue2 = getOutputValue2FromSwapView.optional()(swapView);
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
       {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
       {outputValue1 ? <ValueView valueView={outputValue1} label="Asset 1"/> : null}
       {outputValue2 ? <ValueView valueView={outputValue2} label="Asset 2"/> : null}
@@ -957,7 +902,7 @@ const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   const metadata1 = getSwapMetadata1.optional()(swapView);
   const metadata2 = getSwapMetadata2.optional()(swapView);
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
       <SwapPlaintext swapPlaintext={swapPlaintext}/>
       {transactionId ? <TransactionId value={transactionId.inner} name="Transaction ID"/> : null}
       {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
@@ -970,15 +915,24 @@ const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
 };
 
 const SwapView: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
-  // NOTE: everything but Swap itself and SwapPlaintext (for SwapView_Visible) are optional.
-  //       While less than hygenic, it would theoretically be fine to just have all getters defined here
-  //       and render purely on ternary checks. SwapPlaintext would be made optional but would only render
-  //       if a SwapView_Visible, etc.
-  const swap = getSwap(swapView);
+  const swapProof = getSwapViewProof.optional()(swapView);
+  const tradingPair = getSwapViewBodyTradingPair.optional()(swapView);
+  const { delta1I, delta2I } = getSwapViewBodyAmounts(swapView);
+  const feeCommitment = getSwapViewBodyFeeCommitment(swapView);
+  const payload = getSwapViewBodyPayload(swapView);
+
   return (
-    <FlexCol>
-      <p>Swap View</p>
-      <Swap swap={swap}/>
+    <FlexCol className="w-full">
+      <p className="text-center bg-slate-400">Swap View</p>
+        {swapProof? <ZKSwapProof name="ZK Proof" value={swapProof.inner}/> : null}
+      <FlexCol className="w-full">
+        <p className="text-center">Swap Body</p>
+        <TradingPair tradingPair={tradingPair}/>
+        <Amount amount={delta1I} label="delta_1_i"/>
+        <Amount amount={delta2I} label="delta_2_i"/>
+        <BalanceCommitment value={feeCommitment.inner} name="Fee Commitment"/>
+        <SwapPayload swapPayload={payload}/>
+      </FlexCol>
       {swapView.swapView.case === "visible" ? (
         <SwapViewVisible swapView={swapView}/>
       ) : swapView.swapView.case === "opaque" ? (
@@ -1072,7 +1026,7 @@ const DelegatorVoteView: FC<{ delegatorVoteView: DelegatorVoteViewT }> = ({ dele
                 <pre>{bodyStartPosition.toString()}</pre>
             </FlexRow>
             ) : null}
-            {bodyVote ? <Vote vote={bodyVote}/> : null}
+            {bodyVote ? <TxRow label="Vote" value={bodyVote.vote.toString()}/> : null}
             {bodyValue ? <Value value={bodyValue} label="Delegation Note Value"/> : null}
             {bodyUnboundedAmount ? <Amount amount={bodyUnboundedAmount} label="Delegation Note Amount"/> : null}
             {bodyNullifier ? <Nullifier value={bodyNullifier.inner} name="Input Note Nullifier"/> : null}
@@ -1111,8 +1065,8 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
       <TxRow label="Description" value={validatorDescription}/>
       <TxRow label="Enabled?" value={validatorEnabled?.toString() ?? undefined }/>
       {validatorFundingStreams?.length !== undefined ? (
-        <FlexCol className="w-full">
-          <p className="text-center bg-gray-200">Funding Streams</p>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-gray-300">Funding Streams</p>
           {validatorFundingStreams.map((fundingStream, i) => <FundingStream fundingStream={fundingStream} key={i}/>)}
         </FlexCol>
       ) : null}
@@ -1209,7 +1163,7 @@ const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote })
               <pre>{bodyProposal.toString()}</pre>
             </FlexRow>
           ) : null}
-          {bodyVote ? <Vote vote={bodyVote}/> : null}
+          {bodyVote ? <TxRow label="Vote" value={bodyVote.vote.toString()}/> : null}
           {bodyIdKey ? <IdentityKey value={bodyIdKey.ik} name="Validator Identity"/> : null}
           {bodyGovernanceKey ? <GovernanceKey value={bodyGovernanceKey.gk} name="Governance Key"/> : null}
           {bodyReason ? (
