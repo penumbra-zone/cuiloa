@@ -4,14 +4,14 @@ import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type 
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT, SpendView as SpendViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type Vote as VoteT, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
-import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
+import { getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView, getSpendViewBodyNullifier, getSpendViewAuthSig, getSpendViewProof, getSpendViewBodySpendVerificationKey, getSpendViewBodyBalanceCommitment } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { uint8ArrayToBase64 } from "@penumbra-zone/types/src/base64";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
-import type { Address as AddressT, AddressIndex as AddressIndexT, WalletId as WalletIdT, PayloadKey as PayloadKeyT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
+import type { Address as AddressT, AddressIndex as AddressIndexT, PayloadKey as PayloadKeyT, AddressView as AddressViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type AssetId as AssetIdT, type EquivalentValue as EquivalentValueT, type Metadata as MetadataT, type Value as ValueT, type ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
@@ -150,6 +150,9 @@ const Penalty = GenericKV;
 const UndelegateClaimProof = GenericKV;
 const AuctionId = GenericKV;
 const PayloadKey = GenericKV;
+const WalletId = GenericKV;
+const IndexRandomizer = GenericKV;
+const AddressBytes = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -291,68 +294,44 @@ const Output: FC<{ output: OutputT }> = ({ output }) => {
 
 const Address :FC<{ address: AddressT }> = ({ address }) => {
   return (
-    <div className="flex flex-col">
-      <div className="flex">
-        <p>Altbech32</p>
-        <p>{address.altBech32m}</p>
-      </div>
-      <div className="flex">
-        <p>Inner</p>
-        <pre>{address.inner}</pre>
-      </div>
-    </div>
+    <FlexCol className="w-full">
+      <p className="text-center bg-slate-200">Address</p>
+      <AddressBytes name="Address" value={address.inner}/>
+      <TxRow label="Altbech32-encoded Address" value={address.altBech32m}/>
+    </FlexCol>
   );
 };
 
 const AddressIndex : FC<{ index: AddressIndexT }> = ({ index }) => {
   return (
-    <div className="flex flex-col">
-      <div className="flex">
-        <p>Account</p>
-        <p>{index.account}</p>
-      </div>
-      <div className="flex">
-        <p>Randomizer</p>
-        <pre>{index.randomizer}</pre>
-      </div>
-    </div>
+    <FlexCol className="w-full">
+      <p className="text-center">Address Index</p>
+      <TxRow label="Account" value={index.account}/>
+      <IndexRandomizer name="Randomizer" value={index.randomizer}/>
+    </FlexCol>
   );
 };
 
-const WalletId : FC<{ walletId: WalletIdT }> = ({ walletId }) => {
+const AddressView: FC<{ addressView: AddressViewT }> = ({ addressView }) => {
+  const walletId = getWalletId.optional()(addressView);
+  const addressIndex = getAddressIndex.optional()(addressView);
   return (
-    <div className="flex flex-col">
-      <p>WalletID</p>
-      <div className="flex">
-        <p>WalletID inner</p>
-        <pre>{walletId.inner}</pre>
-      </div>
-    </div>
+    <FlexCol className="w-full">
+      <p className="text-center bg-slate-200">Address View</p>
+      {addressIndex ? <AddressIndex index={addressIndex}/> : null}
+      {walletId ? <WalletId name="WalletId" value={walletId.inner}/> : null}
+    </FlexCol>
   );
 };
 
 
 const NoteView : FC<{note: NoteViewT}>= ({ note }) => {
-  const address = getAddress.optional()(note.address);
-  const walletId = getWalletId.optional()(note.address);
-  const addressIndex = getAddressIndex.optional()(note.address);
-
   return (
-    <div className="flex flex-col flex-wrap w-full">
-      <p className="w-full">TxNote</p>
-      {address ? (
-        <div className="flex flex-col flex-wrap w-full">
-          <p className="w-full">Address</p>
-          <Address address={address}/>
-          {walletId ? <WalletId walletId={walletId}/> : null}
-          {addressIndex ? <AddressIndex index={addressIndex}/> : null}
-        </div>
-      ) : null}
-      <div className="flex flex-col flex-wrap">
-        <p className="w-full">rseed</p>
-        <pre>{note.rseed}</pre>
-      </div>
-    </div>
+    <FlexCol className="w-full">
+      <p className="text-center">Note View</p>
+      {note.address ? <AddressView addressView={note.address}/> : null}
+      <RSeed name="RSeed" value={note.rseed}/>
+    </FlexCol>
   );
 };
 
