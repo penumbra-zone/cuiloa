@@ -9,7 +9,7 @@ import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { Delegate, FundingStream, Undelegate, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 import type { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
-import type { ActionDutchAuctionEnd, ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, ActionDutchAuctionWithdrawView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
+import type { ActionDutchAuctionEnd, ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, ActionDutchAuctionWithdrawView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1/auction_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {

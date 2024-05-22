@@ -1,4 +1,5 @@
-import type { FC } from "react";
+import { type FC } from "react";
+import React from "react";
 import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type Swap as SwapT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT, type BatchSwapOutputData as BatchSwapOutputDataT, type SwapPlaintext as SwapPlaintextT, type PositionOpen as PositionOpenT, type Position as PositionT, type TradingFunction as TradingFunctionT, PositionState_PositionStateEnum, type PositionClose as PositionCloseT, type PositionWithdraw as PositionWithdrawT, type PositionRewardClaim as PositionRewardClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
@@ -7,6 +8,7 @@ import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
+import { uint8ArrayToBase64 } from "@penumbra-zone/types/src/base64";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
 import type { Address as AddressT, AddressIndex as AddressIndexT, WalletId as WalletIdT, PayloadKey as PayloadKeyT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
@@ -19,6 +21,8 @@ import type { IbcRelay, Ics20Withdrawal as Ics20WithdrawalT } from "@buf/penumbr
 import type { Height as HeightT} from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/client_pb";
 import type { Epoch as EpochT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/sct/v1/sct_pb";
 import type { ActionDutchAuctionEnd as ActionDutchAuctionEndT, ActionDutchAuctionScheduleView as ActionDutchAuctionScheduleViewT, ActionDutchAuctionWithdrawView as ActionDutchAuctionWithdrawViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1/auction_pb";
+import { cn } from "@/lib/utils";
+import { useToast } from "../ui/use-toast";
 
 // Explicit typing for the ProposalSubmit.payload field message variants.
 type ProposalSubmitKind = {
@@ -49,11 +53,19 @@ type ProposalSubmitKind = {
 
 function useCopyToClipboard() {
   const [copied, setCopied] = React.useState(false);
+  const { toast } = useToast();
   React.useEffect(() => {
     setTimeout(() => {
       setCopied(false);
     }, 2000);
-    // TODO: pop notification?
+    if (copied) {
+      toast({
+        variant: "default",
+        title: "Copied!",
+        description: "Successfully copied value to clipboard.",
+        duration: 2000,
+      });
+    }
   }, [copied]);
   async function copyToClipboard(value: string) {
     await navigator.clipboard.writeText(value);
