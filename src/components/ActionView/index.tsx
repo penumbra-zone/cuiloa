@@ -1,17 +1,17 @@
 import { type FC } from "react";
 import React from "react";
 import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type Swap as SwapT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT, type BatchSwapOutputData as BatchSwapOutputDataT, type SwapPlaintext as SwapPlaintextT, type PositionOpen as PositionOpenT, type Position as PositionT, type TradingFunction as TradingFunctionT, PositionState_PositionStateEnum, type PositionClose as PositionCloseT, type PositionWithdraw as PositionWithdrawT, type PositionRewardClaim as PositionRewardClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT, SpendView as SpendViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
+import type { NoteView as NoteViewT, NotePayload as NotePayloadT, SpendView as SpendViewT, OutputView as OutputViewT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type Vote as VoteT, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView, getSpendViewBodyNullifier, getSpendViewAuthSig, getSpendViewProof, getSpendViewBodySpendVerificationKey, getSpendViewBodyBalanceCommitment } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutputViewKey, getOutputViewNote, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView, getSpendViewBodyNullifier, getSpendViewAuthSig, getSpendViewProof, getSpendViewBodySpendVerificationKey, getSpendViewBodyBalanceCommitment, getOutputViewBodyNotePayload, getOutputViewProof, getOutputViewBodyBalanceCommitment, getOutputViewBodyWrappedMemoKey, getOutputViewBodyOvkWrappedKey } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { uint8ArrayToBase64 } from "@penumbra-zone/types/src/base64";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
-import type { Address as AddressT, AddressIndex as AddressIndexT, PayloadKey as PayloadKeyT, AddressView as AddressViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
+import type { Address as AddressT, AddressIndex as AddressIndexT, AddressView as AddressViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type AssetId as AssetIdT, type EquivalentValue as EquivalentValueT, type Metadata as MetadataT, type Value as ValueT, type ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
@@ -126,7 +126,8 @@ export const GenericKV: FC<{ name: string, value: Uint8Array, className?: string
   );
 };
 
-// TODO: Currently abusing GenericKV. These keys diverge drastically on encoding and should reflect this to the degree possible.
+// TODO: Fold logic of GenericKV into TxRow and we eliminate all of this.
+// TODO: Would also be useful because it would eliminate a lot of undefine checks while also visibly signaling that a field is missing.
 const OvkWrappedKey = GenericKV;
 const WrappedMemoKey = GenericKV;
 const EphemeralKey = GenericKV;
@@ -153,6 +154,8 @@ const PayloadKey = GenericKV;
 const WalletId = GenericKV;
 const IndexRandomizer = GenericKV;
 const AddressBytes = GenericKV;
+const OutputProof = GenericKV;
+const EncryptedNote = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -243,54 +246,15 @@ const Value: FC<{ value: ValueT, label?: string }> = ({ value, label }) => {
 
 const NotePayload: FC<{ notePayload: NotePayloadT }> = ({ notePayload }) => {
   return (
-    <div className="flex flex-wrap w-full">
-      <p className="w-full">NotePayload</p>
-      <div className="flex flex-wrap w-full">
-        {notePayload.noteCommitment ? (
-          <div className="flex">
-            <p className="w-full">Note Commitment</p>
-            <pre className="w-full">{notePayload.noteCommitment.inner}</pre>
-          </div>
-        ) : null}
-        <EphemeralKey value={notePayload.ephemeralKey} name="Ephemeral Key"/>
-        {notePayload.encryptedNote ? (
-          <div className="flex flex-wrap w-full">
-            <p className="w-full">Encrypted Note</p>
-            <pre className="w-full">{notePayload.encryptedNote.inner}</pre>
-          </div>
-        ) : null}
-      </div>
-    </div>
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-200">Note Payload</p>
+      {notePayload.noteCommitment ? <StateCommitment name="Note Commitment" value={notePayload.noteCommitment.inner}/> : null}
+      <EphemeralKey name="Ephemeral Key" value={notePayload.ephemeralKey}/>
+      {notePayload.encryptedNote ? <EncryptedNote name="Encrypted Note" value={notePayload.encryptedNote.inner}/> : null}
+    </FlexCol>
   );
 };
 
-
-const Output: FC<{ output: OutputT }> = ({ output }) => {
-  const body = output.body;
-  return (
-    <div className="flex flex-col flex-wrap w-full">
-      {body ? (
-        <div className="flex flex-wrap w-full">
-          <p className="w-full">OutputBody</p>
-          {body.notePayload ? (
-            <NotePayload notePayload={body.notePayload}/>
-          ) : null}
-          {body.balanceCommitment ? (
-            <BalanceCommitment value={body.balanceCommitment.inner} name="Balance Commitment"/>
-          ) : null}
-          <WrappedMemoKey value={body.wrappedMemoKey} name="Wrapped Memo Key"/>
-          <OvkWrappedKey value={body.ovkWrappedKey} name="Ovk Wrapped Key"/>
-        </div>
-      ) : null}
-      {output.proof ? (
-        <div className="flex flex-wrap w-full">
-          <p className="w-full">Proof</p>
-          <pre className="w-full">{output.proof.inner}</pre>
-        </div>
-      ) : null}
-    </div>
-  );
-};
 
 const Address :FC<{ address: AddressT }> = ({ address }) => {
   return (
@@ -340,16 +304,17 @@ const SpendView : FC<{ spendView: SpendViewT }> = ({ spendView }) => {
   const spendAuthSig = getSpendViewAuthSig.optional()(spendView);
   const spendBodyNullifier = getSpendViewBodyNullifier.optional()(spendView);
   const spendBodyRk = getSpendViewBodySpendVerificationKey.optional()(spendView);
-  const spendBodyBalance = getSpendViewBodyBalanceCommitment.optional()(spendView)
+  const spendBodyBalance = getSpendViewBodyBalanceCommitment.optional()(spendView);
   const noteView = getSpendNote.optional()(spendView);
+
   return (
-    <FlexCol className="w-full">
+    <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Spend View</p>
       {spendProof ? <SpendProof name="Proof" value={spendProof.inner}/> : null}
       {spendAuthSig ? <AuthSignature name="AuthSig" value={spendAuthSig.inner}/> : null}
       {(spendBodyNullifier ?? spendBodyRk) ?? spendBodyBalance ? (
-        <FlexCol className="w-full">
-          <p className="text-center">Spend Body</p>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-slate-300">Spend Body</p>
           {spendBodyNullifier ? <Nullifier name="Nullifier" value={spendBodyNullifier.inner} /> : null}
           {spendBodyRk ? <SpendVerificationKey name="Verification Key" value={spendBodyRk.inner} /> : null}
           {spendBodyBalance ? <BalanceCommitment name="Balance Commitment" value={spendBodyBalance.inner}/> : null}
@@ -360,18 +325,31 @@ const SpendView : FC<{ spendView: SpendViewT }> = ({ spendView }) => {
   );
 };
 
-const OutputView: FC<{ output: OutputT, noteView?: NoteViewT, payloadKey?: PayloadKeyT }> = ({ output, noteView, payloadKey }) => {
+const OutputView: FC<{ outputView: OutputViewT }> = ({ outputView }) => {
+  // Output & OutputBody
+  const bodyNotePayload = getOutputViewBodyNotePayload.optional()(outputView);
+  const bodyBalanceCommitment = getOutputViewBodyBalanceCommitment.optional()(outputView);
+  const bodyWrappedMemoKey = getOutputViewBodyWrappedMemoKey(outputView);
+  const bodyOvkWrappedKey = getOutputViewBodyOvkWrappedKey(outputView);
+  const outputProof = getOutputViewProof.optional()(outputView);
+  // OutputView.Visible fields
+  const noteView = getOutputViewNote.optional()(outputView);
+  const payloadKey = getOutputViewKey.optional()(outputView);
+
   return (
-    <div className="flex flex-col flex-wrap w-full">
-      <p className="w-full">Output View</p>
-      <Output output={output} />
-      {noteView ? (
-        <NoteView note={noteView}/>
-      ) : null}
-      {payloadKey ? (
-        <PayloadKey name="Payload Key" value={payloadKey.inner}/>
-      ) : null}
-    </div>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Output View</p>
+      {noteView ? <NoteView note={noteView}/> : null}
+      {payloadKey ? <PayloadKey name="Payload Key" value={payloadKey.inner}/> : null}
+      <FlexCol className="w-full border-b">
+        <p className="text-center bg-slate-300">Output Body</p>
+        {bodyNotePayload ? <NotePayload notePayload={bodyNotePayload}/> : null}
+        {bodyBalanceCommitment ? <BalanceCommitment value={bodyBalanceCommitment.inner} name="Balance Commitment"/> : null}
+        <WrappedMemoKey value={bodyWrappedMemoKey} name="Wrapped Memo Key"/>
+        <OvkWrappedKey value={bodyOvkWrappedKey} name="Ovk Wrapped Key"/>
+        {outputProof ? <OutputProof name="Output Proof" value={outputProof.inner}/> : null}
+      </FlexCol>
+    </FlexCol>
   );
 };
 
@@ -1554,10 +1532,7 @@ export const getActionView = ({ actionView } : ActionViewT) => {
       return <SpendView spendView={actionView.value}/>;
     }
     case "output": {
-      const outputView = getOutput(actionView.value);
-      const noteView = getOutputNote.optional()(actionView.value);
-      const outputKey = getOutputKey.optional()(actionView.value);
-      return <OutputView output={outputView} noteView={noteView} payloadKey={outputKey}/>;
+      return <OutputView outputView={actionView.value}/>;
     }
     case "swap": {
       return <SwapView swapView={actionView.value}/>;

@@ -153,13 +153,38 @@ export const getOutput = createGetter((outputView?: OutputView) =>
   outputView?.outputView.value?.output ? outputView.outputView.value.output : undefined,
 );
 
-export const getOutputNote = createGetter((outputView?: OutputView) =>
+export const getOutputViewNote = createGetter((outputView?: OutputView) =>
   outputView?.outputView.case === "visible" ? outputView.outputView.value.note : undefined,
 );
 
-export const getOutputKey = createGetter((outputView?: OutputView) =>
+export const getOutputViewKey = createGetter((outputView?: OutputView) =>
   outputView?.outputView.case === "visible" ? outputView.outputView.value.payloadKey : undefined,
 );
+
+export const getOutputViewProof = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.proof ? outputView.outputView.value.output.proof : undefined,
+);
+export const getOutputViewBodyNotePayload = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.body?.notePayload
+  ? outputView.outputView.value.output.body.notePayload
+  : undefined,
+);
+export const getOutputViewBodyBalanceCommitment= createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.body?.balanceCommitment
+  ? outputView.outputView.value.output.body.balanceCommitment
+  : undefined,
+);
+export const getOutputViewBodyWrappedMemoKey = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.body
+  ? outputView.outputView.value.output.body.wrappedMemoKey
+  : undefined,
+);
+export const getOutputViewBodyOvkWrappedKey = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.body
+  ? outputView.outputView.value.output.body.ovkWrappedKey
+  : undefined,
+);
+
 
 export const getSwap = createGetter((swapView?: SwapView) =>
   swapView?.swapView.value?.swap ? swapView.swapView.value.swap : undefined,
