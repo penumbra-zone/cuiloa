@@ -188,17 +188,12 @@ const Height: FC<{ height: HeightT }> = ({ height }) => {
 };
 
 const Epoch: FC<{ epoch: EpochT, label?: string }> = ({ epoch, label }) => {
+  const title = label !== undefined && label !== "" ? label : "Epoch";
   return (
     <FlexCol className="w-full">
-      {(label ?? "") ? <p className="w-full">{label}</p> : <p className="w-full">Epoch</p>}
-      <FlexRow className="flex-wrap w-full">
-        <p>Index</p>
-        <pre>{epoch.index.toString()}</pre>
-      </FlexRow>
-      <FlexRow className="flex-wrap w-full">
-        <p>Start Height</p>
-        <pre>{epoch.startHeight.toString()}</pre>
-      </FlexRow>
+      {/* <p className="p-1 text-center">{title}</p> */}
+      <TxRow label={`${title} Index`} value={epoch.index}/>
+      <TxRow label={`${title} Start Height`} value={epoch.startHeight}/>
     </FlexCol>
   );
 };
@@ -376,6 +371,7 @@ const AssetId: FC<{ assetId: AssetIdT, label?: string }> = ({ assetId, label }) 
 const TradingPair: FC<{ tradingPair?: TradingPairT }> = ({ tradingPair }) => {
   const asset1 = getAsset1(tradingPair);
   const asset2 = getAsset2(tradingPair);
+
   return (
     <FlexCol>
       <p>Trading Pair</p>
@@ -386,10 +382,23 @@ const TradingPair: FC<{ tradingPair?: TradingPairT }> = ({ tradingPair }) => {
 };
 
 const Amount: FC<{ amount: AmountT, label?: string }> = ({ amount, label }) => {
+  const copyToClipboard = useCopyToClipboard();
+  const title = label !== undefined && label !== "" ? label : "Amount";
+  const amountText = joinLoHiAmount(amount).toString();
+
   return (
-    <FlexRow>
-      {(label ?? "") ? <p>{label}</p> : <p>Amount</p>}
-      <p>{joinLoHiAmount(amount).toString()}</p>
+    <FlexRow className="w-full">
+      <div className="w-1/2">
+        <p className="p-1 text-start">{title}</p>
+      </div>
+      <div className="w-1/2">
+        <pre className="text-start p-1 overflow-hidden overflow-ellipsis"
+          onClick={() => {
+            void (async () => {
+              await copyToClipboard(amountText);
+            })();
+        }}>{amountText}</pre>
+      </div>
     </FlexRow>
   );
 };
@@ -1094,7 +1103,7 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
 
   return (
     <FlexCol className="flex-wrap w-full border rounded-sm shadow-sm">
-      <p className="w-full text-center font-semibold bg-slate-300">Validator Definition</p>
+      <p className="w-full text-center font-semibold bg-slate-400">Validator Definition</p>
       {validatorIdKey ? <IdentityKey value={validatorIdKey.ik} name="Identity Verification Key"/> : null}
       {validatorConsensusKey ? <ConsensusKey value={validatorConsensusKey} name="Consensus PubKey"/> : null}
       <TxRow label="Name" value={validatorName}/>
@@ -1344,19 +1353,13 @@ const UndelegateClaim: FC<{ undelegateClaim: UndelegateClaimT }> = ({ undelegate
   const unbondingStartHeight = getUndelegateClaimUnbondingStartHeight(undelegateClaim);
   const undelegateClaimProof = getUndelegateClaimProof(undelegateClaim);
   return (
-    <FlexCol className="w-full">
+    <FlexCol className="w-full border">
       <p className="w-full">Undelegate Claim</p>
       {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Start Epoch Index (DEPRECATED)</p>
-        <pre>{startEpochIndex.toString()}</pre>
-      </FlexRow>
+      <TxRow label="Start Epoch Index (DEPRECATED)" value={startEpochIndex}/>
       {penalty ? <Penalty value={penalty.inner} name="Penalty"/> : null}
       {balanceCommitment ? <BalanceCommitment value={balanceCommitment.inner} name="Balance Commitment"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Unbonding Start Height</p>
-        <pre>{unbondingStartHeight.toString()}</pre>
-      </FlexRow>
+      <TxRow label="Unbonding Start Height" value={unbondingStartHeight}/>
       <UndelegateClaimProof value={undelegateClaimProof} name="Proof"/>
     </FlexCol>
   );
@@ -1410,13 +1413,10 @@ const Delegate: FC<{ delegate: DelegateT }> = ({ delegate }) => {
   const unbondedAmount = getDelegateUnbondedAmount.optional()(delegate);
   const delegationAmount = getDelegateDelegationAmount.optional()(delegate);
   return (
-    <FlexCol className="w-full">
-      <p className="w-full">Delegate</p>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Delegate</p>
       {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Epoch Index</p>
-        <pre>{epochIndex.toString()}</pre>
-      </FlexRow>
+      <TxRow label="Epoch Index" value={epochIndex}/>
       {unbondedAmount ? <Amount amount={unbondedAmount} label="Unbonded Amount"/> : null}
       {delegationAmount ? <Amount amount={delegationAmount} label="Delegation Amount"/> : null}
     </FlexCol>
@@ -1432,13 +1432,10 @@ const Undelegate: FC<{ undelegate: UndelegateT }> = ({ undelegate }) => {
   const delegationAmount = getUndelegateDelegationAmount.optional()(undelegate);
   const fromEpoch = getUndelegateFromEpoch.optional()(undelegate);
   return (
-    <FlexCol className="w-full">
-      <p className="w-full">Undelegate</p>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Undelegate</p>
       {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Start Epoch Index (DEPRECATED)</p>
-        <pre>{startEpochIndex.toString()}</pre>
-      </FlexRow>
+      <TxRow label="Start Epoch Index (DEPRECATED)" value={startEpochIndex}/>
       {unbondedAmount ? <Amount amount={unbondedAmount} label="Unbonded Amount"/> : null}
       {delegationAmount ? <Amount amount={delegationAmount} label="Delegation Amount"/> : null}
       {fromEpoch ? <Epoch epoch={fromEpoch} label="From Epoch"/> : null}
