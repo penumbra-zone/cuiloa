@@ -2,6 +2,11 @@ import { type FC } from "react";
 import { TransactionView as TransactionViewSchema, type Transaction, TransactionBodyView as TransactionBodyViewSchema, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { makeActionView } from "@/lib/protobuf";
 import { TransactionBodyView } from "./TransactionBodyView";
+import { FlexCol, FlexRow } from "../ui/flex";
+import { GenericKV } from "../ActionView";
+
+const BindingSig = GenericKV;
+const MerkleRoot = GenericKV;
 
 const makeTransactionView = ({ body, ...tx }: Transaction) : TransactionViewSchema => {
 
@@ -35,19 +40,11 @@ interface TransactionViewProps {
 export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
   const txView = makeTransactionView(tx);
   return (
-    <div className="flex flex-col sm:items-start items-center w-full gap-y-1">
-      <div className="flex flex-col items-center w-full">
-        <p className="text-sm font-semibold">TransactionBodyView</p>
-        {txView.bodyView ? (<TransactionBodyView bodyView={txView.bodyView}/>) : "None"}
-      </div>
-      <div className="flex flex-col items-center w-full">
-        <p className="w-full">Binding Signature</p>
-        <pre className="w-full">{txView.bindingSig ? txView.bindingSig.inner: "None"}</pre>
-        </div>
-      <div className="flex flex-col items-center w-full">
-        <p className="w-full">Anchor</p>
-        <pre className="w-full">{txView.anchor ? txView.anchor.inner : "None"}</pre>
-      </div>
-    </div>
+    <FlexRow className="flex-wrap justify-start w-full">
+      <p className="font-semibold sm:text-lg">Transaction View</p>
+      {txView.bodyView ? (<TransactionBodyView bodyView={txView.bodyView}/>) : "None"}
+      {txView.bindingSig ? <BindingSig name="Binding Signature" value={txView.bindingSig.inner}/> : null}
+      {txView.anchor ? <MerkleRoot name="Anchor" value={txView.anchor.inner}/> : null}
+    </FlexRow>
   );
 };

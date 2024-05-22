@@ -1,15 +1,17 @@
-import type { FC } from "react";
-import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type Swap as SwapT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT, type BatchSwapOutputData as BatchSwapOutputDataT, type SwapPlaintext as SwapPlaintextT, type PositionOpen as PositionOpenT, type Position as PositionT, type TradingFunction as TradingFunctionT, PositionState_PositionStateEnum, type PositionClose as PositionCloseT, type PositionWithdraw as PositionWithdrawT, type PositionRewardClaim as PositionRewardClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
-import type { Output as OutputT, NoteView as NoteViewT, Spend as SpendT, NotePayload as NotePayloadT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
+import { type FC } from "react";
+import React from "react";
+import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT, type BatchSwapOutputData as BatchSwapOutputDataT, type SwapPlaintext as SwapPlaintextT, type PositionOpen as PositionOpenT, type Position as PositionT, type TradingFunction as TradingFunctionT, PositionState_PositionStateEnum, type PositionClose as PositionCloseT, type PositionWithdraw as PositionWithdrawT, type PositionRewardClaim as PositionRewardClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import type { NoteView as NoteViewT, NotePayload as NotePayloadT, SpendView as SpendViewT, OutputView as OutputViewT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type Vote as VoteT, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
-import { getAddress, getAddressIndex } from "@penumbra-zone/getters/src/address-view";
+import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutput, getOutputKey, getOutputNote, getSpend, getSpendNote, getSwap, getSwapBodyAmounts, getSwapBodyFeeCommitment, getSwapBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutputViewKey, getOutputViewNote, getSpendNote, getSwapViewBodyAmounts, getSwapViewBodyFeeCommitment, getSwapViewBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView, getSpendViewBodyNullifier, getSpendViewAuthSig, getSpendViewProof, getSpendViewBodySpendVerificationKey, getSpendViewBodyBalanceCommitment, getOutputViewBodyNotePayload, getOutputViewProof, getOutputViewBodyBalanceCommitment, getOutputViewBodyWrappedMemoKey, getOutputViewBodyOvkWrappedKey, getSwapViewProof, getSwapViewBodyTradingPair } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
+import { uint8ArrayToBase64 } from "@penumbra-zone/types/src/base64";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
 import { getAmount, getMetadata, getEquivalentValues, getExtendedMetadata, getAssetIdFromValueView } from "@penumbra-zone/getters/src/value-view";
-import type { Address as AddressT, AddressIndex as AddressIndexT, WalletId as WalletIdT, PayloadKey as PayloadKeyT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
+import type { Address as AddressT, AddressIndex as AddressIndexT, AddressView as AddressViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type AssetId as AssetIdT, type EquivalentValue as EquivalentValueT, type Metadata as MetadataT, type Value as ValueT, type ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
@@ -18,7 +20,9 @@ import type { ValidatorDefinition as ValidatorDefinitionT, FundingStream as Fund
 import type { IbcRelay, Ics20Withdrawal as Ics20WithdrawalT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 import type { Height as HeightT} from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/client_pb";
 import type { Epoch as EpochT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/sct/v1/sct_pb";
-import type { ActionDutchAuctionEnd as ActionDutchAuctionEndT, ActionDutchAuctionScheduleView as ActionDutchAuctionScheduleViewT, ActionDutchAuctionWithdrawView as ActionDutchAuctionWithdrawViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
+import type { ActionDutchAuctionEnd as ActionDutchAuctionEndT, ActionDutchAuctionScheduleView as ActionDutchAuctionScheduleViewT, ActionDutchAuctionWithdrawView as ActionDutchAuctionWithdrawViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1/auction_pb";
+import { cn } from "@/lib/utils";
+import { useToast } from "../ui/use-toast";
 
 // Explicit typing for the ProposalSubmit.payload field message variants.
 type ProposalSubmitKind = {
@@ -47,25 +51,83 @@ type ProposalSubmitKind = {
   value?: undefined
 };
 
-const PayloadKey: FC<{ payloadKey: PayloadKeyT }> = ({ payloadKey }) => {
-  return (
-    <div className="flex">
-      <p>Payload Key</p>
-      <pre>{payloadKey.inner}</pre>
-    </div>
-  );
+function useCopyToClipboard() {
+  const [copied, setCopied] = React.useState(false);
+  const { toast } = useToast();
+  React.useEffect(() => {
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+    if (copied) {
+      toast({
+        variant: "default",
+        title: "Copied!",
+        description: "Successfully copied value to clipboard.",
+        duration: 2000,
+      });
+    }
+  }, [copied]);
+  async function copyToClipboard(value: string) {
+    await navigator.clipboard.writeText(value);
+    setCopied(true);
+  }
+  return copyToClipboard;
 };
 
-const GenericKV: FC<{ name: string, _key: Uint8Array }> = ({ name, _key }) => {
+const TxRow: FC<{ label: string, value?: string | bigint | number, className?: string }> = ({ label: name, value, className }) => {
+  const copyToClipboard = useCopyToClipboard();
+  let text;
+  if (value !== undefined) {
+    if (typeof value === "number" || typeof value === "bigint") {
+      text = value.toString();
+    } else {
+      text = value !== "" ? value : "N/A";
+    }
+  } else {
+    text = "N/A";
+  }
+
   return (
-    <FlexRow className="flex-wrap w-full">
-      <p>{name}</p>
-      <pre>{_key}</pre>
+    <FlexRow className={cn("flex-wrap w-full justify-between", className ?? "")}>
+      <div className="w-1/2">
+        <p className="text-start p-1">{name}</p>
+      </div>
+      <div className="w-1/2">
+        <pre className="text-start p-1 overflow-hidden overflow-ellipsis"
+          onClick={() => {
+            void (async () => {
+              await copyToClipboard(text);
+            })();
+        }}>{text}</pre>
+      </div>
     </FlexRow>
   );
 };
 
-// TODO: Currently abusing GenericKV. These keys diverge drastically on encoding and should reflect this to the degree possible.
+export const GenericKV: FC<{ name: string, value: Uint8Array, className?: string }> = ({ name, value, className }) => {
+
+  const base64Value = uint8ArrayToBase64(value);
+  const copyToClipboard = useCopyToClipboard();
+
+  return (
+    <FlexRow className={cn("flex-wrap w-full justify-between", className ?? "")}>
+      <div className="w-1/2">
+        <p className="text-start p-1">{name}</p>
+      </div>
+      <div className="w-1/2">
+        <pre className="text-start p-1 overflow-hidden overflow-ellipsis"
+          onClick={() => {
+            void (async () => {
+              await copyToClipboard(base64Value);
+            })();
+        }}>{base64Value}</pre>
+      </div>
+    </FlexRow>
+  );
+};
+
+// TODO: Fold logic of GenericKV into TxRow and we eliminate all of this.
+// TODO: Would also be useful because it would eliminate a lot of undefine checks while also visibly signaling that a field is missing.
 const OvkWrappedKey = GenericKV;
 const WrappedMemoKey = GenericKV;
 const EphemeralKey = GenericKV;
@@ -78,6 +140,7 @@ const TransactionId = GenericKV;
 const Nullifier = GenericKV;
 const SpendAuthSignature = GenericKV;
 const SpendVerificationKey = GenericKV;
+const SpendProof = GenericKV;
 const ZKDelegatorVoteProof = GenericKV;
 const AuthSignature = GenericKV;
 const IdentityKey = GenericKV;
@@ -87,6 +150,13 @@ const PositionId = GenericKV;
 const Penalty = GenericKV;
 const UndelegateClaimProof = GenericKV;
 const AuctionId = GenericKV;
+const PayloadKey = GenericKV;
+const WalletId = GenericKV;
+const IndexRandomizer = GenericKV;
+const AddressBytes = GenericKV;
+const OutputProof = GenericKV;
+const EncryptedNote = GenericKV;
+const AssetIdBytes = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -119,17 +189,12 @@ const Height: FC<{ height: HeightT }> = ({ height }) => {
 };
 
 const Epoch: FC<{ epoch: EpochT, label?: string }> = ({ epoch, label }) => {
+  const title = label !== undefined && label !== "" ? label : "Epoch";
   return (
     <FlexCol className="w-full">
-      {(label ?? "") ? <p className="w-full">{label}</p> : <p className="w-full">Epoch</p>}
-      <FlexRow className="flex-wrap w-full">
-        <p>Index</p>
-        <pre>{epoch.index.toString()}</pre>
-      </FlexRow>
-      <FlexRow className="flex-wrap w-full">
-        <p>Start Height</p>
-        <pre>{epoch.startHeight.toString()}</pre>
-      </FlexRow>
+      {/* <p className="p-1 text-center">{title}</p> */}
+      <TxRow label={`${title} Index`} value={epoch.index}/>
+      <TxRow label={`${title} Start Height`} value={epoch.startHeight}/>
     </FlexCol>
   );
 };
@@ -177,212 +242,129 @@ const Value: FC<{ value: ValueT, label?: string }> = ({ value, label }) => {
 
 const NotePayload: FC<{ notePayload: NotePayloadT }> = ({ notePayload }) => {
   return (
-    <div className="flex flex-wrap w-full">
-      <p className="w-full">NotePayload</p>
-      <div className="flex flex-wrap w-full">
-        {notePayload.noteCommitment ? (
-          <div className="flex">
-            <p className="w-full">Note Commitment</p>
-            <pre className="w-full">{notePayload.noteCommitment.inner}</pre>
-          </div>
-        ) : null}
-        <EphemeralKey _key={notePayload.ephemeralKey} name="Ephemeral Key"/>
-        {notePayload.encryptedNote ? (
-          <div className="flex flex-wrap w-full">
-            <p className="w-full">Encrypted Note</p>
-            <pre className="w-full">{notePayload.encryptedNote.inner}</pre>
-          </div>
-        ) : null}
-      </div>
-    </div>
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-200">Note Payload</p>
+      {notePayload.noteCommitment ? <StateCommitment name="Note Commitment" value={notePayload.noteCommitment.inner}/> : null}
+      <EphemeralKey name="Ephemeral Key" value={notePayload.ephemeralKey}/>
+      {notePayload.encryptedNote ? <EncryptedNote name="Encrypted Note" value={notePayload.encryptedNote.inner}/> : null}
+    </FlexCol>
   );
 };
 
-
-const Output: FC<{ output: OutputT }> = ({ output }) => {
-  const body = output.body;
-  return (
-    <div className="flex flex-col flex-wrap w-full">
-      {body ? (
-        <div className="flex flex-wrap w-full">
-          <p className="w-full">OutputBody</p>
-          {body.notePayload ? (
-            <NotePayload notePayload={body.notePayload}/>
-          ) : null}
-          {body.balanceCommitment ? (
-            <BalanceCommitment _key={body.balanceCommitment.inner} name="Balance Commitment"/>
-          ) : null}
-          <WrappedMemoKey _key={body.wrappedMemoKey} name="Wrapped Memo Key"/>
-          <OvkWrappedKey _key={body.ovkWrappedKey} name="Ovk Wrapped Key"/>
-        </div>
-      ) : null}
-      {output.proof ? (
-        <div className="flex flex-wrap w-full">
-          <p className="w-full">Proof</p>
-          <pre className="w-full">{output.proof.inner}</pre>
-        </div>
-      ) : null}
-    </div>
-  );
-};
-
-const Spend : FC<{spend: SpendT}>= ({spend}) => {
-  const spendBody = spend.body;
-  return (
-    <div className="flex flex-col flex-wrap w-full">
-      <div className="flex flex-col flex-wrap w-full">
-        {spend.proof ? (
-          <div className="flex flex-wrap w-full">
-            <p className="w-full">Proof</p>
-            <pre className="w-full">{spend.proof.inner}</pre>
-          </div>
-        ) : null}
-        {spend.authSig ? (
-        <div className="flex flex-wrap w-full">
-          <p className="w-full">AuthSig</p>
-          <pre className="w-full">{spend.authSig.inner}</pre>
-        </div>
-        ) : null}
-        {spendBody ? (
-          <div className="flex flex-wrap w-full">
-            <p className="w-full">Body</p>
-            <div className="flex flex-wrap w-full">
-              {spendBody.nullifier ? (
-                <div className="flex flex-wrap w-full">
-                  <p className="w-full">Nullifier</p>
-                  <pre className="w-full">{spendBody.nullifier.inner}</pre>
-                </div>
-              ) : spendBody.rk ? (
-                <div className="flex flex-wrap w-full">
-                  <p className="w-full">Randomized Validating Key</p>
-                  <pre className="w-full">{spendBody.rk.inner}</pre>
-                </div>
-              ) : <p>None</p>}
-            </div>
-          </div>
-        ): null}
-      </div>
-    </div>
-  );
-};
 
 const Address :FC<{ address: AddressT }> = ({ address }) => {
   return (
-    <div className="flex flex-col">
-      <div className="flex">
-        <p>Altbech32</p>
-        <p>{address.altBech32m}</p>
-      </div>
-      <div className="flex">
-        <p>Inner</p>
-        <pre>{address.inner}</pre>
-      </div>
-    </div>
+    <FlexCol className="w-full">
+      <p className="text-center bg-slate-200">Address</p>
+      <AddressBytes name="Address" value={address.inner}/>
+      <TxRow label="Altbech32-encoded Address" value={address.altBech32m}/>
+    </FlexCol>
   );
 };
 
 const AddressIndex : FC<{ index: AddressIndexT }> = ({ index }) => {
   return (
-    <div className="flex flex-col">
-      <div className="flex">
-        <p>Account</p>
-        <p>{index.account}</p>
-      </div>
-      <div className="flex">
-        <p>Randomizer</p>
-        <pre>{index.randomizer}</pre>
-      </div>
-    </div>
+    <FlexCol className="w-full">
+      <p className="text-center">Address Index</p>
+      <TxRow label="Account" value={index.account}/>
+      <IndexRandomizer name="Randomizer" value={index.randomizer}/>
+    </FlexCol>
   );
 };
 
-const WalletId : FC<{ walletId: WalletIdT }> = ({ walletId }) => {
+const AddressView: FC<{ addressView: AddressViewT }> = ({ addressView }) => {
+  const walletId = getWalletId.optional()(addressView);
+  const addressIndex = getAddressIndex.optional()(addressView);
   return (
-    <div className="flex flex-col">
-      <p>WalletID</p>
-      <div className="flex">
-        <p>WalletID inner</p>
-        <pre>{walletId.inner}</pre>
-      </div>
-    </div>
+    <FlexCol className="w-full">
+      <p className="text-center bg-slate-200">Address View</p>
+      {addressIndex ? <AddressIndex index={addressIndex}/> : null}
+      {walletId ? <WalletId name="WalletId" value={walletId.inner}/> : null}
+    </FlexCol>
   );
 };
 
 
 const NoteView : FC<{note: NoteViewT}>= ({ note }) => {
-  const address = getAddress.optional()(note.address);
-  const walletId = getWalletId.optional()(note.address);
-  const addressIndex = getAddressIndex.optional()(note.address);
-
   return (
-    <div className="flex flex-col flex-wrap w-full">
-      <p className="w-full">TxNote</p>
-      {address ? (
-        <div className="flex flex-col flex-wrap w-full">
-          <p className="w-full">Address</p>
-          <Address address={address}/>
-          {walletId ? <WalletId walletId={walletId}/> : null}
-          {addressIndex ? <AddressIndex index={addressIndex}/> : null}
-        </div>
-      ) : null}
-      <div className="flex flex-col flex-wrap">
-        <p className="w-full">rseed</p>
-        <pre>{note.rseed}</pre>
-      </div>
-    </div>
+    <FlexCol className="w-full">
+      <p className="text-center">Note View</p>
+      {note.address ? <AddressView addressView={note.address}/> : null}
+      <RSeed name="RSeed" value={note.rseed}/>
+    </FlexCol>
   );
 };
 
-const SpendView : FC<{ spend: SpendT, noteView?: NoteViewT}> = ({spend, noteView}) => {
+const SpendView : FC<{ spendView: SpendViewT }> = ({ spendView }) => {
+  const spendProof = getSpendViewProof.optional()(spendView);
+  const spendAuthSig = getSpendViewAuthSig.optional()(spendView);
+  const spendBodyNullifier = getSpendViewBodyNullifier.optional()(spendView);
+  const spendBodyRk = getSpendViewBodySpendVerificationKey.optional()(spendView);
+  const spendBodyBalance = getSpendViewBodyBalanceCommitment.optional()(spendView);
+  const noteView = getSpendNote.optional()(spendView);
+
   return (
-    <div className="flex flex-col flex-wrap w-full">
-      <p className="w-full">Spend View</p>
-      <Spend spend={spend} />
-      {noteView ? (
-        <NoteView note={noteView}/>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Spend View</p>
+      {spendProof ? <SpendProof name="Proof" value={spendProof.inner}/> : null}
+      {spendAuthSig ? <AuthSignature name="AuthSig" value={spendAuthSig.inner}/> : null}
+      {(spendBodyNullifier ?? spendBodyRk) ?? spendBodyBalance ? (
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-slate-300">Spend Body</p>
+          {spendBodyNullifier ? <Nullifier name="Nullifier" value={spendBodyNullifier.inner} /> : null}
+          {spendBodyRk ? <SpendVerificationKey name="Verification Key" value={spendBodyRk.inner} /> : null}
+          {spendBodyBalance ? <BalanceCommitment name="Balance Commitment" value={spendBodyBalance.inner}/> : null}
+        </FlexCol>
       ) : null}
-    </div>
+      {noteView ? <NoteView note={noteView}/> : null}
+    </FlexCol>
   );
 };
 
-const OutputView: FC<{ output: OutputT, noteView?: NoteViewT, payloadKey?: PayloadKeyT }> = ({ output, noteView, payloadKey }) => {
+const OutputView: FC<{ outputView: OutputViewT }> = ({ outputView }) => {
+  // Output & OutputBody
+  const bodyNotePayload = getOutputViewBodyNotePayload.optional()(outputView);
+  const bodyBalanceCommitment = getOutputViewBodyBalanceCommitment.optional()(outputView);
+  const bodyWrappedMemoKey = getOutputViewBodyWrappedMemoKey(outputView);
+  const bodyOvkWrappedKey = getOutputViewBodyOvkWrappedKey(outputView);
+  const outputProof = getOutputViewProof.optional()(outputView);
+  // OutputView.Visible fields
+  const noteView = getOutputViewNote.optional()(outputView);
+  const payloadKey = getOutputViewKey.optional()(outputView);
+
   return (
-    <div className="flex flex-col flex-wrap w-full">
-      <p className="w-full">Output View</p>
-      <Output output={output} />
-      {noteView ? (
-        <NoteView note={noteView}/>
-      ) : null}
-      {payloadKey ? (
-        <PayloadKey payloadKey={payloadKey}/>
-      ) : null}
-    </div>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Output View</p>
+      {noteView ? <NoteView note={noteView}/> : null}
+      {payloadKey ? <PayloadKey name="Payload Key" value={payloadKey.inner}/> : null}
+      <FlexCol className="w-full border-b">
+        <p className="text-center bg-slate-300">Output Body</p>
+        {bodyNotePayload ? <NotePayload notePayload={bodyNotePayload}/> : null}
+        {bodyBalanceCommitment ? <BalanceCommitment value={bodyBalanceCommitment.inner} name="Balance Commitment"/> : null}
+        <WrappedMemoKey value={bodyWrappedMemoKey} name="Wrapped Memo Key"/>
+        <OvkWrappedKey value={bodyOvkWrappedKey} name="Ovk Wrapped Key"/>
+        {outputProof ? <OutputProof name="Output Proof" value={outputProof.inner}/> : null}
+      </FlexCol>
+    </FlexCol>
   );
 };
 
 const AssetId: FC<{ assetId: AssetIdT, label?: string }> = ({ assetId, label }) => {
+  const title = label !== undefined && label !== "" ? label : "Asset ID";
   return (
-    <FlexRow>
-      {(label ?? "") ? <p>{label}</p> : <p>Asset ID</p>}
-      <FlexRow>
-        <p>inner</p>
-        <p>{assetId.inner}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Alt Bech32</p>
-        <p>{assetId.altBech32m}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Alt Base Denomination</p>
-        <p>{assetId.altBaseDenom}</p>
-      </FlexRow>
-    </FlexRow>
+    <FlexCol className="w-full">
+      <p className="text-center">{title}</p>
+      <AssetIdBytes name="Inner Bytes" value={assetId.inner}/>
+      <TxRow label="Alternative Bech32-Encoding of Inner Bytes" value={assetId.altBech32m}/>
+      <TxRow label="Alternative Base Denomination String" value={assetId.altBaseDenom}/>
+    </FlexCol>
   );
 };
 
 const TradingPair: FC<{ tradingPair?: TradingPairT }> = ({ tradingPair }) => {
   const asset1 = getAsset1(tradingPair);
   const asset2 = getAsset2(tradingPair);
+
   return (
     <FlexCol>
       <p>Trading Pair</p>
@@ -393,10 +375,23 @@ const TradingPair: FC<{ tradingPair?: TradingPairT }> = ({ tradingPair }) => {
 };
 
 const Amount: FC<{ amount: AmountT, label?: string }> = ({ amount, label }) => {
+  const copyToClipboard = useCopyToClipboard();
+  const title = label !== undefined && label !== "" ? label : "Amount";
+  const amountText = joinLoHiAmount(amount).toString();
+
   return (
-    <FlexRow>
-      {(label ?? "") ? <p>{label}</p> : <p>Amount</p>}
-      <p>{joinLoHiAmount(amount).toString()}</p>
+    <FlexRow className="w-full">
+      <div className="w-1/2">
+        <p className="p-1 text-start">{title}</p>
+      </div>
+      <div className="w-1/2">
+        <pre className="text-start p-1 overflow-hidden overflow-ellipsis"
+          onClick={() => {
+            void (async () => {
+              await copyToClipboard(amountText);
+            })();
+        }}>{amountText}</pre>
+      </div>
     </FlexRow>
   );
 };
@@ -404,8 +399,8 @@ const Amount: FC<{ amount: AmountT, label?: string }> = ({ amount, label }) => {
 const SwapPayload: FC<{ swapPayload: SwapPayloadT }> = ({ swapPayload }) => {
   return (
     <FlexCol>
-      {swapPayload.commitment ? <StateCommitment _key={swapPayload.commitment?.inner} name="Commitment"/> : null}
-      <EncryptedSwap _key={swapPayload.encryptedSwap} name="Encrypted Swap"/>
+      {swapPayload.commitment ? <StateCommitment value={swapPayload.commitment?.inner} name="Commitment"/> : null}
+      <EncryptedSwap value={swapPayload.encryptedSwap} name="Encrypted Swap"/>
     </FlexCol>
   );
 };
@@ -445,48 +440,22 @@ const BatchSwapOutputData: FC<{ batchSwapOutput: BatchSwapOutputDataT }> = ({ ba
 const Metadata: FC<{ metaData: MetadataT, label?: string }> = ({ metaData, label }) => {
   const assetId = getAssetId(metaData);
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
       {(label ?? "") ? <p>{label}</p> : <p>Asset Metadata</p>}
-      <FlexRow>
-        <p>Name</p>
-        <p>{metaData.name}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Description</p>
-        <p>{metaData.description}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Symbol</p>
-        <p>{metaData.symbol}</p>
-      </FlexRow>
+      <TxRow label="Name" value={metaData.name}/>
+      <TxRow label="Description" value={metaData.description}/>
+      <TxRow label="Symbol" value={metaData.symbol}/>
       <AssetId assetId={assetId} label="Penumbra Asset ID"/>
-      <FlexRow>
-        <p>Display Denomination</p>
-        <pre>{metaData.display}</pre>
-      </FlexRow>
-      <FlexRow>
-        <p>Base Denomination</p>
-        <pre>{metaData.base}</pre>
-      </FlexRow>
+      <TxRow label="Display Denomination" value={metaData.display}/>
+      <TxRow label="Base Denomination" value={metaData.base}/>
       {/* TODO: This needs to be fleshed out. Skipping aliases and information for exponents. Could easily blow up the UI without collapsable elements as it is. */}
-      <FlexRow>
-        {metaData.denomUnits.map((denomUnit, i) => <p key={i}>{denomUnit.denom}</p>)}
-      </FlexRow>
+      <FlexCol className="w-full">
+        <p className="text-center">Denomination Units</p>
+        {metaData.denomUnits.map((denomUnit, i) => <pre key={i}>{denomUnit.denom}</pre>)}
+      </FlexCol>
       {/* TODO: Skipping AssetImage images field entirely */}
-      <FlexRow>
-        <p>Asset Images</p>
-        <p>Unimplemented</p>
-      </FlexRow>
+      <TxRow label="Asset Images" value="NOT CURRENTLY IMPLEMENTED"/>
     </FlexCol>
-  );
-};
-
-const Vote: FC<{ vote: VoteT }> = ({ vote }) => {
-  return (
-    <FlexRow>
-      <p>Vote</p>
-      <pre>{vote.vote.toString()}</pre>
-    </FlexRow>
   );
 };
 
@@ -494,8 +463,8 @@ const Fee: FC<{ fee: FeeT}> = ({ fee }) => {
   const amount = getFeeAmount(fee);
   const assetId = getFeeAssetId.optional()(fee);
   return (
-    <FlexCol>
-      <p>Fee</p>
+    <FlexCol className="w-full">
+      <p className="text-center">Fee</p>
       <Amount amount={amount}/>
       {assetId ? <AssetId assetId={assetId} label="Token ID"/> : null}
     </FlexCol>
@@ -533,20 +502,22 @@ const FeeParameters: FC<{ feeParameters: FeeParametersT }> = ({ feeParameters })
 const FundingStream: FC<{ fundingStream: FundingStreamT }> = ({ fundingStream }) => {
   const fundingStreamToAddress = getFundingStreamToAddress.optional()(fundingStream);
   const fundingStreamBps = getFundingStreamRateBps.optional()(fundingStream);
-  return (
-    <FlexCol className="flex-overflow w-full">
-      {fundingStreamToAddress !== undefined ?
-        <FlexRow className="flex-overflow w-full">
-          <p>Destination Address</p>
-          <pre>{fundingStreamToAddress}</pre>
-        </FlexRow> : null}
-      {fundingStreamBps !== undefined ?
-        <FlexRow>
-          <p>Reward BPS</p>
-          <pre>{fundingStreamToAddress}</pre>
-        </FlexRow> : null}
-    </FlexCol>
-  );
+  if (fundingStreamToAddress !== undefined) {
+    return (
+      <FlexCol className="w-full border-b">
+        <TxRow label="Recipient" value="To Address"/>
+        <TxRow label="Destination Address" value={fundingStreamToAddress}/>
+        <TxRow label="Reward BPS" value={fundingStreamBps}/>
+      </FlexCol>
+    );
+  } else {
+    return (
+      <FlexCol className="w-full border-b">
+        <TxRow label="Recipient" value="To Community Pool"/>
+        <TxRow label="Reward BPS" value={fundingStreamBps}/>
+      </FlexCol>
+    );
+  }
 };
 
 const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext }) => {
@@ -556,13 +527,13 @@ const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext })
   const claimFee = getSwapPlaintextFee(swapPlaintext);
   const claimAddress = getSwapPlaintextAddress(swapPlaintext);
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
       <TradingPair tradingPair={tradingPair}/>
       <Amount amount={delta1I} label="Delta 1"/>
       <Amount amount={delta2I} label="Delta 2"/>
       <Fee fee={claimFee}/>
       <Address address={claimAddress}/>
-      <RSeed _key={swapPlaintext.rseed} name="rseed"/>
+      <RSeed value={swapPlaintext.rseed} name="rseed"/>
     </FlexCol>
   );
 };
@@ -794,16 +765,16 @@ const ProposalPayload: FC<{ payload: ProposalSubmitKind }> = ({ payload }) => {
       const ibcValue = payload.value.transactionPlan?.value;
       const ibcTypeURL = payload.value.transactionPlan?.typeUrl;
       return (
-        <FlexCol className="flex-overflow w-full">
+        <FlexCol className="flex-wrap w-full">
           <p className="w-full">Community Pool Spend</p>
           {ibcValue ? (
-            <FlexCol className="flex-overflow w-full">
+            <FlexCol className="flex-wrap w-full">
               <p className="w-full">Value</p>
               <pre className="w-full">{ibcValue}</pre>
             </FlexCol>
           ) : null}
           {ibcTypeURL?.length !== undefined ? (
-            <FlexCol className="flex-overflow w-full">
+            <FlexCol className="flex-wrap w-full">
               <p>Proto URL Resource</p>
               <pre className="w-full">{ibcTypeURL}</pre>
             </FlexCol>
@@ -905,28 +876,6 @@ const Position: FC<{ position: PositionT }> = ({ position }) => {
   );
 };
 
-const Swap: FC<{ swap: SwapT}> = ({ swap }) => {
-  const swapBody = swap.body;
-  const { delta1I, delta2I } = getSwapBodyAmounts(swapBody);
-  const feeCommitment = getSwapBodyFeeCommitment(swapBody);
-  const payload = getSwapBodyPayload(swapBody);
-  return (
-    <FlexCol>
-      {swap.proof ? <ZKSwapProof name="ZK Proof" _key={swap.proof.inner}/> : null}
-      {swapBody ? (
-        <FlexCol>
-          <p>Swap Body</p>
-          <TradingPair tradingPair={swapBody.tradingPair}/>
-          <Amount amount={delta1I} label="delta_1_i"/>
-          <Amount amount={delta2I} label="delta_2_i"/>
-          <BalanceCommitment _key={feeCommitment.inner} name="Fee Commitment"/>
-          <SwapPayload swapPayload={payload}/>
-        </FlexCol>
-      ) : null}
-    </FlexCol>
-  );
-};
-
 const SwapViewOpaque: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   const batchSwapOutput = getBatchSwapOutputData.optional()(swapView);
   const metadata1 = getSwapMetadata1.optional()(swapView);
@@ -934,7 +883,7 @@ const SwapViewOpaque: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   const outputValue1 = getOutputValue1FromSwapView.optional()(swapView);
   const outputValue2 = getOutputValue2FromSwapView.optional()(swapView);
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
       {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
       {outputValue1 ? <ValueView valueView={outputValue1} label="Asset 1"/> : null}
       {outputValue2 ? <ValueView valueView={outputValue2} label="Asset 2"/> : null}
@@ -953,9 +902,9 @@ const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   const metadata1 = getSwapMetadata1.optional()(swapView);
   const metadata2 = getSwapMetadata2.optional()(swapView);
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
       <SwapPlaintext swapPlaintext={swapPlaintext}/>
-      {transactionId ? <TransactionId _key={transactionId.inner} name="Transaction ID"/> : null}
+      {transactionId ? <TransactionId value={transactionId.inner} name="Transaction ID"/> : null}
       {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
       {noteOuput1 ? <NoteView note={noteOuput1}/> : null}
       {noteOuput2 ? <NoteView note={noteOuput2}/> : null}
@@ -966,15 +915,24 @@ const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
 };
 
 const SwapView: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
-  // NOTE: everything but Swap itself and SwapPlaintext (for SwapView_Visible) are optional.
-  //       While less than hygenic, it would theoretically be fine to just have all getters defined here
-  //       and render purely on ternary checks. SwapPlaintext would be made optional but would only render
-  //       if a SwapView_Visible, etc.
-  const swap = getSwap(swapView);
+  const swapProof = getSwapViewProof.optional()(swapView);
+  const tradingPair = getSwapViewBodyTradingPair.optional()(swapView);
+  const { delta1I, delta2I } = getSwapViewBodyAmounts(swapView);
+  const feeCommitment = getSwapViewBodyFeeCommitment(swapView);
+  const payload = getSwapViewBodyPayload(swapView);
+
   return (
-    <FlexCol>
-      <p>Swap View</p>
-      <Swap swap={swap}/>
+    <FlexCol className="w-full">
+      <p className="text-center bg-slate-400">Swap View</p>
+        {swapProof? <ZKSwapProof name="ZK Proof" value={swapProof.inner}/> : null}
+      <FlexCol className="w-full">
+        <p className="text-center">Swap Body</p>
+        <TradingPair tradingPair={tradingPair}/>
+        <Amount amount={delta1I} label="delta_1_i"/>
+        <Amount amount={delta2I} label="delta_2_i"/>
+        <BalanceCommitment value={feeCommitment.inner} name="Fee Commitment"/>
+        <SwapPayload swapPayload={payload}/>
+      </FlexCol>
       {swapView.swapView.case === "visible" ? (
         <SwapViewVisible swapView={swapView}/>
       ) : swapView.swapView.case === "opaque" ? (
@@ -1009,14 +967,14 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
     <FlexCol>
       <p>Swap Claim View</p>
       <FlexCol>
-        {swapClaimProof ? <ZKSwapProof _key={swapClaimProof.inner} name="SwapClaim Proof"/> : null}
+        {swapClaimProof ? <ZKSwapProof value={swapClaimProof.inner} name="SwapClaim Proof"/> : null}
         {swapClaimBody ? (
           <FlexCol>
             <p>SwapClaimBody</p>
-            {bodyNullifier ? <Nullifier _key={bodyNullifier.inner} name="Nullifier"/> : null}
+            {bodyNullifier ? <Nullifier value={bodyNullifier.inner} name="Nullifier"/> : null}
             {bodyFee ? <Fee fee={bodyFee}/> : null}
-            {bodyOutput1Commitment ? <StateCommitment _key={bodyOutput1Commitment.inner} name="Output 1 Commitment"/> : null}
-            {bodyOutput2Commitment ? <StateCommitment _key={bodyOutput2Commitment.inner} name="Output 2 Commitment"/> : null}
+            {bodyOutput1Commitment ? <StateCommitment value={bodyOutput1Commitment.inner} name="Output 1 Commitment"/> : null}
+            {bodyOutput2Commitment ? <StateCommitment value={bodyOutput2Commitment.inner} name="Output 2 Commitment"/> : null}
             {bodyOutputData ? <BatchSwapOutputData batchSwapOutput={bodyOutputData}/> : null}
           </FlexCol>
         ) : null}
@@ -1026,7 +984,7 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
         </FlexRow>
         {isVisible && swapClaimNoteOutput1 ? <NoteView note={swapClaimNoteOutput1}/> : null}
         {isVisible && swapClaimNoteOutput2 ? <NoteView note={swapClaimNoteOutput2}/> : null}
-        {isVisible && swapClaimTxId ? <TransactionId _key={swapClaimTxId.inner} name="Swap Transaction ID"/> : null}
+        {isVisible && swapClaimTxId ? <TransactionId value={swapClaimTxId.inner} name="Swap Transaction ID"/> : null}
       </FlexCol>
     </FlexCol>
   );
@@ -1068,15 +1026,15 @@ const DelegatorVoteView: FC<{ delegatorVoteView: DelegatorVoteViewT }> = ({ dele
                 <pre>{bodyStartPosition.toString()}</pre>
             </FlexRow>
             ) : null}
-            {bodyVote ? <Vote vote={bodyVote}/> : null}
+            {bodyVote ? <TxRow label="Vote" value={bodyVote.vote.toString()}/> : null}
             {bodyValue ? <Value value={bodyValue} label="Delegation Note Value"/> : null}
             {bodyUnboundedAmount ? <Amount amount={bodyUnboundedAmount} label="Delegation Note Amount"/> : null}
-            {bodyNullifier ? <Nullifier _key={bodyNullifier.inner} name="Input Note Nullifier"/> : null}
-            {bodyRK ? <SpendVerificationKey _key={bodyRK.inner} name="Validating Key"/> : null}
+            {bodyNullifier ? <Nullifier value={bodyNullifier.inner} name="Input Note Nullifier"/> : null}
+            {bodyRK ? <SpendVerificationKey value={bodyRK.inner} name="Validating Key"/> : null}
           </FlexCol>
         ) : null}
-        {delegatorVoteAuthSig ? <SpendAuthSignature _key={delegatorVoteAuthSig.inner} name="Auth Signature"/> : null}
-        {delegatorVoteProof ? <ZKDelegatorVoteProof _key={delegatorVoteProof.inner} name="Delegator Vote Proof"/> : null}
+        {delegatorVoteAuthSig ? <SpendAuthSignature value={delegatorVoteAuthSig.inner} name="Auth Signature"/> : null}
+        {delegatorVoteProof ? <ZKDelegatorVoteProof value={delegatorVoteProof.inner} name="Delegator Vote Proof"/> : null}
       </FlexCol>
       {isVisible && delegatorVoteViewNote ? <NoteView note={delegatorVoteViewNote}/> : null}
     </FlexCol>
@@ -1098,40 +1056,23 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
   const validatorGovernanceKey = getValidatorGovernanceKey.optional()(validatorDefinition);
 
   return (
-    <FlexCol className="flex-overflow w-full">
-      <p className="w-full">Validator Definition</p>
-      {validatorIdKey ? <IdentityKey _key={validatorIdKey.ik} name="Identity Verification Key"/> : null}
-      {validatorConsensusKey ? <ConsensusKey _key={validatorConsensusKey} name="Consensus PubKey"/> : null}
-      <FlexRow className="flex-overflow w-full">
-        <p className="w-full">Name</p>
-        <p className="w-full">{validatorName}</p>
-      </FlexRow>
-      <FlexRow className="flex-overflow w-full">
-        <p className="w-full">Website</p>
-        <p className="w-full">{validatorWebsite}</p>
-      </FlexRow>
-      <FlexRow className="flex-overflow w-full">
-        <p className="w-full">Description</p>
-        <p className="w-full">{validatorDescription}</p>
-      </FlexRow>
-      <FlexRow className="flex-overflow w-full">
-        <p className="w-full">Enabled?</p>
-        <p className="w-full">{validatorEnabled}</p>
-      </FlexRow>
+    <FlexCol className="flex-wrap w-full border rounded-sm shadow-sm">
+      <p className="w-full text-center font-semibold bg-slate-400">Validator Definition</p>
+      {validatorIdKey ? <IdentityKey value={validatorIdKey.ik} name="Identity Verification Key"/> : null}
+      {validatorConsensusKey ? <ConsensusKey value={validatorConsensusKey} name="Consensus PubKey"/> : null}
+      <TxRow label="Name" value={validatorName}/>
+      <TxRow label="Website" value={validatorWebsite}/>
+      <TxRow label="Description" value={validatorDescription}/>
+      <TxRow label="Enabled?" value={validatorEnabled?.toString() ?? undefined }/>
       {validatorFundingStreams?.length !== undefined ? (
-        <FlexCol className="flex-overflow w-full">
-          <p>Funding Streams</p>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-gray-300">Funding Streams</p>
           {validatorFundingStreams.map((fundingStream, i) => <FundingStream fundingStream={fundingStream} key={i}/>)}
         </FlexCol>
       ) : null}
-      {validatorSequenceNumber !== undefined  ? (
-        <FlexRow className="flex-overflow w-full">
-          <p className="w-full">Sequence Number</p>
-          <p className="w-full">{validatorSequenceNumber}</p>
-        </FlexRow>
-      ) : null}
-      {validatorGovernanceKey ? <GovernanceKey _key={validatorGovernanceKey.gk} name="Governance Key"/> : null}
-      {validatorAuthSig ? <AuthSignature _key={validatorAuthSig} name="Auth Signature"/> : null}
+      {validatorSequenceNumber !== undefined  ? <TxRow label="Sequence Number" value={validatorSequenceNumber}/> : null}
+      {validatorGovernanceKey ? <GovernanceKey value={validatorGovernanceKey.gk} name="Governance Key"/> : null}
+      {validatorAuthSig ? <AuthSignature value={validatorAuthSig} name="Auth Signature"/> : null}
     </FlexCol>
   );
 };
@@ -1140,16 +1081,16 @@ const IBCRelayAction: FC<{ ibcRelayAction: IbcRelay }> = ({ ibcRelayAction }) =>
   const ibcValue = ibcRelayAction.rawAction?.value;
   const ibcTypeURL = ibcRelayAction.rawAction?.typeUrl;
   return (
-    <FlexCol className="flex-overflow w-full">
+    <FlexCol className="flex-wrap w-full">
       <p className="w-full">IBC Relay Raw Action</p>
       {ibcValue ? (
-        <FlexCol className="flex-overflow w-full">
+        <FlexCol className="flex-wrap w-full">
           <p className="w-full">Value</p>
           <pre className="w-full">{ibcValue}</pre>
         </FlexCol>
       ) : null}
       {ibcTypeURL?.length !== undefined ? (
-        <FlexCol className="flex-overflow w-full">
+        <FlexCol className="flex-wrap w-full">
           <p>Proto URL Resource</p>
           <pre className="w-full">{ibcTypeURL}</pre>
         </FlexCol>
@@ -1222,9 +1163,9 @@ const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote })
               <pre>{bodyProposal.toString()}</pre>
             </FlexRow>
           ) : null}
-          {bodyVote ? <Vote vote={bodyVote}/> : null}
-          {bodyIdKey ? <IdentityKey _key={bodyIdKey.ik} name="Validator Identity"/> : null}
-          {bodyGovernanceKey ? <GovernanceKey _key={bodyGovernanceKey.gk} name="Governance Key"/> : null}
+          {bodyVote ? <TxRow label="Vote" value={bodyVote.vote.toString()}/> : null}
+          {bodyIdKey ? <IdentityKey value={bodyIdKey.ik} name="Validator Identity"/> : null}
+          {bodyGovernanceKey ? <GovernanceKey value={bodyGovernanceKey.gk} name="Governance Key"/> : null}
           {bodyReason ? (
             <FlexRow className="flex-wrap w-full">
               <p>Reason</p>
@@ -1233,7 +1174,7 @@ const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote })
           ) : null}
         </FlexCol>
       ) : null}
-      {voteAuthSig ? <AuthSignature _key={voteAuthSig.inner} name="Auth Signature"/> : null}
+      {voteAuthSig ? <AuthSignature value={voteAuthSig.inner} name="Auth Signature"/> : null}
     </FlexCol>
   );
 };
@@ -1289,7 +1230,7 @@ const PositionClose: FC<{ positionClose: PositionCloseT }> = ({ positionClose })
   return (
     <FlexCol className="w-full">
       <p>Position Close</p>
-      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
+      {positionId ? <PositionId value={positionId.inner} name="Position ID"/>: null}
     </FlexCol>
   );
 };
@@ -1301,8 +1242,8 @@ const PositionWithdraw: FC<{ positionWithdraw: PositionWithdrawT }> = ({ positio
   return (
     <FlexCol className="w-full">
       <p className="w-full">Position Withdraw</p>
-      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
-      {balanceCommitment ? <BalanceCommitment name="Reserves Commitment" _key={balanceCommitment.inner}/> : null}
+      {positionId ? <PositionId value={positionId.inner} name="Position ID"/>: null}
+      {balanceCommitment ? <BalanceCommitment name="Reserves Commitment" value={balanceCommitment.inner}/> : null}
       <FlexRow className="flex-wrap w-full">
           <p>Sequence</p>
           <pre>{sequence.toString()}</pre>
@@ -1318,8 +1259,8 @@ const PositionRewardClaim: FC<{ positionRewardClaim: PositionRewardClaimT }> = (
   return (
     <FlexCol className="w-full">
       <p className="w-full">Position Reward Claim</p>
-      {positionId ? <PositionId _key={positionId.inner} name="Position ID"/>: null}
-      {balanceCommitment ? <BalanceCommitment name="Rewards Commitment" _key={balanceCommitment.inner}/> : null}
+      {positionId ? <PositionId value={positionId.inner} name="Position ID"/>: null}
+      {balanceCommitment ? <BalanceCommitment name="Rewards Commitment" value={balanceCommitment.inner}/> : null}
     </FlexCol>
   );
 };
@@ -1366,20 +1307,14 @@ const UndelegateClaim: FC<{ undelegateClaim: UndelegateClaimT }> = ({ undelegate
   const unbondingStartHeight = getUndelegateClaimUnbondingStartHeight(undelegateClaim);
   const undelegateClaimProof = getUndelegateClaimProof(undelegateClaim);
   return (
-    <FlexCol className="w-full">
+    <FlexCol className="w-full border">
       <p className="w-full">Undelegate Claim</p>
-      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Start Epoch Index (DEPRECATED)</p>
-        <pre>{startEpochIndex.toString()}</pre>
-      </FlexRow>
-      {penalty ? <Penalty _key={penalty.inner} name="Penalty"/> : null}
-      {balanceCommitment ? <BalanceCommitment _key={balanceCommitment.inner} name="Balance Commitment"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Unbonding Start Height</p>
-        <pre>{unbondingStartHeight.toString()}</pre>
-      </FlexRow>
-      <UndelegateClaimProof _key={undelegateClaimProof} name="Proof"/>
+      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
+      <TxRow label="Start Epoch Index (DEPRECATED)" value={startEpochIndex}/>
+      {penalty ? <Penalty value={penalty.inner} name="Penalty"/> : null}
+      {balanceCommitment ? <BalanceCommitment value={balanceCommitment.inner} name="Balance Commitment"/> : null}
+      <TxRow label="Unbonding Start Height" value={unbondingStartHeight}/>
+      <UndelegateClaimProof value={undelegateClaimProof} name="Proof"/>
     </FlexCol>
   );
 };
@@ -1432,13 +1367,10 @@ const Delegate: FC<{ delegate: DelegateT }> = ({ delegate }) => {
   const unbondedAmount = getDelegateUnbondedAmount.optional()(delegate);
   const delegationAmount = getDelegateDelegationAmount.optional()(delegate);
   return (
-    <FlexCol className="w-full">
-      <p className="w-full">Delegate</p>
-      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Epoch Index</p>
-        <pre>{epochIndex.toString()}</pre>
-      </FlexRow>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Delegate</p>
+      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
+      <TxRow label="Epoch Index" value={epochIndex}/>
       {unbondedAmount ? <Amount amount={unbondedAmount} label="Unbonded Amount"/> : null}
       {delegationAmount ? <Amount amount={delegationAmount} label="Delegation Amount"/> : null}
     </FlexCol>
@@ -1454,13 +1386,10 @@ const Undelegate: FC<{ undelegate: UndelegateT }> = ({ undelegate }) => {
   const delegationAmount = getUndelegateDelegationAmount.optional()(undelegate);
   const fromEpoch = getUndelegateFromEpoch.optional()(undelegate);
   return (
-    <FlexCol className="w-full">
-      <p className="w-full">Undelegate</p>
-      {validatorID ? <IdentityKey _key={validatorID.ik} name="Validator Identity Key"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Start Epoch Index (DEPRECATED)</p>
-        <pre>{startEpochIndex.toString()}</pre>
-      </FlexRow>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Undelegate</p>
+      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
+      <TxRow label="Start Epoch Index (DEPRECATED)" value={startEpochIndex}/>
       {unbondedAmount ? <Amount amount={unbondedAmount} label="Unbonded Amount"/> : null}
       {delegationAmount ? <Amount amount={delegationAmount} label="Delegation Amount"/> : null}
       {fromEpoch ? <Epoch epoch={fromEpoch} label="From Epoch"/> : null}
@@ -1508,7 +1437,7 @@ const ActionDutchActionScheduleView: FC<{ dutchAuctionScheduleView: ActionDutchA
           <pre>{nonce.toString()}</pre>
         </FlexRow>
       </FlexCol>
-      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
       {inputMetadata ? <Metadata metaData={inputMetadata} label="Input Metadata"/> : null}
       {outputMetadata ? <Metadata metaData={outputMetadata} label="Output Metadata"/> : null}
     </FlexCol>
@@ -1520,7 +1449,7 @@ const ActionDutchAuctionEnd: FC<{ actionDutchAuctionEnd: ActionDutchAuctionEndT 
   return (
     <FlexCol className="w-full">
       <p className="w-full">Action Dutch Auction End</p>
-      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
     </FlexCol>
   );
 };
@@ -1532,12 +1461,12 @@ const ActionDutchAuctionWithdrawView: FC<{ actionDutchAuctionWithdrawView: Actio
   const reserves = getReservesFromActionDutchAuctionWithdrawView(actionDutchAuctionWithdrawView);
   return (
     <FlexCol className="w-full">
-      {auctionId ? <AuctionId _key={auctionId.inner} name="Auction ID"/> : null}
+      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
       <FlexRow className="flex-wrap w-full">
         <p>Sequence</p>
         <pre>{seq.toString()}</pre>
       </FlexRow>
-      {reservesCommitment ? <BalanceCommitment _key={reservesCommitment.inner} name="Reserves Commitment"/> : null}
+      {reservesCommitment ? <BalanceCommitment value={reservesCommitment.inner} name="Reserves Commitment"/> : null}
       {reserves.length !== 0 ? (
         <FlexCol className="w-full">
           <p className="w-full">Reserves</p>
@@ -1551,15 +1480,10 @@ const ActionDutchAuctionWithdrawView: FC<{ actionDutchAuctionWithdrawView: Actio
 export const getActionView = ({ actionView } : ActionViewT) => {
   switch (actionView.case) {
     case "spend": {
-      const spendView = getSpend(actionView.value);
-      const noteView = getSpendNote.optional()(actionView.value);
-      return <SpendView spend={spendView} noteView={noteView}/>;
+      return <SpendView spendView={actionView.value}/>;
     }
     case "output": {
-      const outputView = getOutput(actionView.value);
-      const noteView = getOutputNote.optional()(actionView.value);
-      const outputKey = getOutputKey.optional()(actionView.value);
-      return <OutputView output={outputView} noteView={noteView} payloadKey={outputKey}/>;
+      return <OutputView outputView={actionView.value}/>;
     }
     case "swap": {
       return <SwapView swapView={actionView.value}/>;
@@ -1642,9 +1566,5 @@ interface ActionViewProps {
 
 
 export const ActionView : FC<ActionViewProps> = ({ action }) => {
-  return (
-    <div className="flex flex-col flex-wrap w-full">
-      {getActionView(action)}
-    </div>
-  );
+  return (getActionView(action));
 };

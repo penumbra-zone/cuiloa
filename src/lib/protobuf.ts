@@ -3,13 +3,13 @@ import { OutputView, OutputView_Opaque, SpendView, SpendView_Opaque } from "@buf
 import { type AddressView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/keys/v1/keys_pb";
 import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { createGetter } from "./getter/create-getter";
-import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type SwapBody, type BatchSwapOutputData, type SwapPlaintext, type Position, PositionState_PositionStateEnum, type TradingFunction, type PositionOpen, type PositionClose, type PositionWithdraw, type PositionRewardClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
+import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type BatchSwapOutputData, type SwapPlaintext, type Position, PositionState_PositionStateEnum, type TradingFunction, type PositionOpen, type PositionClose, type PositionWithdraw, type PositionRewardClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, type ValidatorVote, type ProposalDepositClaim, type CommunityPoolSpend, type CommunityPoolOutput, type CommunityPoolDeposit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee, FeeParameters } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { Delegate, FundingStream, Undelegate, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 import type { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
-import type { ActionDutchAuctionEnd, ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, ActionDutchAuctionWithdrawView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1alpha1/auction_pb";
+import type { ActionDutchAuctionEnd, ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, ActionDutchAuctionWithdrawView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1/auction_pb";
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
   switch (action.case) {
@@ -109,6 +109,31 @@ export const makeActionView = ({ action }: Action): ActionView | undefined => {
   }
 };
 
+export const getSpendViewProof = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.proof ? spendView.spendView.value.spend.proof : undefined,
+);
+
+export const getSpendViewAuthSig = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.authSig ? spendView.spendView.value.spend.authSig :  undefined,
+);
+
+export const getSpendViewBodyNullifier = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.body?.nullifier
+  ? spendView.spendView.value.spend.body.nullifier
+  : undefined,
+);
+
+export const getSpendViewBodySpendVerificationKey = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.body?.rk
+  ? spendView.spendView.value.spend.body.rk
+  : undefined,
+);
+
+export const getSpendViewBodyBalanceCommitment = createGetter((spendView?: SpendView) =>
+  spendView?.spendView.value?.spend?.body?.balanceCommitment
+  ? spendView.spendView.value.spend.body.balanceCommitment
+  : undefined,
+);
 
 export const getWalletId = createGetter((addressView?: AddressView) =>
   addressView?.addressView.case === "decoded" && addressView.addressView.value.walletId
@@ -128,16 +153,48 @@ export const getOutput = createGetter((outputView?: OutputView) =>
   outputView?.outputView.value?.output ? outputView.outputView.value.output : undefined,
 );
 
-export const getOutputNote = createGetter((outputView?: OutputView) =>
+export const getOutputViewNote = createGetter((outputView?: OutputView) =>
   outputView?.outputView.case === "visible" ? outputView.outputView.value.note : undefined,
 );
 
-export const getOutputKey = createGetter((outputView?: OutputView) =>
+export const getOutputViewKey = createGetter((outputView?: OutputView) =>
   outputView?.outputView.case === "visible" ? outputView.outputView.value.payloadKey : undefined,
+);
+
+export const getOutputViewProof = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.proof ? outputView.outputView.value.output.proof : undefined,
+);
+
+export const getOutputViewBodyNotePayload = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.body?.notePayload
+  ? outputView.outputView.value.output.body.notePayload
+  : undefined,
+);
+
+export const getOutputViewBodyBalanceCommitment= createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.body?.balanceCommitment
+  ? outputView.outputView.value.output.body.balanceCommitment
+  : undefined,
+);
+
+export const getOutputViewBodyWrappedMemoKey = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.body
+  ? outputView.outputView.value.output.body.wrappedMemoKey
+  : undefined,
+);
+
+export const getOutputViewBodyOvkWrappedKey = createGetter((outputView?: OutputView) =>
+  outputView?.outputView.value?.output?.body
+  ? outputView.outputView.value.output.body.ovkWrappedKey
+  : undefined,
 );
 
 export const getSwap = createGetter((swapView?: SwapView) =>
   swapView?.swapView.value?.swap ? swapView.swapView.value.swap : undefined,
+);
+
+export const getSwapViewProof = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.value?.swap?.proof ? swapView.swapView.value.swap.proof : undefined,
 );
 
 export const getSwapMetadata1 = createGetter((swapView?: SwapView) =>
@@ -152,16 +209,22 @@ export const getSwapMetadata2 = createGetter((swapView?: SwapView) =>
   : undefined,
 );
 
-export const getSwapBodyAmounts = createGetter((swapBody?: SwapBody) =>
-  swapBody?.delta1I && swapBody.delta2I ? { delta1I: swapBody.delta1I, delta2I: swapBody.delta2I }: undefined,
+export const getSwapViewBodyAmounts = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.value?.swap?.body?.delta1I && swapView.swapView.value.swap.body.delta2I
+  ? { delta1I: swapView.swapView.value.swap.body.delta1I, delta2I: swapView.swapView.value.swap.body.delta2I }
+  : undefined,
 );
 
-export const getSwapBodyPayload = createGetter((swapBody?: SwapBody) =>
-  swapBody?.payload ? swapBody.payload : undefined,
+export const getSwapViewBodyPayload = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.value?.swap?.body?.payload ? swapView.swapView.value.swap.body.payload : undefined,
 );
 
-export const getSwapBodyFeeCommitment = createGetter((swapBody?: SwapBody) =>
-  swapBody?.feeCommitment ? swapBody.feeCommitment : undefined,
+export const getSwapViewBodyFeeCommitment = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.value?.swap?.body?.feeCommitment ? swapView.swapView.value.swap.body.feeCommitment : undefined,
+);
+
+export const getSwapViewBodyTradingPair = createGetter((swapView?: SwapView) =>
+  swapView?.swapView.value?.swap?.body?.tradingPair ? swapView.swapView.value.swap.body.tradingPair : undefined,
 );
 
 export const getBatchSwapOutputData = createGetter((swapView?: SwapView) =>
