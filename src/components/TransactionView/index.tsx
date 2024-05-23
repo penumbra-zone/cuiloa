@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { TransactionView as TransactionViewSchema, type Transaction, TransactionBodyView as TransactionBodyViewSchema, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { makeActionView } from "@/lib/protobuf";
 import { TransactionBodyView } from "./TransactionBodyView";
-import { FlexCol, FlexRow } from "../ui/flex";
+import { FlexRow } from "../ui/flex";
 import { GenericKV } from "../ActionView";
 
 const BindingSig = GenericKV;
@@ -42,7 +42,7 @@ export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
   return (
     <FlexRow className="flex-wrap justify-start w-full">
       <p className="font-semibold sm:text-lg">Transaction View</p>
-      {txView.bodyView ? (<TransactionBodyView bodyView={txView.bodyView}/>) : "None"}
+      {txView.bodyView ? <TransactionBodyView bodyView={txView.bodyView}/> : "None"}
       {txView.bindingSig ? <BindingSig name="Binding Signature" value={txView.bindingSig.inner}/> : null}
       {txView.anchor ? <MerkleRoot name="Anchor" value={txView.anchor.inner}/> : null}
     </FlexRow>
