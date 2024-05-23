@@ -74,11 +74,11 @@ function useCopyToClipboard() {
   return copyToClipboard;
 };
 
-const TxRow: FC<{ label: string, value?: string | bigint | number, className?: string }> = ({ label: name, value, className }) => {
+const TxRow: FC<{ label: string, value?: string | bigint | number | boolean, className?: string }> = ({ label: name, value, className }) => {
   const copyToClipboard = useCopyToClipboard();
   let text : string;
   if (value !== undefined) {
-    if (typeof value === "number" || typeof value === "bigint") {
+    if (typeof value === "number" || typeof value === "bigint" || typeof value === "boolean") {
       text = value.toString();
     } else {
       text = value !== "" ? value : "N/A";
@@ -157,6 +157,7 @@ const AddressBytes = GenericKV;
 const OutputProof = GenericKV;
 const EncryptedNote = GenericKV;
 const AssetIdBytes = GenericKV;
+const IbcRelayRawValue = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -361,7 +362,7 @@ const Amount: FC<{ amount: AmountT, label?: string }> = ({ amount, label }) => {
   const amountText = joinLoHiAmount(amount).toString();
 
   return (
-    <FlexRow className="w-full">
+    <FlexRow className="w-full flex-wrap">
       <div className="w-1/2">
         <p className="p-1 text-start">{title}</p>
       </div>
@@ -985,24 +986,15 @@ const DelegatorVoteView: FC<{ delegatorVoteView: DelegatorVoteViewT }> = ({ dele
   const isVisible = delegatorVoteView.delegatorVote.case === "visible";
   const delegatorVoteViewNote = getDelegatorVoteViewNote.optional()(delegatorVoteView);
   return (
-    <FlexCol>
-      <p>Delegator Vote View</p>
-      <FlexCol>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Delegator Vote View</p>
+      <FlexCol className="w-full">
         {delegatorVoteBody ? (
-          <FlexCol>
-            <p>DelegatorVoteBody</p>
-            {bodyProposal !== undefined ? (
-              <FlexRow>
-                <p>Proposal</p>
-                <pre>{bodyProposal.toString()}</pre>
-              </FlexRow>
-            ) : null}
-            {bodyStartPosition !== undefined ? (
-              <FlexRow>
-                <p>Proposal</p>
-                <pre>{bodyStartPosition.toString()}</pre>
-            </FlexRow>
-            ) : null}
+          <FlexCol className="w-full border-b">
+            <p className="text-center bg-slate-300">Delegator Vote Body</p>
+            <TxRow label="Proposal" value={bodyProposal}/>
+            {bodyProposal !== undefined ? <TxRow label="Proposal" value={bodyProposal}/> : null}
+            {bodyStartPosition !== undefined ? <TxRow label="Start Position" value={bodyStartPosition}/> : null}
             {bodyVote ? <TxRow label="Vote" value={bodyVote.vote.toString()}/> : null}
             {bodyValue ? <Value value={bodyValue} label="Delegation Note Value"/> : null}
             {bodyUnboundedAmount ? <Amount amount={bodyUnboundedAmount} label="Delegation Note Amount"/> : null}
@@ -1058,20 +1050,10 @@ const IBCRelayAction: FC<{ ibcRelayAction: IbcRelay }> = ({ ibcRelayAction }) =>
   const ibcValue = ibcRelayAction.rawAction?.value;
   const ibcTypeURL = ibcRelayAction.rawAction?.typeUrl;
   return (
-    <FlexCol className="flex-wrap w-full">
-      <p className="w-full">IBC Relay Raw Action</p>
-      {ibcValue ? (
-        <FlexCol className="flex-wrap w-full">
-          <p className="w-full">Value</p>
-          <pre className="w-full">{ibcValue}</pre>
-        </FlexCol>
-      ) : null}
-      {ibcTypeURL?.length !== undefined ? (
-        <FlexCol className="flex-wrap w-full">
-          <p>Proto URL Resource</p>
-          <pre className="w-full">{ibcTypeURL}</pre>
-        </FlexCol>
-      ) : null}
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">IBC Relay Raw Action</p>
+      {ibcValue ? <IbcRelayRawValue name="IBC Raw Value" value={ibcValue}/> : null}
+      {ibcTypeURL?.length !== undefined ? <TxRow label="Proto URL Resource" value={ibcTypeURL}/> : null}
     </FlexCol>
   );
 };
@@ -1081,23 +1063,14 @@ const ProposalSubmit: FC<{ proposalSubmit: ProposalSubmitT }> = ({ proposalSubmi
   const proposalId = getProposalId(proposalSubmit);
   const proposalTitle = getProposalTitle(proposalSubmit);
   const proposalDescription = getProposalDescription(proposalSubmit);
-  const proposalPayload = getProposalPayload(proposalSubmit);
+  const proposalPayload = getProposalPayload.optional()(proposalSubmit);
   return (
-    <FlexCol className="flex-wrap w-full">
-      <p className="w-full">Proposal Submit</p>
-      <FlexRow>
-        <p>ID</p>
-        <pre>{proposalId.toString()}</pre>
-      </FlexRow>
-      <FlexRow>
-        <p>Title</p>
-        <p>{proposalTitle}</p>
-      </FlexRow>
-      <FlexRow>
-        <p>Description</p>
-        <p>{proposalDescription}</p>
-      </FlexRow>
-      <ProposalPayload payload={proposalPayload}/>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Proposal Submit</p>
+      <TxRow label="ID" value={proposalId}/>
+      <TxRow label="Title" value={proposalTitle}/>
+      <TxRow label="Description" value={proposalDescription}/>
+      {proposalPayload ? <ProposalPayload payload={proposalPayload}/> : null}
       {proposalSubmitAmount ? <Amount amount={proposalSubmitAmount} label="Proposal Deposit Amount"/> : null}
     </FlexCol>
   );
