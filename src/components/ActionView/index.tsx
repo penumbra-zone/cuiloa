@@ -76,7 +76,7 @@ function useCopyToClipboard() {
 
 const TxRow: FC<{ label: string, value?: string | bigint | number, className?: string }> = ({ label: name, value, className }) => {
   const copyToClipboard = useCopyToClipboard();
-  let text;
+  let text : string;
   if (value !== undefined) {
     if (typeof value === "number" || typeof value === "bigint") {
       text = value.toString();
