@@ -400,7 +400,7 @@ const BatchSwapOutputData: FC<{ batchSwapOutput: BatchSwapOutputDataT }> = ({ ba
   const sctPositionPrefix = batchSwapOutput.sctPositionPrefix;
   return (
     <FlexCol className="w-full border-b">
-      <p className="text-center bg-slate-300">Batch Swap Output Data</p>
+      <p className="text-center bg-slate-200">Batch Swap Output Data</p>
       <Amount amount={delta1I} label="delta_1_i"/>
       <Amount amount={delta2I} label="delta_2_i"/>
       <Amount amount={lambda1} label="lambda_1"/>
@@ -944,13 +944,13 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
 
   // NOTE: This might be a good model to copy for SwapView. Cleanly eliminates the unnecessary nesting of Opaque & Visible variants.
   return (
-    <FlexCol>
-      <p>Swap Claim View</p>
-      <FlexCol>
-        {swapClaimProof ? <ZKSwapProof value={swapClaimProof.inner} name="SwapClaim Proof"/> : null}
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Swap Claim View</p>
+      <FlexCol className="w-full">
+        {swapClaimProof ? <ZKSwapProof value={swapClaimProof.inner} name="Swap Claim Proof"/> : null}
         {swapClaimBody ? (
-          <FlexCol>
-            <p>SwapClaimBody</p>
+          <FlexCol className="w-full border-b">
+            <p className="text-center bg-slate-300">Swap Claim Body</p>
             {bodyNullifier ? <Nullifier value={bodyNullifier.inner} name="Nullifier"/> : null}
             {bodyFee ? <Fee fee={bodyFee}/> : null}
             {bodyOutput1Commitment ? <StateCommitment value={bodyOutput1Commitment.inner} name="Output 1 Commitment"/> : null}
@@ -958,10 +958,7 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
             {bodyOutputData ? <BatchSwapOutputData batchSwapOutput={bodyOutputData}/> : null}
           </FlexCol>
         ) : null}
-        <FlexRow>
-          <p>Epoch Duration</p>
-          <pre>{swapEpochDuration.toString()}</pre>
-        </FlexRow>
+        <TxRow label="Epoch Duration" value={swapEpochDuration}/>
         {isVisible && swapClaimNoteOutput1 ? <NoteView note={swapClaimNoteOutput1}/> : null}
         {isVisible && swapClaimNoteOutput2 ? <NoteView note={swapClaimNoteOutput2}/> : null}
         {isVisible && swapClaimTxId ? <TransactionId value={swapClaimTxId.inner} name="Swap Transaction ID"/> : null}
