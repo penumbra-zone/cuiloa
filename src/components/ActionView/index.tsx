@@ -160,14 +160,11 @@ const AssetIdBytes = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
-    <FlexCol>
-      <p>Equivalent Value</p>
+    <FlexCol className="w-full">
+      <p className="text-center">Equivalent Value</p>
       {equivalentValue.equivalentAmount ? <Amount amount={equivalentValue.equivalentAmount}/> : null}
       {equivalentValue.numeraire ? <Metadata metaData={equivalentValue.numeraire}/> : null}
-      <FlexRow>
-        <p>Height</p>
-        <pre>{equivalentValue.asOfHeight.toString()}</pre>
-      </FlexRow>
+      <TxRow label="Height" value={equivalentValue.asOfHeight}/>
     </FlexCol>
   );
 };
@@ -175,15 +172,9 @@ const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equiva
 const Height: FC<{ height: HeightT }> = ({ height }) => {
   return (
     <FlexCol className="w-full">
-      <p className="w-full">Height</p>
-      <FlexRow className="flex-wrap w-full">
-        <p>Revision Number</p>
-        <pre>{height.revisionNumber.toString()}</pre>
-      </FlexRow>
-      <FlexRow className="flex-wrap w-full">
-        <p>Revision Height</p>
-        <pre>{height.revisionHeight.toString()}</pre>
-      </FlexRow>
+      <p className="text-center">Height</p>
+      <TxRow label="Revision Number" value={height.revisionNumber}/>
+      <TxRow label="Revision Number" value={height.revisionHeight}/>
     </FlexCol>
   );
 };
@@ -192,7 +183,6 @@ const Epoch: FC<{ epoch: EpochT, label?: string }> = ({ epoch, label }) => {
   const title = label !== undefined && label !== "" ? label : "Epoch";
   return (
     <FlexCol className="w-full">
-      {/* <p className="p-1 text-center">{title}</p> */}
       <TxRow label={`${title} Index`} value={epoch.index}/>
       <TxRow label={`${title} Start Height`} value={epoch.startHeight}/>
     </FlexCol>
@@ -201,39 +191,30 @@ const Epoch: FC<{ epoch: EpochT, label?: string }> = ({ epoch, label }) => {
 
 // NOTE: the way ValueView's opaque vs visible cases are handled is by the fact that metadata, equivalentValues, and extendedMetadata
 //       should never be defined in the case of an UnknownAssetId and we only render assetId when valueView.case is unknownAssetId.
-const ValueView: FC<{ valueView: ValueViewT, label?: "Asset 1" | "Asset 2" | string }> = ({ valueView, label }) => {
+const ValueView: FC<{ valueView: ValueViewT, label?: string }> = ({ valueView, label }) => {
+  const title = (label ?? "") ? label : "Value View";
   const amount = getAmount(valueView);
   const metadata = getMetadata.optional()(valueView);
   const equivalentValues = getEquivalentValues.optional()(valueView);
   const extendedMetadata = getExtendedMetadata.optional()(valueView);
   const assetId = getAssetIdFromValueView(valueView);
   return (
-    <FlexCol>
-      {(label ?? "") ? <p>{label} ValueView</p> : <p>ValueView</p>}
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-300">{title}</p>
       <Amount amount={amount} label={(label ?? "") ? `${label} Amount` : "Amount"}/>
       {metadata ? <Metadata metaData={metadata} label={label}/> : null}
-      {equivalentValues ? (
-        <FlexRow>
-          {equivalentValues.map((equivalentValue, i) => <EquivalentValueView equivalentValue={equivalentValue} key={i}/>)}
-        </FlexRow>
-      ) : null}
-      {extendedMetadata ? (
-        <FlexRow>
-          <p>Extended Metadata</p>
-          <pre>{extendedMetadata.toJsonString()}</pre>
-        </FlexRow>
-      ) : null}
-      {valueView.valueView.case === "unknownAssetId" ? (
-        <AssetId assetId={assetId}/>
-      ) : null}
+      {equivalentValues?.map((equivalentValue, i) => <EquivalentValueView equivalentValue={equivalentValue} key={i}/>)}
+      {extendedMetadata ? <TxRow label="Extended Metadata" value={extendedMetadata.toJsonString()}/>: null}
+      {valueView.valueView.case === "unknownAssetId" ? <AssetId assetId={assetId} label="Unknown Asset ID"/> : null}
     </FlexCol>
   );
 };
 
 const Value: FC<{ value: ValueT, label?: string }> = ({ value, label }) => {
+  const title = label !== undefined && label !== "" ? label : "Value";
   return (
-    <FlexCol>
-      {(label ?? "") ? <p>{label}</p> : <p>Value</p>}
+    <FlexCol className="w-full">
+      <p className="text-center">{title}</p>
       {value.amount ? <Amount amount={value.amount}/> : null}
       {value.assetId ? <AssetId assetId={value.assetId}/> : null}
     </FlexCol>
@@ -287,8 +268,8 @@ const AddressView: FC<{ addressView: AddressViewT }> = ({ addressView }) => {
 
 const NoteView : FC<{note: NoteViewT}>= ({ note }) => {
   return (
-    <FlexCol className="w-full">
-      <p className="text-center">Note View</p>
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-300">Note View</p>
       {note.address ? <AddressView addressView={note.address}/> : null}
       <RSeed name="RSeed" value={note.rseed}/>
     </FlexCol>
@@ -366,8 +347,8 @@ const TradingPair: FC<{ tradingPair?: TradingPairT }> = ({ tradingPair }) => {
   const asset2 = getAsset2(tradingPair);
 
   return (
-    <FlexCol>
-      <p>Trading Pair</p>
+    <FlexCol className="w-full">
+      <p className="text-center">Trading Pair</p>
       <AssetId assetId={asset1} label="Asset 1"/>
       <AssetId assetId={asset2} label="Asset 2"/>
     </FlexCol>
@@ -398,7 +379,8 @@ const Amount: FC<{ amount: AmountT, label?: string }> = ({ amount, label }) => {
 
 const SwapPayload: FC<{ swapPayload: SwapPayloadT }> = ({ swapPayload }) => {
   return (
-    <FlexCol>
+    <FlexCol className="w-full">
+      <p className="text-center">Swap Payload</p>
       {swapPayload.commitment ? <StateCommitment value={swapPayload.commitment?.inner} name="Commitment"/> : null}
       <EncryptedSwap value={swapPayload.encryptedSwap} name="Encrypted Swap"/>
     </FlexCol>
@@ -414,34 +396,31 @@ const BatchSwapOutputData: FC<{ batchSwapOutput: BatchSwapOutputDataT }> = ({ ba
   const unfilled2 = getBatchSwapOutputUnfilled2Amount(batchSwapOutput);
   const tradingPair = getBatchSwapOutputTradingPair(batchSwapOutput);
   const height = batchSwapOutput.height;
-  const startingEpoch = batchSwapOutput.epochStartingHeight;
+  const startingEpoch = batchSwapOutput?.epochStartingHeight;
+  const sctPositionPrefix = batchSwapOutput.sctPositionPrefix;
   return (
-    <FlexCol>
-      <p>BatchSwapOutputData</p>
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-300">Batch Swap Output Data</p>
       <Amount amount={delta1I} label="delta_1_i"/>
       <Amount amount={delta2I} label="delta_2_i"/>
       <Amount amount={lambda1} label="lambda_1"/>
       <Amount amount={lambda2} label="lambda_2"/>
       <Amount amount={unfilled1} label="unfilled_1"/>
       <Amount amount={unfilled2} label="unfilled_2"/>
-      <FlexRow>
-        <p>Height</p>
-        <pre>{height.toString()}</pre>
-      </FlexRow>
+      <TxRow label="Height" value={height}/>
       <TradingPair tradingPair={tradingPair}/>
-      <FlexRow>
-        <p>Epoch Starting Height</p>
-        <pre>{startingEpoch.toString()}</pre>
-      </FlexRow>
+      <TxRow label="Epoch Starting Height (DEPRECATED)" value={startingEpoch}/>
+      <TxRow label="Sct Position Prefix" value={sctPositionPrefix}/>
     </FlexCol>
   );
 };
 
 const Metadata: FC<{ metaData: MetadataT, label?: string }> = ({ metaData, label }) => {
+  const title = (label ?? "") ? label : "Asset Metadata";
   const assetId = getAssetId(metaData);
   return (
-    <FlexCol className="w-full">
-      {(label ?? "") ? <p>{label}</p> : <p>Asset Metadata</p>}
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-200">{title}</p>
       <TxRow label="Name" value={metaData.name}/>
       <TxRow label="Description" value={metaData.description}/>
       <TxRow label="Symbol" value={metaData.symbol}/>
@@ -527,7 +506,8 @@ const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext })
   const claimFee = getSwapPlaintextFee(swapPlaintext);
   const claimAddress = getSwapPlaintextAddress(swapPlaintext);
   return (
-    <FlexCol className="w-full">
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-200">Swap Plaintext</p>
       <TradingPair tradingPair={tradingPair}/>
       <Amount amount={delta1I} label="Delta 1"/>
       <Amount amount={delta2I} label="Delta 2"/>
@@ -885,8 +865,8 @@ const SwapViewOpaque: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   return (
     <FlexCol className="w-full">
       {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
-      {outputValue1 ? <ValueView valueView={outputValue1} label="Asset 1"/> : null}
-      {outputValue2 ? <ValueView valueView={outputValue2} label="Asset 2"/> : null}
+      {outputValue1 ? <ValueView valueView={outputValue1} label="Asset 1 Value View"/> : null}
+      {outputValue2 ? <ValueView valueView={outputValue2} label="Asset 2 Value View"/> : null}
       {metadata1 ? <Metadata metaData={metadata1} label="Asset 1"/> : null}
       {metadata2 ? <Metadata metaData={metadata2} label="Asset 2"/> : null}
     </FlexCol>
@@ -925,8 +905,8 @@ const SwapView: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
     <FlexCol className="w-full">
       <p className="text-center bg-slate-400">Swap View</p>
         {swapProof? <ZKSwapProof name="ZK Proof" value={swapProof.inner}/> : null}
-      <FlexCol className="w-full">
-        <p className="text-center">Swap Body</p>
+      <FlexCol className="w-full border-b">
+        <p className="text-center bg-slate-300">Swap Body</p>
         <TradingPair tradingPair={tradingPair}/>
         <Amount amount={delta1I} label="delta_1_i"/>
         <Amount amount={delta2I} label="delta_2_i"/>
@@ -1469,7 +1449,7 @@ const ActionDutchAuctionWithdrawView: FC<{ actionDutchAuctionWithdrawView: Actio
       {reservesCommitment ? <BalanceCommitment value={reservesCommitment.inner} name="Reserves Commitment"/> : null}
       {reserves.length !== 0 ? (
         <FlexCol className="w-full">
-          <p className="w-full">Reserves</p>
+          <p className="text-center">Reserves</p>
           {reserves.map((valueView, i) => <ValueView valueView={valueView} key={i}/>)}
         </FlexCol>
       ) : null}
