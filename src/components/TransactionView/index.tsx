@@ -3,10 +3,10 @@ import { TransactionView as TransactionViewSchema, type Transaction, Transaction
 import { makeActionView } from "@/lib/protobuf";
 import { TransactionBodyView } from "./TransactionBodyView";
 import { FlexRow } from "../ui/flex";
-import { GenericKV } from "../ActionView";
+import { ActionRow } from "../ActionView";
 
-const BindingSig = GenericKV;
-const MerkleRoot = GenericKV;
+const BindingSig = ActionRow;
+const MerkleRoot = ActionRow;
 
 const makeTransactionView = ({ body, ...tx }: Transaction) : TransactionViewSchema => {
 
@@ -43,8 +43,8 @@ export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
     <FlexRow className="flex-wrap justify-start w-full">
       <p className="font-semibold sm:text-lg">Transaction View</p>
       {txView.bodyView ? <TransactionBodyView bodyView={txView.bodyView}/> : "None"}
-      {txView.bindingSig ? <BindingSig name="Binding Signature" value={txView.bindingSig.inner}/> : null}
-      {txView.anchor ? <MerkleRoot name="Anchor" value={txView.anchor.inner}/> : null}
+      {txView.bindingSig ? <BindingSig label="Binding Signature" value={txView.bindingSig.inner}/> : null}
+      {txView.anchor ? <MerkleRoot label="Anchor" value={txView.anchor.inner}/> : null}
     </FlexRow>
   );
 };
