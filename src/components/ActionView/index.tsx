@@ -74,7 +74,7 @@ function useCopyToClipboard() {
   return copyToClipboard;
 };
 
-const ActionRow: FC<{ label: string, value?: string | bigint | Uint8Array | number | boolean, className?: string }> = ({ label: name, value, className }) => {
+export const ActionRow: FC<{ label: string, value?: string | bigint | Uint8Array | number | boolean, className?: string }> = ({ label: name, value, className }) => {
   const copyToClipboard = useCopyToClipboard();
   let text : string;
   if (value !== undefined) {

@@ -3,10 +3,10 @@ import { TransactionView as TransactionViewSchema, type Transaction, Transaction
 import { makeActionView } from "@/lib/protobuf";
 import { TransactionBodyView } from "./TransactionBodyView";
 import { FlexRow } from "../ui/flex";
-import { GenericKV } from "../ActionView";
+import { ActionRow } from "../ActionView";
 
-const BindingSig = GenericKV;
-const MerkleRoot = GenericKV;
+const BindingSig = ActionRow;
+const MerkleRoot = ActionRow;
 
 const makeTransactionView = ({ body, ...tx }: Transaction) : TransactionViewSchema => {
 
