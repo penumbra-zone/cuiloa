@@ -3,10 +3,10 @@ import React from "react";
 import { type SwapView as SwapViewT, type SwapClaimView as SwapClaimViewT, type TradingPair as TradingPairT, type SwapPayload as SwapPayloadT, type BatchSwapOutputData as BatchSwapOutputDataT, type SwapPlaintext as SwapPlaintextT, type PositionOpen as PositionOpenT, type Position as PositionT, type TradingFunction as TradingFunctionT, PositionState_PositionStateEnum, type PositionClose as PositionCloseT, type PositionWithdraw as PositionWithdrawT, type PositionRewardClaim as PositionRewardClaimT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import type { NoteView as NoteViewT, NotePayload as NotePayloadT, SpendView as SpendViewT, OutputView as OutputViewT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/shielded_pool/v1/shielded_pool_pb";
 import type { ActionView as ActionViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT} from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
+import { type ValidatorVote as ValidatorVoteT, type ChangedAppParameters as ChangeAppParametersT, type DelegatorVoteView as DelegatorVoteViewT, type ProposalSubmit as ProposalSubmitT, type ProposalWithdraw as ProposalWithdrawT, type Proposal_CommunityPoolSpend, type Proposal_Emergency, type Proposal_FreezeIbcClient, type Proposal_ParameterChange, type Proposal_Signaling, type Proposal_UnfreezeIbcClient, type Proposal_UpgradePlan, type ProposalDepositClaim as ProposalDepositClaimT, type CommunityPoolSpend as CommunityPoolSpendT, type CommunityPoolOutput as CommunityPoolOutputT, type CommunityPoolDeposit as CommunityPoolDepositT, type EncodedParameter as EncodedParameterT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
 import { getAddressIndex } from "@penumbra-zone/getters/src/address-view";
 import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
-import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutputViewKey, getOutputViewNote, getSpendNote, getSwapViewBodyAmounts, getSwapViewBodyFeeCommitment, getSwapViewBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getGasPriceBlockSpacePrice, getGasPriceCompactBlockSpacePrice, getGasPriceVerificationPrice, getGasPriceExecutionPrice, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView, getSpendViewBodyNullifier, getSpendViewAuthSig, getSpendViewProof, getSpendViewBodySpendVerificationKey, getSpendViewBodyBalanceCommitment, getOutputViewBodyNotePayload, getOutputViewProof, getOutputViewBodyBalanceCommitment, getOutputViewBodyWrappedMemoKey, getOutputViewBodyOvkWrappedKey, getSwapViewProof, getSwapViewBodyTradingPair } from "@/lib/protobuf";
+import { getBatchSwapOutputDelta1Amount, getBatchSwapOutputDelta2Amount, getBatchSwapOutputTradingPair, getBatchSwapOutputLambda1Amount, getBatchSwapOutputLambda2Amount, getBatchSwapOutputUnfilled1Amount, getBatchSwapOutputUnfilled2Amount , getBatchSwapOutputData, getOutputViewKey, getOutputViewNote, getSpendNote, getSwapViewBodyAmounts, getSwapViewBodyFeeCommitment, getSwapViewBodyPayload, getSwapMetadata1, getSwapMetadata2, getWalletId, getOutputValue1FromSwapView, getOutputValue2FromSwapView, getSwapTransactionId, getSwapPlaintext, getSwapNoteViewOutput1, getSwapNoteViewOutput2, getSwapPlaintextTradingPair, getSwapPlaintextDelta1, getSwapPlaintextDelta2, getSwapPlaintextFee, getSwapPlaintextAddress, getFeeAmount, getFeeAssetId, getSwapClaimViewZKProof, getSwapClaimViewBody, getSwapClaimViewEpochDuration, getSwapClaimBodyNullifier, getSwapClaimBodyFee, getSwapClaimBodyOutput1Commitment, getSwapClaimBodyOutput2Commitment, getSwapClaimBodyBatchOutputData, getSwapClaimNoteOutput1, getSwapClaimNoteOutput2, getSwapClaimTransactionId, getDelegatorVoteViewBody, getDelegatorVoteViewAuthSig, getDelegatorVoteViewProof, getDelegatorVoteViewNote, getDelegatorVoteBodyProposal, getDelegatorVoteBodyStartPosition, getDelegatorVoteBodyVote, getDelegatorVoteBodyValue, getDelegatorVoteBodyUnbondedAmount, getDelegatorVoteBodyNullifier, getDelegatorVoteBodyRK, getValidatorIdentityKey, getValidatorConsensusKey, getValidatorName, getValidatorWebsite, getValidatorDescription, getValidatorEnabled, getValidatorFundingStream, getValidatorSequenceNumber, getValidatorGovernanceKey, getValidatorAuthSig, getFundingStreamToAddress, getFundingStreamRateBps, getProposalSubmitDepositAmount, getProposalId, getProposalTitle, getProposalDescription, getProposalPayload, getChangeAppSctParameter, getChangeAppCommunityPoolParameter, getChangeAppGovernanceParameter, getChangeAppIbcParameters, getChangeAppStakeParameters, getChangeAppFeeParameters, getChangeAppDistributionParameters, getChangeAppFundingParameters, getChangeAppShieldedParameters, getChangeAppDexParameters, getChangeAppAuctionParameters, getValidatorVoteBodyProposal, getValidatorVoteBodyVote, getValidatorVoteBodyIdentityKey, getValidatorVoteBodyGovernanceKey, getValidatorVoteBodyReason, getValidatorVoteBody, getValidatorVoteAuthSig, getProposalDepositClaimAmount, getProposalDepositClaimOutcome, getProposalDepositClaimOutcomeReason, getPositionOpen, getPositionTradingFunction, getPositionNonce, getPositionState, getPositionStateSequence, getPositionReservesAmount1, getPositionReservesAmount2, getPositionCloseOnFill, getTradingFunctionFee, getTradingFunctionAmountQ, getTradingFunctionAmountP, getTradingFunctionPair, getPositionClosePositionId, getPositionWithdrawPositionId, getPositionWithdrawBalanceCommitment, getPositionWithdrawSequence, getPositionRewardClaimPositionId, getPositionRewardClaimBalanceCommitment, getCommunityPoolSpendValue, getCommunityPoolOutputValue, getCommunityPoolOutputAddress, getCommunityPoolDepositValue, getUndelegateClaimIdentityKey, getUndelegateClaimStartEpochIndex, getUndelegateClaimPenalty, getUndelegateClaimBalanceCommitment, getUndelegateClaimUnbondingStartHeight, getUndelegateClaimProof, getIcs20WithdrawalAmount, getIcs20WithdrawalDenom, getIcs20WithdrawalDestinationAddress, getIcs20WithdrawalReturnAddress, getIcs20WithdrawalTimeoutHeight, getIcs20WithdrawalTimeoutTime, getIcs20WithdrawalSourceChannel, getDelegateIdentityKey, getDelegateEpochIndex, getDelegateUnbondedAmount, getDelegateDelegationAmount, getUndelegateStartEpochIndex, getUndelegateUnbondedAmount, getUndelegateDelegationAmount, getUndelegateFromEpoch, getUndelegateIdentityKey, getInputFromActionDutchAuctionScheduleView, getOutputIdFromActionDutchAuctionScheduleView, getMaxOutputFromActionDutchAuctionScheduleView, getMinOutputFromActionDutchAuctionScheduleView, getStartHeightFromActionDutchAuctionScheduleView, getEndHeightFromActionDutchAuctionScheduleView, getStepCountFromActionDutchAuctionScheduleView, getNonceFromActionDutchAuctionScheduleView, getActionDutchAuctionScheduleViewAuctionId, getActionDutchAuctionScheduleViewInputMetadata, getActionDutchAuctionScheduleViewOutputMetadata, getAuctionIdFromActionDutchAuctionEnd, getReservesCommitmentFromActionDutchAuctionWithdrawView, getReservesFromActionDutchAuctionWithdrawView, getAuctionIdFromActionDutchAuctionWithdrawView, getSeqFromActionDutchAuctionWithdrawView, getSpendViewBodyNullifier, getSpendViewAuthSig, getSpendViewProof, getSpendViewBodySpendVerificationKey, getSpendViewBodyBalanceCommitment, getOutputViewBodyNotePayload, getOutputViewProof, getOutputViewBodyBalanceCommitment, getOutputViewBodyWrappedMemoKey, getOutputViewBodyOvkWrappedKey, getSwapViewProof, getSwapViewBodyTradingPair } from "@/lib/protobuf";
 import { joinLoHiAmount } from "@penumbra-zone/types/src/amount";
 import { uint8ArrayToBase64 } from "@penumbra-zone/types/src/base64";
 import { getAssetId } from "@penumbra-zone/getters/src/metadata";
@@ -15,7 +15,7 @@ import type { Address as AddressT, AddressIndex as AddressIndexT, AddressView as
 import { type AssetId as AssetIdT, type EquivalentValue as EquivalentValueT, type Metadata as MetadataT, type Value as ValueT, type ValueView as ValueViewT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/asset/v1/asset_pb";
 import { FlexCol, FlexRow } from "../ui/flex";
 import type { Amount as AmountT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/num/v1/num_pb";
-import type { FeeParameters as FeeParametersT, Fee as FeeT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import type { Fee as FeeT, GasPrices as GasPricesT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
 import type { ValidatorDefinition as ValidatorDefinitionT, FundingStream as FundingStreamT, UndelegateClaim as UndelegateClaimT, Delegate as DelegateT, Undelegate as UndelegateT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 import type { IbcRelay, Ics20Withdrawal as Ics20WithdrawalT } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 import type { Height as HeightT} from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/client_pb";
@@ -157,7 +157,6 @@ const AddressBytes = GenericKV;
 const OutputProof = GenericKV;
 const EncryptedNote = GenericKV;
 const AssetIdBytes = GenericKV;
-const IbcRelayRawValue = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
@@ -356,10 +355,10 @@ const TradingPair: FC<{ tradingPair?: TradingPairT }> = ({ tradingPair }) => {
   );
 };
 
-const Amount: FC<{ amount: AmountT, label?: string }> = ({ amount, label }) => {
+const Amount: FC<{ amount?: AmountT, label?: string }> = ({ amount, label }) => {
   const copyToClipboard = useCopyToClipboard();
   const title = label !== undefined && label !== "" ? label : "Amount";
-  const amountText = joinLoHiAmount(amount).toString();
+  const amountText = amount ? joinLoHiAmount(amount).toString() : "N/A";
 
   return (
     <FlexRow className="w-full flex-wrap">
@@ -451,30 +450,14 @@ const Fee: FC<{ fee: FeeT}> = ({ fee }) => {
   );
 };
 
-const FeeParameters: FC<{ feeParameters: FeeParametersT }> = ({ feeParameters }) => {
-  const blockSpacePrice = getGasPriceBlockSpacePrice(feeParameters);
-  const compactBlockSpacePrice = getGasPriceCompactBlockSpacePrice(feeParameters);
-  const verificationPrice = getGasPriceVerificationPrice(feeParameters);
-  const executionPrice = getGasPriceExecutionPrice(feeParameters);
+const GasPrices: FC<{ gasPrices: GasPricesT, label: "Fixed Gas Prices" | "Fixed Alternative Gas Price" }> = ({ gasPrices, label }) => {
   return (
     <FlexCol className="w-full">
-      <p>Gas Prices</p>
-      <FlexRow>
-        <p>Block Space Price</p>
-        <pre>{blockSpacePrice.toString()}</pre>
-      </FlexRow>
-      <FlexRow>
-        <p>Compact Block Space Price</p>
-        <pre>{compactBlockSpacePrice.toString()}</pre>
-      </FlexRow>
-      <FlexRow>
-        <p>Verification Price</p>
-        <pre>{verificationPrice.toString()}</pre>
-      </FlexRow>
-      <FlexRow>
-        <p>Execution Price</p>
-        <pre>{executionPrice.toString()}</pre>
-      </FlexRow>
+      <p className="text-center">{label}</p>
+      {gasPrices.assetId ? <AssetId label="Asset ID" assetId={gasPrices.assetId}/> : null}
+      <TxRow label="Compact Block Space Price" value={gasPrices.compactBlockSpacePrice}/>
+      <TxRow label="Verification Price" value={gasPrices.verificationPrice}/>
+      <TxRow label="Execution Price" value={gasPrices.executionPrice}/>
     </FlexCol>
   );
 };
@@ -521,7 +504,7 @@ const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext })
 
 const ChangeParameters: FC<{
   parameters: ChangeAppParametersT,
-  label: "Old App Parameters" | "New App Parameters"
+  label: "Old App Parameters (DEPRECATED)" | "New App Parameters (DEPRECATED)"
 }> = ({ parameters, label }) => {
   const sctParameters = getChangeAppSctParameter.optional()(parameters);
   const communityPoolParameters = getChangeAppCommunityPoolParameter.optional()(parameters);
@@ -535,258 +518,204 @@ const ChangeParameters: FC<{
   const dexParameters = getChangeAppDexParameters.optional()(parameters);
   const auctionParameters = getChangeAppAuctionParameters.optional()(parameters);
   return (
-    <FlexCol className="w-full">
-      <p>{label}</p>
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-200">{label}</p>
       {sctParameters ? (
-        <FlexRow className="flex-wrap w-full">
-          <p>SCT Parameters</p>
-          <pre>{sctParameters.epochDuration.toString()}</pre>
-        </FlexRow>
+        <FlexCol className="w-full">
+          <p className="text-center">SCT Parameters</p>
+          <TxRow label="Epoch Duration" value={sctParameters.epochDuration}/>
+        </FlexCol>
       ) : null}
       {communityPoolParameters ? (
-        <FlexRow className="flex-wrap w-full">
-          <p className="w-full">Community Pool Parameter</p>
-          <div className="w-full">
-            <p>Community Pool Spend Proposals Enabled</p>
-            <pre>{communityPoolParameters.communityPoolSpendProposalsEnabled}</pre>
-          </div>
-        </FlexRow>
+        <FlexCol className="w-full">
+          <p className="text-center">Community Pool Parameters</p>
+          <TxRow label="Community Pool Spend Proposals Enabled" value={communityPoolParameters.communityPoolSpendProposalsEnabled}/>
+        </FlexCol>
       ) : null}
       {governanceParameters ? (
         <FlexCol className="w-full">
-          <p>Governance Parameters</p>
-          <FlexRow>
-            <p>Proposal Voting Blocks</p>
-            <pre>{governanceParameters.proposalVotingBlocks.toString()}</pre>
-          </FlexRow>
-          {governanceParameters.proposalDepositAmount ? (
-            <FlexRow>
-              <p>Proposal Deposit Amount</p>
-              <Amount amount={governanceParameters.proposalDepositAmount} label=""/>
-            </FlexRow>
-          ) : null}
-          <FlexRow>
-            <p>Proposal Valid Quorum</p>
-            <pre>{governanceParameters.proposalValidQuorum}</pre>
-          </FlexRow>
-          <FlexRow>
-            <p>Proposal Pass Threshold</p>
-            <pre>{governanceParameters.proposalValidQuorum}</pre>
-          </FlexRow>
-          <FlexRow>
-            <p>Proposal Slash Threshold</p>
-            <pre>{governanceParameters.proposalSlashThreshold}</pre>
-          </FlexRow>
+          <p className="text-center">Governance Parameters</p>
+          <TxRow label="Proposal Voting Blocks" value={governanceParameters.proposalVotingBlocks}/>
+          <Amount label="Proposal Deposit Amount" amount={governanceParameters.proposalDepositAmount}/>
+          <TxRow label="Proposal Valid Quorum" value={governanceParameters.proposalValidQuorum}/>
+          <TxRow label="Proposal Pass Threshold" value={governanceParameters.proposalPassThreshold}/>
+          <TxRow label="Proposal Slash Threshold" value={governanceParameters.proposalSlashThreshold}/>
         </FlexCol>
       ) : null}
       {ibcParameters ? (
         <FlexCol className="w-full">
-          <p className="w-full">IBC Parameters</p>
-          <FlexRow className="flex-wrap w-full">
-            <p>IBC Enabled</p>
-            <pre>{ibcParameters.ibcEnabled}</pre>
-          </FlexRow>
-          <FlexRow className="flex-wrap w-full">
-            <p>Inbound ICS-20 Transfers Enabled</p>
-            <pre>{ibcParameters.inboundIcs20TransfersEnabled}</pre>
-          </FlexRow>
-          <FlexRow className="flex-wrap w-full">
-            <p>Outbound ICS-20 Transfers Enabled</p>
-            <pre>{ibcParameters.outboundIcs20TransfersEnabled}</pre>
-          </FlexRow>
+          <p className="text-center">IBC Parameters</p>
+          <TxRow label="IBC Enabled" value={ibcParameters.ibcEnabled}/>
+          <TxRow label="Inbound ICS-20 Transfers Enabled" value={ibcParameters.inboundIcs20TransfersEnabled}/>
+          <TxRow label="Outbound ICS-20 Transfers Enabled" value={ibcParameters.outboundIcs20TransfersEnabled}/>
         </FlexCol>
       ) : null}
       {stakeParameters ? (
         <FlexCol className="w-full">
-          <p>Stake Parameters</p>
-          <FlexRow className="w-full">
-            <p>Unbonding Epochs</p>
-            <pre>{stakeParameters.unbondingDelay.toString()}</pre>
-          </FlexRow>
-          <FlexRow className="w-full">
-            <p>Active Validators Limit</p>
-            <pre>{stakeParameters.activeValidatorLimit.toString()}</pre>
-          </FlexRow>
-          <FlexRow className="w-full">
-            <p>Base Reward Rate</p>
-            <pre>{stakeParameters.baseRewardRate.toString()}</pre>
-          </FlexRow>
-          <FlexRow className="w-full">
-            <p>Slashing Penalty Misbehavior</p>
-            <pre>{stakeParameters.slashingPenaltyMisbehavior.toString()}</pre>
-          </FlexRow>
-          <FlexRow className="w-full">
-            <p>Slashing Penalty Downtown</p>
-            <pre>{stakeParameters.slashingPenaltyDowntime.toString()}</pre>
-          </FlexRow>
-          <FlexRow className="w-full">
-            <p>Signed Blocks Window Length</p>
-            <pre>{stakeParameters.signedBlocksWindowLen.toString()}</pre>
-          </FlexRow>
-          <FlexRow className="w-full">
-            <p>Missed Blocks Maximium</p>
-            <pre>{stakeParameters.missedBlocksMaximum.toString()}</pre>
-          </FlexRow>
-          <FlexRow className="w-full">
-            <p>Minimum Validator Stake</p>
-            {stakeParameters.minValidatorStake ? <Amount amount={stakeParameters.minValidatorStake}/> : null}
-          </FlexRow>
-          <FlexRow className="w-full">
-            <p>Unbonding Delay</p>
-            <pre>{stakeParameters.unbondingDelay.toString()}</pre>
-          </FlexRow>
+          <p className="text-center">Stake Parameters</p>
+          <TxRow label="Unbonding Epochs" value={stakeParameters.unbondingEpochs}/>
+          <TxRow label="Active Validator Limit" value={stakeParameters.activeValidatorLimit}/>
+          <TxRow label="Base Reward Rate" value={stakeParameters.baseRewardRate}/>
+          <TxRow label="Slashing Penalty Misbehavior" value={stakeParameters.slashingPenaltyMisbehavior}/>
+          <TxRow label="Slashing Penalty Downtown" value={stakeParameters.slashingPenaltyDowntime}/>
+          <TxRow label="Signed Blocks Window Length" value={stakeParameters.signedBlocksWindowLen}/>
+          <TxRow label="Missed Blocks Maximum" value={stakeParameters.missedBlocksMaximum}/>
+          <Amount label="Minimum Validator Stake" amount={stakeParameters.minValidatorStake}/>
+          <TxRow label="Unbonding Delay" value={stakeParameters.unbondingDelay}/>
         </FlexCol>
       ) : null}
       {feeParameters ? (
         <FlexCol className="w-full">
-          <p>Fee Parameters</p>
-          <FeeParameters feeParameters={feeParameters}/>
+          <p className="text-center">Fee Parameters</p>
+          {feeParameters.fixedGasPrices
+            ? <GasPrices label="Fixed Gas Prices" gasPrices={feeParameters.fixedGasPrices}/>
+            : <TxRow label="Fixed Gas Prices"/>}
+          {feeParameters.fixedAltGasPrices.length !== 0 ? (
+            <FlexCol className="w-full">
+              {feeParameters.fixedAltGasPrices.map((gasPrices, i) => <GasPrices label="Fixed Alternative Gas Price" gasPrices={gasPrices} key={i}/>)}
+            </FlexCol>
+          ) : <TxRow label="Fixed Alternative Gas Prices"/>}
         </FlexCol>
       ) : null}
       {distributionParameters ? (
-        <FlexCol>
-          <p>Distribution Parameters</p>
-          <FlexRow>
-            <p>Staking Issuance Per Block</p>
-            <pre>{distributionParameters.stakingIssuancePerBlock.toString()}</pre>
-          </FlexRow>
+        <FlexCol className="w-full">
+          <p className="text-center">Distribution Parameters</p>
+          <TxRow label="Staking Issuance Per Block" value={distributionParameters.stakingIssuancePerBlock}/>
         </FlexCol>
       ) : null}
       {fundingParameters ? (
-        <FlexRow className="w-full">
-          <p>Funding Parameters</p>
+        <FlexCol className="w-full">
+          <p className="text-center">Funding Parameters</p>
           {/* TODO?: there are no fields to this message type */}
-          <pre>This message type currently has no fields defined by Penumbra.</pre>
-        </FlexRow>
+          <pre className="text-center">This message type currently has no fields defined by Penumbra.</pre>
+        </FlexCol>
       ) : null}
       {shieldedParameters ? (
-        <FlexCol>
-          <p>Shielded Parameters</p>
+        <FlexCol className="w-full">
+          <p className="text-center">Shielded Pool Parameters</p>
           {shieldedParameters.fixedFmdParams ? (
-            <FlexCol>
-              <p>Fuzzy Message Detection</p>
-              <FlexRow>
-                <p>Precision Bits</p>
-                <pre>{shieldedParameters.fixedFmdParams.precisionBits}</pre>
-              </FlexRow>
-              <FlexRow>
-                <p>As Of Block Height</p>
-                <pre>{shieldedParameters.fixedFmdParams.asOfBlockHeight.toString()}</pre>
-              </FlexRow>
+            <FlexCol className="w-full">
+              <p className="text-center">FmdParameters</p>
+              <TxRow label="Precision Bits" value={shieldedParameters.fixedFmdParams.precisionBits}/>
+              <TxRow label="As of Block Height" value={shieldedParameters.fixedFmdParams.asOfBlockHeight}/>
             </FlexCol>
-          ) : null}
+          ) : <TxRow label="FmdParameters"/>}
         </FlexCol>
       ) : null}
       {dexParameters ? (
-        <FlexCol>
-          <p>Dex Parameters</p>
-          <FlexRow>
-            <p>Is Enabled</p>
-            <pre>{dexParameters.isEnabled}</pre>
-          </FlexRow>
-          <FlexCol>
-            <p>Fixed Candidates</p>
+        <FlexCol className="w-full">
+          <p className="text-center">Dex Parameters</p>
+          <TxRow label="Is Enabled" value={dexParameters.isEnabled}/>
+          <FlexCol className="w-full">
+            <p className="text-center">Fixed Candidates</p>
             {dexParameters.fixedCandidates.map((assetId, i) => <AssetId assetId={assetId} key={i}/>)}
           </FlexCol>
-          <FlexRow>
-            <p>Max Hops</p>
-            <pre>{dexParameters.maxHops}</pre>
-          </FlexRow>
-          <FlexRow>
-            <p>Max Positions Per Pair</p>
-            <pre>{dexParameters.maxPositionsPerPair}</pre>
-          </FlexRow>
+          <TxRow label="Max Hops" value={dexParameters.maxHops}/>
+          <TxRow label="Max Positions Per Pair" value={dexParameters.maxPositionsPerPair}/>
         </FlexCol>
       ) : null}
       {auctionParameters ? (
-        <FlexRow className="w-full">
-        <p>Auction Parameters</p>
-        {/* TODO?: there are no fields to this message type */}
-        <pre>This message type currently has no fields defined by Penumbra.</pre>
-      </FlexRow>
+        <FlexCol className="w-full">
+          <p className="text-center">Auction Parameters</p>
+          {/* TODO?: there are no fields to this message type */}
+          <pre className="text-center">This message type currently has no fields defined by Penumbra.</pre>
+        </FlexCol>
       ) : null}
+    </FlexCol>
+  );
+};
+
+const EncodedParameters: FC<{ encodedParameters: EncodedParameterT[], label: "Preconditions" | "Changes" }> = ({ encodedParameters, label }) => {
+  const title = label === "Preconditions" ? "Encoded Parameter Precondition" : "Encoded Parameter Changes";
+  return (
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-200">{label}</p>
+      {label === "Preconditions" && encodedParameters.length === 0 ? <pre className="text-center">None</pre> : null}
+      {encodedParameters.map((parameter, i) => (
+        <FlexCol className="w-full" key={i}>
+          <p className="text-center">{title}</p>
+          <TxRow label="Component Name" value={parameter.component}/>
+          <TxRow label="Parameter Key" value={parameter.key}/>
+          <TxRow label="Parameter Value" value={parameter.value}/>
+        </FlexCol>
+      ))}
     </FlexCol>
   );
 };
 
 const ProposalPayload: FC<{ payload: ProposalSubmitKind }> = ({ payload }) => {
   switch (payload.case) {
-    case "signaling":
+    case "signaling": {
       return (
-        <FlexRow>
-          <p>Commit</p>
-          <pre>{payload.value.commit}</pre>
-        </FlexRow>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-slate-300">Signaling Proposal</p>
+          <TxRow label="Commit" value={payload.value.commit}/>
+        </FlexCol>
       );
-    case "emergency":
+    }
+    case "emergency": {
       return (
-        <FlexRow>
-          <p>Emergency Halt Chain</p>
-          <pre>{payload.value.haltChain}</pre>
-        </FlexRow>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-gray-300">Emergency Proposal</p>
+          <TxRow label="Halt Chain" value={payload.value.haltChain}/>
+        </FlexCol>
       );
+    }
     case "parameterChange":
       return (
-        <FlexCol>
-          <p>Change App Parameters</p>
-          {payload.value.oldParameters ?
-            <ChangeParameters
-              parameters={payload.value.oldParameters}
-              label="Old App Parameters"/> : null}
-          {payload.value.newParameters ?
-            <ChangeParameters
-              parameters={payload.value.newParameters}
-              label="New App Parameters"/> : null}
-          <FlexCol>
-            <p>New Parameters</p>
-          </FlexCol>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-slate-300">Parameter Change Proposal</p>
+          {payload.value.oldParameters
+            ? <ChangeParameters parameters={payload.value.oldParameters} label="Old App Parameters (DEPRECATED)"/>
+            : null}
+          {payload.value.newParameters
+            ? <ChangeParameters parameters={payload.value.newParameters} label="New App Parameters (DEPRECATED)"/>
+            : null}
+          <EncodedParameters encodedParameters={payload.value.preconditions} label="Preconditions"/>
+          <EncodedParameters encodedParameters={payload.value.changes} label="Changes"/>
         </FlexCol>
       );
     case "communityPoolSpend": {
-      const ibcValue = payload.value.transactionPlan?.value;
-      const ibcTypeURL = payload.value.transactionPlan?.typeUrl;
       return (
-        <FlexCol className="flex-wrap w-full">
-          <p className="w-full">Community Pool Spend</p>
-          {ibcValue ? (
-            <FlexCol className="flex-wrap w-full">
-              <p className="w-full">Value</p>
-              <pre className="w-full">{ibcValue}</pre>
-            </FlexCol>
-          ) : null}
-          {ibcTypeURL?.length !== undefined ? (
-            <FlexCol className="flex-wrap w-full">
-              <p>Proto URL Resource</p>
-              <pre className="w-full">{ibcTypeURL}</pre>
-            </FlexCol>
-          ) : null}
-      </FlexCol>
+        <FlexCol className="w-full border">
+          <p className="text-center bg-slate-300">Community Pool Spend Proposal</p>
+          <TxRow label="Transaction Plan" value={payload.value.transactionPlan?.toJsonString()}/>
+        </FlexCol>
       );
     }
-    case "upgradePlan":
+    case "upgradePlan": {
       return (
-      <FlexRow>
-        <p>Upgrade Height</p>
-        <pre>{payload.value.height.toString()}</pre>
-      </FlexRow>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-gray-300">Upgrade Plan Proposal</p>
+          <TxRow label="Halt Chain" value={payload.value.height}/>
+        </FlexCol>
       );
-    case "freezeIbcClient":
+    }
+    case "freezeIbcClient": {
       return (
-        <FlexRow>
-          <p>Freeze IBC Client ID</p>
-          <pre>{payload.value.clientId}</pre>
-        </FlexRow>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-gray-300">Freeze IBC Client Proposal</p>
+          <TxRow label="Client ID" value={payload.value.clientId}/>
+        </FlexCol>
       );
-    case "unfreezeIbcClient":
+    }
+    case "unfreezeIbcClient": {
       return (
-        <FlexRow>
-          <p>Unfreeze IBC Client ID</p>
-          <pre>{payload.value.clientId}</pre>
-        </FlexRow>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-gray-300">Unfreeze IBC Client Proposal</p>
+          <TxRow label="Client ID" value={payload.value.clientId}/>
+        </FlexCol>
       );
+    }
     // TODO: start adding UI motifs/messaging for bad/unlikely outcomes when rendering queried data.
-    default:
-      break;
+    default: {
+      return (
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-gray-300">Proposal Payload</p>
+          <pre className="text-center">N/A</pre>
+        </FlexCol>
+      );
+    }
   }
 };
 
@@ -1046,14 +975,11 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
   );
 };
 
-const IBCRelayAction: FC<{ ibcRelayAction: IbcRelay }> = ({ ibcRelayAction }) =>{
-  const ibcValue = ibcRelayAction.rawAction?.value;
-  const ibcTypeURL = ibcRelayAction.rawAction?.typeUrl;
+const IBCRelayAction: FC<{ ibcRelayAction: IbcRelay }> = ({ ibcRelayAction : { rawAction } }) =>{
   return (
     <FlexCol className="w-full border">
-      <p className="text-center bg-slate-400">IBC Relay Raw Action</p>
-      {ibcValue ? <IbcRelayRawValue name="IBC Raw Value" value={ibcValue}/> : null}
-      {ibcTypeURL?.length !== undefined ? <TxRow label="Proto URL Resource" value={ibcTypeURL}/> : null}
+      <p className="text-center bg-slate-400">IBC Relay Action</p>
+      <TxRow label="Raw Action" value={rawAction?.toJsonString()}/>
     </FlexCol>
   );
 };
@@ -1079,16 +1005,10 @@ const ProposalSubmit: FC<{ proposalSubmit: ProposalSubmitT }> = ({ proposalSubmi
 
 const ProposalWithdraw: FC<{ proposalWithdraw: ProposalWithdrawT }> = ({ proposalWithdraw }) => {
   return (
-    <FlexCol>
-      <p>Proposal Withdraw</p>
-      <FlexRow>
-        <p>Proposal</p>
-        <pre>{proposalWithdraw.proposal.toString()}</pre>
-      </FlexRow>
-      <FlexRow>
-        <p>Reason</p>
-        <pre>{proposalWithdraw.reason.toString()}</pre>
-      </FlexRow>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Proposal Withdraw</p>
+      <TxRow label="Proposal" value={proposalWithdraw.proposal}/>
+      <TxRow label="Reason" value={proposalWithdraw.reason}/>
     </FlexCol>
   );
 };
