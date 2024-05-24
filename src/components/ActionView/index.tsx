@@ -74,14 +74,18 @@ function useCopyToClipboard() {
   return copyToClipboard;
 };
 
-const TxRow: FC<{ label: string, value?: string | bigint | number | boolean, className?: string }> = ({ label: name, value, className }) => {
+const TxRow: FC<{ label: string, value?: string | bigint | Uint8Array | number | boolean, className?: string }> = ({ label: name, value, className }) => {
   const copyToClipboard = useCopyToClipboard();
   let text : string;
   if (value !== undefined) {
-    if (typeof value === "number" || typeof value === "bigint" || typeof value === "boolean") {
-      text = value.toString();
-    } else {
+    if (typeof value === "string") {
       text = value !== "" ? value : "N/A";
+    } else if (typeof value === "number" || typeof value === "bigint" || typeof value === "boolean") {
+      text = value.toString();
+    } else if (Object.prototype.toString.call(value) === "[object Uint8Array]") {
+      text = uint8ArrayToBase64(value);
+    } else {
+      text = "N/A";
     }
   } else {
     text = "N/A";
@@ -104,7 +108,7 @@ const TxRow: FC<{ label: string, value?: string | bigint | number | boolean, cla
   );
 };
 
-export const GenericKV: FC<{ name: string, value: Uint8Array, className?: string }> = ({ name, value, className }) => {
+export const GenericKV: FC<{ label: string, value: Uint8Array, className?: string }> = ({ label: name, value, className }) => {
 
   const base64Value = uint8ArrayToBase64(value);
   const copyToClipboard = useCopyToClipboard();
@@ -161,9 +165,9 @@ const Nonce = GenericKV;
 
 const EquivalentValueView: FC<{ equivalentValue: EquivalentValueT }> = ({ equivalentValue }) => {
   return (
-    <FlexCol className="w-full">
-      <p className="text-center">Equivalent Value</p>
-      {equivalentValue.equivalentAmount ? <Amount amount={equivalentValue.equivalentAmount}/> : null}
+    <FlexCol className="w-full border-b">
+      <p className="text-center bg-slate-200">Equivalent Value</p>
+      <Amount amount={equivalentValue.equivalentAmount}/>
       {equivalentValue.numeraire ? <Metadata metaData={equivalentValue.numeraire}/> : null}
       <TxRow label="Height" value={equivalentValue.asOfHeight}/>
     </FlexCol>
@@ -206,7 +210,7 @@ const ValueView: FC<{ valueView: ValueViewT, label?: string }> = ({ valueView, l
       <Amount amount={amount} label={(label ?? "") ? `${label} Amount` : "Amount"}/>
       {metadata ? <Metadata metaData={metadata} label={label}/> : null}
       {equivalentValues?.map((equivalentValue, i) => <EquivalentValueView equivalentValue={equivalentValue} key={i}/>)}
-      {extendedMetadata ? <TxRow label="Extended Metadata" value={extendedMetadata.toJsonString()}/>: null}
+      <TxRow label="Extended Metadata" value={extendedMetadata?.toJsonString()}/>
       {valueView.valueView.case === "unknownAssetId" ? <AssetId assetId={assetId} label="Unknown Asset ID"/> : null}
     </FlexCol>
   );
@@ -228,20 +232,22 @@ const NotePayload: FC<{ notePayload: NotePayloadT }> = ({ notePayload }) => {
   return (
     <FlexCol className="w-full border-b">
       <p className="text-center bg-slate-200">Note Payload</p>
-      {notePayload.noteCommitment ? <StateCommitment name="Note Commitment" value={notePayload.noteCommitment.inner}/> : null}
-      <EphemeralKey name="Ephemeral Key" value={notePayload.ephemeralKey}/>
-      {notePayload.encryptedNote ? <EncryptedNote name="Encrypted Note" value={notePayload.encryptedNote.inner}/> : null}
+      {notePayload.noteCommitment ? <StateCommitment label="Note Commitment" value={notePayload.noteCommitment.inner}/> : null}
+      <EphemeralKey label="Ephemeral Key" value={notePayload.ephemeralKey}/>
+      {notePayload.encryptedNote ? <EncryptedNote label="Encrypted Note" value={notePayload.encryptedNote.inner}/> : null}
     </FlexCol>
   );
 };
 
 
-const Address :FC<{ address: AddressT }> = ({ address }) => {
+const Address :FC<{ address?: AddressT }> = ({ address }) => {
   return (
-    <FlexCol className="w-full">
+    <FlexCol className="w-full border-b">
       <p className="text-center bg-slate-200">Address</p>
-      <AddressBytes name="Address" value={address.inner}/>
-      <TxRow label="Altbech32-encoded Address" value={address.altBech32m}/>
+      {!address ? <pre className="text-center">N/A</pre> : null}
+      {/* NOTE: Keep these components gated behind the address check */}
+      {address ? <AddressBytes label="Address" value={address.inner}/> : null}
+      {address ? <TxRow label="Altbech32-encoded Address" value={address.altBech32m}/> : null}
     </FlexCol>
   );
 };
@@ -251,7 +257,7 @@ const AddressIndex : FC<{ index: AddressIndexT }> = ({ index }) => {
     <FlexCol className="w-full">
       <p className="text-center">Address Index</p>
       <TxRow label="Account" value={index.account}/>
-      <IndexRandomizer name="Randomizer" value={index.randomizer}/>
+      <IndexRandomizer label="Randomizer" value={index.randomizer}/>
     </FlexCol>
   );
 };
@@ -263,7 +269,7 @@ const AddressView: FC<{ addressView: AddressViewT }> = ({ addressView }) => {
     <FlexCol className="w-full">
       <p className="text-center bg-slate-200">Address View</p>
       {addressIndex ? <AddressIndex index={addressIndex}/> : null}
-      {walletId ? <WalletId name="WalletId" value={walletId.inner}/> : null}
+      {walletId ? <WalletId label="WalletId" value={walletId.inner}/> : null}
     </FlexCol>
   );
 };
@@ -274,7 +280,7 @@ const NoteView : FC<{note: NoteViewT}>= ({ note }) => {
     <FlexCol className="w-full border-b">
       <p className="text-center bg-slate-300">Note View</p>
       {note.address ? <AddressView addressView={note.address}/> : null}
-      <RSeed name="RSeed" value={note.rseed}/>
+      <RSeed label="RSeed" value={note.rseed}/>
     </FlexCol>
   );
 };
@@ -290,14 +296,14 @@ const SpendView : FC<{ spendView: SpendViewT }> = ({ spendView }) => {
   return (
     <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Spend View</p>
-      {spendProof ? <SpendProof name="Proof" value={spendProof.inner}/> : null}
-      {spendAuthSig ? <AuthSignature name="AuthSig" value={spendAuthSig.inner}/> : null}
+      {spendProof ? <SpendProof label="Proof" value={spendProof.inner}/> : null}
+      {spendAuthSig ? <AuthSignature label="AuthSig" value={spendAuthSig.inner}/> : null}
       {(spendBodyNullifier ?? spendBodyRk) ?? spendBodyBalance ? (
         <FlexCol className="w-full border-b">
           <p className="text-center bg-slate-300">Spend Body</p>
-          {spendBodyNullifier ? <Nullifier name="Nullifier" value={spendBodyNullifier.inner} /> : null}
-          {spendBodyRk ? <SpendVerificationKey name="Verification Key" value={spendBodyRk.inner} /> : null}
-          {spendBodyBalance ? <BalanceCommitment name="Balance Commitment" value={spendBodyBalance.inner}/> : null}
+          {spendBodyNullifier ? <Nullifier label="Nullifier" value={spendBodyNullifier.inner} /> : null}
+          {spendBodyRk ? <SpendVerificationKey label="Verification Key" value={spendBodyRk.inner} /> : null}
+          {spendBodyBalance ? <BalanceCommitment label="Balance Commitment" value={spendBodyBalance.inner}/> : null}
         </FlexCol>
       ) : null}
       {noteView ? <NoteView note={noteView}/> : null}
@@ -320,14 +326,14 @@ const OutputView: FC<{ outputView: OutputViewT }> = ({ outputView }) => {
     <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Output View</p>
       {noteView ? <NoteView note={noteView}/> : null}
-      {payloadKey ? <PayloadKey name="Payload Key" value={payloadKey.inner}/> : null}
+      {payloadKey ? <PayloadKey label="Payload Key" value={payloadKey.inner}/> : null}
       <FlexCol className="w-full border-b">
         <p className="text-center bg-slate-300">Output Body</p>
         {bodyNotePayload ? <NotePayload notePayload={bodyNotePayload}/> : null}
-        {bodyBalanceCommitment ? <BalanceCommitment value={bodyBalanceCommitment.inner} name="Balance Commitment"/> : null}
-        <WrappedMemoKey value={bodyWrappedMemoKey} name="Wrapped Memo Key"/>
-        <OvkWrappedKey value={bodyOvkWrappedKey} name="Ovk Wrapped Key"/>
-        {outputProof ? <OutputProof name="Output Proof" value={outputProof.inner}/> : null}
+        {bodyBalanceCommitment ? <BalanceCommitment value={bodyBalanceCommitment.inner} label="Balance Commitment"/> : null}
+        <WrappedMemoKey value={bodyWrappedMemoKey} label="Wrapped Memo Key"/>
+        <OvkWrappedKey value={bodyOvkWrappedKey} label="Ovk Wrapped Key"/>
+        {outputProof ? <OutputProof label="Output Proof" value={outputProof.inner}/> : null}
       </FlexCol>
     </FlexCol>
   );
@@ -339,7 +345,7 @@ const AssetId: FC<{ assetId?: AssetIdT, label?: string }> = ({ assetId, label })
     <FlexCol className="w-full">
       <p className="text-center">{title}</p>
       {!assetId ? <pre className="text-center">N/A</pre> : null}
-      {assetId?.inner ? <AssetIdBytes name="Inner Bytes" value={assetId.inner}/> : null}
+      {assetId?.inner ? <AssetIdBytes label="Inner Bytes" value={assetId.inner}/> : null}
       <TxRow label="Alternative Bech32-Encoding of Inner Bytes" value={assetId?.altBech32m}/>
       <TxRow label="Alternative Base Denomination String" value={assetId?.altBaseDenom}/>
     </FlexCol>
@@ -385,8 +391,8 @@ const SwapPayload: FC<{ swapPayload: SwapPayloadT }> = ({ swapPayload }) => {
   return (
     <FlexCol className="w-full">
       <p className="text-center">Swap Payload</p>
-      {swapPayload.commitment ? <StateCommitment value={swapPayload.commitment?.inner} name="Commitment"/> : null}
-      <EncryptedSwap value={swapPayload.encryptedSwap} name="Encrypted Swap"/>
+      {swapPayload.commitment ? <StateCommitment value={swapPayload.commitment?.inner} label="Commitment"/> : null}
+      <EncryptedSwap value={swapPayload.encryptedSwap} label="Encrypted Swap"/>
     </FlexCol>
   );
 };
@@ -449,7 +455,7 @@ const Fee: FC<{ fee: FeeT}> = ({ fee }) => {
     <FlexCol className="w-full">
       <p className="text-center">Fee</p>
       <Amount amount={amount}/>
-      {assetId ? <AssetId assetId={assetId} label="Token ID"/> : null}
+      <AssetId assetId={assetId} label="Token ID"/>
     </FlexCol>
   );
 };
@@ -458,7 +464,7 @@ const GasPrices: FC<{ gasPrices: GasPricesT, label: "Fixed Gas Prices" | "Fixed 
   return (
     <FlexCol className="w-full">
       <p className="text-center">{label}</p>
-      {gasPrices.assetId ? <AssetId label="Asset ID" assetId={gasPrices.assetId}/> : null}
+      <AssetId label="Asset ID" assetId={gasPrices.assetId}/>
       <TxRow label="Compact Block Space Price" value={gasPrices.compactBlockSpacePrice}/>
       <TxRow label="Verification Price" value={gasPrices.verificationPrice}/>
       <TxRow label="Execution Price" value={gasPrices.executionPrice}/>
@@ -501,7 +507,7 @@ const SwapPlaintext: FC<{ swapPlaintext: SwapPlaintextT }> = ({ swapPlaintext })
       <Amount amount={delta2I} label="Delta 2"/>
       <Fee fee={claimFee}/>
       <Address address={claimAddress}/>
-      <RSeed value={swapPlaintext.rseed} name="rseed"/>
+      <RSeed value={swapPlaintext.rseed} label="rseed"/>
     </FlexCol>
   );
 };
@@ -763,11 +769,12 @@ const Position: FC<{ position: PositionT }> = ({ position }) => {
     <FlexCol className="w-full border-b">
       <p className="text-center bg-slate-300">Position</p>
       {phi ? <TradingFunction tradingFunction={phi}/> : null}
-      <Nonce name="Nonce" value={nonce}/>
+      <Nonce label="Nonce" value={nonce}/>
       {positionState ? (
         <FlexCol className="w-full border-b">
           <p className="text-center bg-slate-200">Position State</p>
           <TxRow label="State" value={positionStateValue}/>
+          {/* NOTE: Keep gated behind  hasPositionSequence, only valid when WITHDRAWN is also true */}
           {hasPositionSequence ? <TxRow label="Sequence" value={positionSequence}/> : null}
         </FlexCol>
       ) : null}
@@ -809,7 +816,7 @@ const SwapViewVisible: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   return (
     <FlexCol className="w-full">
       <SwapPlaintext swapPlaintext={swapPlaintext}/>
-      {transactionId ? <TransactionId value={transactionId.inner} name="Transaction ID"/> : null}
+      {transactionId ? <TransactionId value={transactionId.inner} label="Transaction ID"/> : null}
       {batchSwapOutput ? <BatchSwapOutputData batchSwapOutput={batchSwapOutput}/> : null}
       {noteOuput1 ? <NoteView note={noteOuput1}/> : null}
       {noteOuput2 ? <NoteView note={noteOuput2}/> : null}
@@ -829,13 +836,13 @@ const SwapView: FC<{ swapView: SwapViewT }> = ({ swapView }) => {
   return (
     <FlexCol className="w-full">
       <p className="text-center bg-slate-400">Swap View</p>
-        {swapProof? <ZKSwapProof name="ZK Proof" value={swapProof.inner}/> : null}
+        {swapProof? <ZKSwapProof label="ZK Proof" value={swapProof.inner}/> : null}
       <FlexCol className="w-full border-b">
         <p className="text-center bg-slate-300">Swap Body</p>
         <TradingPair tradingPair={tradingPair}/>
         <Amount amount={delta1I} label="delta_1_i"/>
         <Amount amount={delta2I} label="delta_2_i"/>
-        <BalanceCommitment value={feeCommitment.inner} name="Fee Commitment"/>
+        <BalanceCommitment value={feeCommitment.inner} label="Fee Commitment"/>
         <SwapPayload swapPayload={payload}/>
       </FlexCol>
       {swapView.swapView.case === "visible" ? (
@@ -872,21 +879,21 @@ const SwapClaimView: FC<{ swapClaimView: SwapClaimViewT}> = ({ swapClaimView }) 
     <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Swap Claim View</p>
       <FlexCol className="w-full">
-        {swapClaimProof ? <ZKSwapProof value={swapClaimProof.inner} name="Swap Claim Proof"/> : null}
+        {swapClaimProof ? <ZKSwapProof value={swapClaimProof.inner} label="Swap Claim Proof"/> : null}
         {swapClaimBody ? (
           <FlexCol className="w-full border-b">
             <p className="text-center bg-slate-300">Swap Claim Body</p>
-            {bodyNullifier ? <Nullifier value={bodyNullifier.inner} name="Nullifier"/> : null}
+            {bodyNullifier ? <Nullifier value={bodyNullifier.inner} label="Nullifier"/> : null}
             {bodyFee ? <Fee fee={bodyFee}/> : null}
-            {bodyOutput1Commitment ? <StateCommitment value={bodyOutput1Commitment.inner} name="Output 1 Commitment"/> : null}
-            {bodyOutput2Commitment ? <StateCommitment value={bodyOutput2Commitment.inner} name="Output 2 Commitment"/> : null}
+            {bodyOutput1Commitment ? <StateCommitment value={bodyOutput1Commitment.inner} label="Output 1 Commitment"/> : null}
+            {bodyOutput2Commitment ? <StateCommitment value={bodyOutput2Commitment.inner} label="Output 2 Commitment"/> : null}
             {bodyOutputData ? <BatchSwapOutputData batchSwapOutput={bodyOutputData}/> : null}
           </FlexCol>
         ) : null}
         <TxRow label="Epoch Duration" value={swapEpochDuration}/>
         {isVisible && swapClaimNoteOutput1 ? <NoteView note={swapClaimNoteOutput1}/> : null}
         {isVisible && swapClaimNoteOutput2 ? <NoteView note={swapClaimNoteOutput2}/> : null}
-        {isVisible && swapClaimTxId ? <TransactionId value={swapClaimTxId.inner} name="Swap Transaction ID"/> : null}
+        {isVisible && swapClaimTxId ? <TransactionId value={swapClaimTxId.inner} label="Swap Transaction ID"/> : null}
       </FlexCol>
     </FlexCol>
   );
@@ -919,15 +926,15 @@ const DelegatorVoteView: FC<{ delegatorVoteView: DelegatorVoteViewT }> = ({ dele
             <TxRow label="Proposal" value={bodyProposal}/>
             <TxRow label="Proposal" value={bodyProposal}/>
             <TxRow label="Start Position" value={bodyStartPosition}/>
-            {bodyVote ? <TxRow label="Vote" value={bodyVote.vote.toString()}/> : null}
+            <TxRow label="Vote" value={bodyVote?.vote.toString()}/>
             <Value value={bodyValue} label="Delegation Note Value"/>
             <Amount amount={bodyUnboundedAmount} label="Delegation Note Amount"/>
-            {bodyNullifier ? <Nullifier value={bodyNullifier.inner} name="Input Note Nullifier"/> : null}
-            {bodyRK ? <SpendVerificationKey value={bodyRK.inner} name="Validating Key"/> : null}
+            {bodyNullifier ? <Nullifier value={bodyNullifier.inner} label="Input Note Nullifier"/> : null}
+            {bodyRK ? <SpendVerificationKey value={bodyRK.inner} label="Validating Key"/> : null}
           </FlexCol>
         ) : null}
-        {delegatorVoteAuthSig ? <SpendAuthSignature value={delegatorVoteAuthSig.inner} name="Auth Signature"/> : null}
-        {delegatorVoteProof ? <ZKDelegatorVoteProof value={delegatorVoteProof.inner} name="Delegator Vote Proof"/> : null}
+        {delegatorVoteAuthSig ? <SpendAuthSignature value={delegatorVoteAuthSig.inner} label="Auth Signature"/> : null}
+        {delegatorVoteProof ? <ZKDelegatorVoteProof value={delegatorVoteProof.inner} label="Delegator Vote Proof"/> : null}
       </FlexCol>
       {isVisible && delegatorVoteViewNote ? <NoteView note={delegatorVoteViewNote}/> : null}
     </FlexCol>
@@ -951,8 +958,8 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
   return (
     <FlexCol className="flex-wrap w-full border rounded-sm shadow-sm">
       <p className="w-full text-center font-semibold bg-slate-400">Validator Definition</p>
-      {validatorIdKey ? <IdentityKey value={validatorIdKey.ik} name="Identity Verification Key"/> : null}
-      {validatorConsensusKey ? <ConsensusKey value={validatorConsensusKey} name="Consensus PubKey"/> : null}
+      {validatorIdKey ? <IdentityKey value={validatorIdKey.ik} label="Identity Verification Key"/> : null}
+      {validatorConsensusKey ? <ConsensusKey value={validatorConsensusKey} label="Consensus PubKey"/> : null}
       <TxRow label="Name" value={validatorName}/>
       <TxRow label="Website" value={validatorWebsite}/>
       <TxRow label="Description" value={validatorDescription}/>
@@ -963,9 +970,9 @@ const ValidatorDefinition: FC<{ validatorDefinition: ValidatorDefinitionT }> = (
           {validatorFundingStreams.map((fundingStream, i) => <FundingStream fundingStream={fundingStream} key={i}/>)}
         </FlexCol>
       ) : null}
-      {validatorSequenceNumber !== undefined  ? <TxRow label="Sequence Number" value={validatorSequenceNumber}/> : null}
-      {validatorGovernanceKey ? <GovernanceKey value={validatorGovernanceKey.gk} name="Governance Key"/> : null}
-      {validatorAuthSig ? <AuthSignature value={validatorAuthSig} name="Auth Signature"/> : null}
+      <TxRow label="Sequence Number" value={validatorSequenceNumber}/>
+      {validatorGovernanceKey ? <GovernanceKey value={validatorGovernanceKey.gk} label="Governance Key"/> : null}
+      {validatorAuthSig ? <AuthSignature value={validatorAuthSig} label="Auth Signature"/> : null}
     </FlexCol>
   );
 };
@@ -992,7 +999,7 @@ const ProposalSubmit: FC<{ proposalSubmit: ProposalSubmitT }> = ({ proposalSubmi
       <TxRow label="Title" value={proposalTitle}/>
       <TxRow label="Description" value={proposalDescription}/>
       {proposalPayload ? <ProposalPayload payload={proposalPayload}/> : null}
-      {proposalSubmitAmount ? <Amount amount={proposalSubmitAmount} label="Proposal Deposit Amount"/> : null}
+      <Amount amount={proposalSubmitAmount} label="Proposal Deposit Amount"/>
     </FlexCol>
   );
 
@@ -1025,12 +1032,12 @@ const ValidatorVote: FC<{ validatorVote: ValidatorVoteT }> = ({ validatorVote })
           <p className="text-center bg-slate-300">Validator Vote Body</p>
           <TxRow label="Proposal" value={bodyProposal}/>
           <TxRow label="Vote" value={bodyVote?.vote.toString()}/>
-          {bodyIdKey ? <IdentityKey value={bodyIdKey.ik} name="Validator Identity"/> : null}
-          {bodyGovernanceKey ? <GovernanceKey value={bodyGovernanceKey.gk} name="Governance Key"/> : null}
+          {bodyIdKey ? <IdentityKey value={bodyIdKey.ik} label="Validator Identity"/> : null}
+          {bodyGovernanceKey ? <GovernanceKey value={bodyGovernanceKey.gk} label="Governance Key"/> : null}
           <TxRow label="Reason" value={bodyReason?.reason}/>
         </FlexCol>
       ) : null}
-      {voteAuthSig ? <AuthSignature value={voteAuthSig.inner} name="Auth Signature"/> : null}
+      {voteAuthSig ? <AuthSignature value={voteAuthSig.inner} label="Auth Signature"/> : null}
     </FlexCol>
   );
 };
@@ -1077,7 +1084,7 @@ const PositionClose: FC<{ positionClose: PositionCloseT }> = ({ positionClose })
   return (
     <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Position Close</p>
-      {positionId ? <PositionId value={positionId.inner} name="Position ID"/>: <pre className="text-center">N/A</pre>}
+      {positionId ? <PositionId value={positionId.inner} label="Position ID"/>: <pre className="text-center">N/A</pre>}
     </FlexCol>
   );
 };
@@ -1089,8 +1096,8 @@ const PositionWithdraw: FC<{ positionWithdraw: PositionWithdrawT }> = ({ positio
   return (
     <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Position Withdraw</p>
-      {positionId ? <PositionId value={positionId.inner} name="Position ID"/> : <pre className="text-center">N/A</pre>}
-      {balanceCommitment ? <BalanceCommitment name="Reserves Commitment" value={balanceCommitment.inner}/> : null}
+      {positionId ? <PositionId value={positionId.inner} label="Position ID"/> : <pre className="text-center">N/A</pre>}
+      {balanceCommitment ? <BalanceCommitment label="Reserves Commitment" value={balanceCommitment.inner}/> : null}
       <TxRow label="Sequence" value={sequence}/>
     </FlexCol>
   );
@@ -1103,8 +1110,8 @@ const PositionRewardClaim: FC<{ positionRewardClaim: PositionRewardClaimT }> = (
   return (
     <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Position Reward Claim</p>
-      {positionId ? <PositionId value={positionId.inner} name="Position ID"/>: null}
-      {balanceCommitment ? <BalanceCommitment name="Rewards Commitment" value={balanceCommitment.inner}/> : null}
+      {positionId ? <PositionId value={positionId.inner} label="Position ID"/>: null}
+      {balanceCommitment ? <BalanceCommitment label="Rewards Commitment" value={balanceCommitment.inner}/> : null}
     </FlexCol>
   );
 };
@@ -1126,7 +1133,7 @@ const CommunityPoolOutput: FC<{ communityPoolOutput: CommunityPoolOutputT }> = (
     <FlexCol className="w-full">
       <p className="w-full">Community Pool Output</p>
       <Value value={value} label="Output Value"/>
-      {address ? <Address address={address}/> : null}
+      <Address address={address}/>
     </FlexCol>
   );
 };
@@ -1153,12 +1160,12 @@ const UndelegateClaim: FC<{ undelegateClaim: UndelegateClaimT }> = ({ undelegate
   return (
     <FlexCol className="w-full border">
       <p className="w-full">Undelegate Claim</p>
-      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
+      {validatorID ? <IdentityKey value={validatorID.ik} label="Validator Identity Key"/> : null}
       <TxRow label="Start Epoch Index (DEPRECATED)" value={startEpochIndex}/>
-      {penalty ? <Penalty value={penalty.inner} name="Penalty"/> : null}
-      {balanceCommitment ? <BalanceCommitment value={balanceCommitment.inner} name="Balance Commitment"/> : null}
+      {penalty ? <Penalty value={penalty.inner} label="Penalty"/> : null}
+      {balanceCommitment ? <BalanceCommitment value={balanceCommitment.inner} label="Balance Commitment"/> : null}
       <TxRow label="Unbonding Start Height" value={unbondingStartHeight}/>
-      <UndelegateClaimProof value={undelegateClaimProof} name="Proof"/>
+      <UndelegateClaimProof value={undelegateClaimProof} label="Proof"/>
     </FlexCol>
   );
 };
@@ -1173,19 +1180,11 @@ const Ics20Withdrawal: FC<{ ics20Withdrawal: Ics20WithdrawalT }> = ({ ics20Withd
   const sourceChannel = getIcs20WithdrawalSourceChannel(ics20Withdrawal);
 
   return (
-    <FlexCol className="w-full">
-      <p className="w-full">ICS20 Withdrawal</p>
-      {withdrawalAmount ? <Amount amount={withdrawalAmount}/> : null}
-      {(denom ?? "") ? (
-        <FlexRow className="flex-wrap w-full">
-          <p>Denom</p>
-          <pre>{denom}</pre>
-        </FlexRow>
-      ) : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Destination Address</p>
-        <pre>{destinationAddress}</pre>
-      </FlexRow>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">ICS20 Withdrawal</p>
+      <Amount amount={withdrawalAmount}/>
+      <TxRow label="Denom" value={denom}/>
+      <TxRow label="Destination Address" value={destinationAddress}/>
       {returnAddress ? (
         <FlexCol className="w-full">
           <p className="w-full">Return Address</p>
@@ -1213,7 +1212,7 @@ const Delegate: FC<{ delegate: DelegateT }> = ({ delegate }) => {
   return (
     <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Delegate</p>
-      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
+      {validatorID ? <IdentityKey value={validatorID.ik} label="Validator Identity Key"/> : null}
       <TxRow label="Epoch Index" value={epochIndex}/>
       <Amount amount={unbondedAmount} label="Unbonded Amount"/>
       <Amount amount={delegationAmount} label="Delegation Amount"/>
@@ -1232,7 +1231,7 @@ const Undelegate: FC<{ undelegate: UndelegateT }> = ({ undelegate }) => {
   return (
     <FlexCol className="w-full border">
       <p className="text-center bg-slate-400">Undelegate</p>
-      {validatorID ? <IdentityKey value={validatorID.ik} name="Validator Identity Key"/> : null}
+      {validatorID ? <IdentityKey value={validatorID.ik} label="Validator Identity Key"/> : null}
       <TxRow label="Start Epoch Index (DEPRECATED)" value={startEpochIndex}/>
       <Amount amount={unbondedAmount} label="Unbonded Amount"/>
       <Amount amount={delegationAmount} label="Delegation Amount"/>
@@ -1256,32 +1255,20 @@ const ActionDutchActionScheduleView: FC<{ dutchAuctionScheduleView: ActionDutchA
   const inputMetadata = getActionDutchAuctionScheduleViewInputMetadata.optional()(dutchAuctionScheduleView);
   const outputMetadata = getActionDutchAuctionScheduleViewOutputMetadata.optional()(dutchAuctionScheduleView);
   return (
-    <FlexCol className="w-full">
-      <p className="w-full">Action Dutch Auction Schedule View</p>
-      <FlexCol className="w-full">
-        <p className="w-full">Dutch Action Description</p>
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Action Dutch Auction Schedule View</p>
+      <FlexCol className="w-full border-b">
+        <p className="text-center bg-slate-300">Dutch Action Description</p>
         <Value value={input}/>
         <AssetId assetId={outputId} label="Target Asset ID"/>
         <Amount amount={maxOutput} label="Maximum Output"/>
         <Amount amount={minOutput} label="Minimum Output"/>
-        <FlexRow className="flex-wrap w-full">
-          <p>Start Height</p>
-          <pre>{startHeight.toString()}</pre>
-        </FlexRow>
-        <FlexRow className="flex-wrap w-full">
-          <p>End Height</p>
-          <pre>{endHeight.toString()}</pre>
-        </FlexRow>
-        <FlexRow className="flex-wrap w-full">
-          <p>Step Count</p>
-          <pre>{stepCount.toString()}</pre>
-        </FlexRow>
-        <FlexRow className="flex-wrap w-full">
-          <p>Nonce</p>
-          <pre>{nonce.toString()}</pre>
-        </FlexRow>
+        <TxRow label="Start Height" value={startHeight}/>
+        <TxRow label="End Height" value={endHeight}/>
+        <TxRow label="Step Count" value={stepCount}/>
+        <Nonce label="Nonce" value={nonce}/>
       </FlexCol>
-      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
+      {auctionId ? <AuctionId value={auctionId.inner} label="Auction ID"/> : null}
       {inputMetadata ? <Metadata metaData={inputMetadata} label="Input Metadata"/> : null}
       {outputMetadata ? <Metadata metaData={outputMetadata} label="Output Metadata"/> : null}
     </FlexCol>
@@ -1291,9 +1278,9 @@ const ActionDutchActionScheduleView: FC<{ dutchAuctionScheduleView: ActionDutchA
 const ActionDutchAuctionEnd: FC<{ actionDutchAuctionEnd: ActionDutchAuctionEndT }> = ({ actionDutchAuctionEnd }) => {
   const auctionId = getAuctionIdFromActionDutchAuctionEnd.optional()(actionDutchAuctionEnd);
   return (
-    <FlexCol className="w-full">
-      <p className="w-full">Action Dutch Auction End</p>
-      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-4000">Action Dutch Auction End</p>
+      {auctionId ? <AuctionId value={auctionId.inner} label="Auction ID"/> : null}
     </FlexCol>
   );
 };
@@ -1304,16 +1291,14 @@ const ActionDutchAuctionWithdrawView: FC<{ actionDutchAuctionWithdrawView: Actio
   const reservesCommitment = getReservesCommitmentFromActionDutchAuctionWithdrawView.optional()(actionDutchAuctionWithdrawView);
   const reserves = getReservesFromActionDutchAuctionWithdrawView(actionDutchAuctionWithdrawView);
   return (
-    <FlexCol className="w-full">
-      {auctionId ? <AuctionId value={auctionId.inner} name="Auction ID"/> : null}
-      <FlexRow className="flex-wrap w-full">
-        <p>Sequence</p>
-        <pre>{seq.toString()}</pre>
-      </FlexRow>
-      {reservesCommitment ? <BalanceCommitment value={reservesCommitment.inner} name="Reserves Commitment"/> : null}
+    <FlexCol className="w-full border">
+      <p className="text-center bg-slate-400">Action Dutch Auction Withdraw View</p>
+      {auctionId ? <AuctionId value={auctionId.inner} label="Auction ID"/> : null}
+      <TxRow label="Sequence" value={seq}/>
+      {reservesCommitment ? <BalanceCommitment value={reservesCommitment.inner} label="Reserves Commitment"/> : null}
       {reserves.length !== 0 ? (
-        <FlexCol className="w-full">
-          <p className="text-center">Reserves</p>
+        <FlexCol className="w-full border-b">
+          <p className="text-center bg-slate-300">Reserves</p>
           {reserves.map((valueView, i) => <ValueView valueView={valueView} key={i}/>)}
         </FlexCol>
       ) : null}
