@@ -27,7 +27,6 @@ interface AttributeTableProps<TData, TValue> {
 
 export function AttributeTable<TData, TValue>({
   className,
-  header,
   columns,
   columnVisibility,
   data,
