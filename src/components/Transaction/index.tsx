@@ -1,5 +1,6 @@
 import { type TransactionResultPayload } from "@/lib/validators/search";
-import ReactJson from "@microlink/react-json-view";
+import { JsonView, allExpanded, defaultStyles } from "react-json-view-lite";
+import "react-json-view-lite/dist/index.css";
 import Link from "next/link";
 import { type FC } from "react";
 import ABCIEventsTable from "../ABCIEventsTable";
@@ -34,7 +35,7 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 sm:shrink-0 w-full sm:text-lg font-semibold">Transaction Data</p>
           <pre className="sm:w-5/6 w-full break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
-            <ReactJson src={penumbraTx.toJson() as object} name={"transaction"} displayDataTypes={false} collapseStringsAfterLength={20} collapsed={5} enableClipboard={true} displayObjectSize={false}/>
+            <JsonView data={penumbraTx.toJson() as object} shouldExpandNode={allExpanded} clickToExpandNode={true} style={defaultStyles}/>
           </pre>
         </div>
         <div className="flex justify-start flex-wrap w-full gap-y-5">

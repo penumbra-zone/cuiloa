@@ -5,8 +5,8 @@ import { type Action, ActionView, Transaction } from "@buf/penumbra-zone_penumbr
 import { createGetter } from "./getter/create-getter";
 import { SwapView, SwapView_Opaque, SwapClaimView, SwapClaimView_Opaque, type BatchSwapOutputData, type SwapPlaintext, type Position, PositionState_PositionStateEnum, type TradingFunction, type PositionOpen, type PositionClose, type PositionWithdraw, type PositionRewardClaim } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/dex/v1/dex_pb";
 import { type ChangedAppParameters, DelegatorVoteView, DelegatorVoteView_Opaque, type ProposalSubmit, type ValidatorVote, type ProposalDepositClaim, type CommunityPoolSpend, type CommunityPoolOutput, type CommunityPoolDeposit } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/governance/v1/governance_pb";
-import { getAsset1, getAsset2 } from "@penumbra-zone/getters/src/trading-pair";
 import type { Fee } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/fee/v1/fee_pb";
+import { getAsset1, getAsset2 } from "@penumbra-zone/getters/trading-pair";
 import type { Delegate, FundingStream, Undelegate, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 import type { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 import type { ActionDutchAuctionEnd, ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, ActionDutchAuctionWithdrawView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1/auction_pb";

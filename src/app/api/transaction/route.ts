@@ -44,8 +44,8 @@ export async function GET(req: Request) {
     const penumbraTx = transactionFromBytes(query.tx_result);
     console.log("Successfully decoded Transaction from tx_result:", penumbraTx);
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { tx_result, ...tx} = query;
+    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
+    const { tx_result , ...tx} = query;
 
     return new Response(JSON.stringify([tx, penumbraTx.toJsonString()]));
   } catch (error) {

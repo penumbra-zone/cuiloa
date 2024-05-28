@@ -4,26 +4,26 @@
         "es2021": true,
         "node": true
     },
+    "root": true,
     "extends": [
-        "standard-with-typescript",
-        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@next/next/recommended",
         "prettier"
     ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
+        "project": ["./tsconfig.json"],
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": [
-        "react"
-    ],
+    "plugins": ["@stylistic", "@typescript-eslint", "react"],
     "rules": {
-        "@typescript-eslint/comma-dangle": ["error", "always-multiline"],
-        "@typescript-eslint/quotes": ["error", "double"],
-        "@typescript-eslint/semi": ["error", "always", { "omitLastInOneLineBlock": true, "omitLastInOneLineClassBody": true }],
+        "@stylistic/comma-dangle": ["error", "always-multiline"],
+        "@stylistic/quotes": ["error", "double"],
+        "@stylistic/semi": ["error", "always", { "omitLastInOneLineBlock": true, "omitLastInOneLineClassBody": true }],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/strict-boolean-expressions": ["error", { "allowNullableObject": true, "allowString": true }],
-        "react/react-in-jsx-scope": "off"
+        "@eslint-plugin-react/react-in-jsx-scope": "off"
     },
     "settings": {
         "react": {
