@@ -24,20 +24,29 @@ export default async function Home() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-1 items-center">
-            <Button className="sm:w-2/3 w-full">
+            <Button className="sm:w-2/3 w-full" asChild>
               <Link href="/transactions">Recent Transactions</Link>
             </Button>
-            <Button className="sm:w-2/3 w-full">
+            <Button className="sm:w-2/3 w-full" asChild>
               <Link href="/blocks">Recent Blocks</Link>
             </Button>
-            <Button className="sm:w-2/3 w-full">
+            <Button className="sm:w-2/3 w-full" asChild>
               <Link href="/ibc/clients">IBC Clients</Link>
             </Button>
-            <Button className="sm:w-2/3 w-full">
+            <Button className="sm:w-2/3 w-full" asChild>
               <Link href="/ibc/channels">IBC Channels</Link>
             </Button>
-            <Button className="sm:w-2/3 w-full">
+            <Button className="sm:w-2/3 w-full" asChild>
               <Link href="/ibc/connections">IBC Connections</Link>
+            </Button>
+            <Button className="sm:w-2/3 w-full" asChild>
+              <Link href="/staking">Staking</Link>
+            </Button>
+            <Button className="sm:w-2/3 w-full" asChild>
+              <Link href="/dex">Dex</Link>
+            </Button>
+            <Button className="sm:w-2/3 w-full" asChild>
+              <Link href="/governance">Governance</Link>
             </Button>
           </CardContent>
         </Card>
