@@ -2,8 +2,15 @@
 
 import React, { useState } from "react";
 import { QueryCache, QueryClient, QueryClientProvider  } from "@tanstack/react-query";
+import { createGrpcWebTransport } from "@connectrpc/connect-web";
+import { TransportProvider } from "@connectrpc/connect-query";
 import { Toaster } from "../ui/toaster";
 import { useToast } from "../ui/use-toast";
+
+
+const penumbraTransport = createGrpcWebTransport({
+  baseUrl: "https://grpc.testnet.penumbra.zone",
+});
 
 const Providers = ({ children } : { children: React.ReactNode }) => {
   const { toast } = useToast();
@@ -48,10 +55,12 @@ const Providers = ({ children } : { children: React.ReactNode }) => {
   }));
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-      <Toaster/>
-    </QueryClientProvider>
+    <TransportProvider transport={penumbraTransport}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <Toaster/>
+      </QueryClientProvider>
+    </TransportProvider>
   );
 };
 
