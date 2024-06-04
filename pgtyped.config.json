@@ -1,0 +1,16 @@
+{
+    "transforms": [
+      {
+        "mode": "ts",
+        "include": "**/api/**/route.ts",
+        "emitTemplate": "{{dir}}/{{name}}.types.ts"
+      }
+    ],
+    "srcDir": "./src/",
+    "failOnError": false,
+    "camelCaseColumnNames": false,
+    "dbUrl": "You shouldn't need this with the justfile command for running pgtyped",
+    "typesOverrides": {
+        "bigint": "BigInt"
+    }
+  }
