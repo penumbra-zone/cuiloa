@@ -6,9 +6,7 @@ import Link from "next/link";
 export interface EventColumns {
   height: bigint
   created_at: string,
-  tx_results: Array<{
-    tx_hash: string,
-  }>,
+  tx_hash: string,
 };
 
 // TODO: try out createColumnHelper for configurating columns
@@ -31,11 +29,11 @@ export const columns : Array<ColumnDef<EventColumns>> = [
     },
   },
   {
-    accessorKey: "tx_results",
+    accessorKey: "tx_hash",
     header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">Hash</div>,
     cell: ({ row }) => {
-      const tx : Array<{ tx_hash: string }>= row.getValue("tx_results");
-      return <Link href={`/transaction/${tx[0].tx_hash}`} className="underline text-xs sm:text-base text-center"><pre className="sm:max-w-full max-w-[90px] overflow-hidden overflow-ellipsis">{tx[0].tx_hash}</pre></Link>;
+      const tx_hash : string = row.getValue("tx_hash");
+      return <Link href={`/transaction/${tx_hash}`} className="underline text-xs sm:text-base text-center"><pre className="sm:max-w-full max-w-[90px] overflow-hidden overflow-ellipsis">{tx_hash}</pre></Link>;
     },
   },
 ];

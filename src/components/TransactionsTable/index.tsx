@@ -24,7 +24,7 @@ export interface TransactionResult {
   createdAt: Date,
   chain_id: string,
   hash: string,
-  // TODO: is string actually wanted here for the representation of this buffer 
+  // TODO: is string actually wanted here for the representation of this buffer
   result: string,
   events: Event[],
 };

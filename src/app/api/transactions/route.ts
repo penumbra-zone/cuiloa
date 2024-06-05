@@ -1,63 +1,39 @@
-import db from "@/lib/db";
+import { getPgClient } from "@/lib/db";
+import { sql } from "@pgtyped/runtime";
+import { IGetTransactionsCountQuery, IGetTransactionsQuery } from "./route.types";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  console.log("Success: POST /api/events");
+  console.log("Success: POST /api/transactions");
   try {
     const url = new URL(req.url);
     const pageParam = url.searchParams.get("page")?.trim() ?? "";
-    // TODO
-    // - [ ] config limit variable
+    // TODO: config limit variable
     const pageOffset = (parseInt(pageParam, 10)) * 10;
+    const pageLimit = 10;
 
-    const where = {
-      tx_results: {
-        some: {},
-      },
-    };
+    const getTransactions = sql<IGetTransactionsQuery>`
+      SELECT tx.block_id as "height!", tx.created_at, tx.tx_hash
+      FROM tx_results tx
+      ORDER BY tx.block_id DESC LIMIT $pageLimit! OFFSET $pageOffset!;
+    `;
+    const getTransactionsCount = sql<IGetTransactionsCountQuery>`SELECT COUNT(*)::int as "count!" FROM tx_results;`;
 
-    const events = db.blocks.findMany({
-      where,
-      select: {
-        height: true,
-        created_at: true,
-        tx_results: {
-          select: {
-            tx_hash: true,
-          },
-        },
-      },
-      skip: pageOffset,
-      take: 10,
-      orderBy: {
-        created_at: "desc",
-      },
-    });
+    console.log("Acquring DbClient and querying for recent Transactions.");
 
-    // In moments like this, I truly miss rolling plain SQL.
-    // PrismaJS's docs on pagination are... "untruthful" because it is actually impossible to get the count for a pagination's count within the query.
-    // Instead, we need to make two separate queries to first count all rows that match the criteria of our filter. After we acquire that number, we then run the query that gives us the actual rows using that same filter.
-    // This is done in Promise.all() becuase Prisma's transaction method runs sequentially.
-    // We cannot do both of these in a single query.
-    // See:
-    // - https://github.com/prisma/prisma/discussions/16148
-    // - https://github.com/prisma/prisma/issues/6570
-    // - https://github.com/prisma/prisma/issues/7550
-    console.log("querying database for Block Events.");
-    const [count, blockEvents] = await Promise.all([
-      db.blocks.count({
-        where,
-      }),
-      events,
-    ]);
+    const client = await getPgClient();
+    const transactions = await getTransactions.run({ pageLimit, pageOffset }, client);
+    const [{ count },,] = await getTransactionsCount.run(undefined, client);
+    client.release();
 
-    console.log("Successfully queried Block Events:");
-    console.log([count, blockEvents]);
+    console.log("Successfully queried Transactions:");
+    console.log([transactions, count]);
+
     // Ensure that our pagination doesn't cut off early.
     const pages = Math.floor((count / 10) + 1);
 
-    return new Response(JSON.stringify({ pages, results: blockEvents }));
+    return new Response(JSON.stringify({ pages, results: transactions }));
   } catch (error) {
     console.log(error);
     return new Response("Could not load events.", { status: 404 });
