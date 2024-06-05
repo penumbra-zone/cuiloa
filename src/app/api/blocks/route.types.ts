@@ -2,8 +2,8 @@
 
 /** 'GetBlocksByDesc' parameters type */
 export interface IGetBlocksByDescParams {
-  pageOffset: bigint;
-  queryLimit: bigint;
+  pageOffset: bigint | number;
+  queryLimit: bigint | number;
 }
 
 /** 'GetBlocksByDesc' return type */

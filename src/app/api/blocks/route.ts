@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
     const getBlocksByDesc = sql<IGetBlocksByDescQuery>`
       SELECT b.rowid, b.height, b.created_at FROM blocks b
-      ORDER BY b.created_at DESC LIMIT $queryLimit! OFFSET $pageOffset!;
+      ORDER BY b.height DESC LIMIT $queryLimit! OFFSET $pageOffset!;
     `;
     const getBlocksCount = sql<IGetBlocksCountQuery>`SELECT COUNT(*)::int as _count FROM blocks;`;
 
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     const [{ _count },,] = await getBlocksCount.run(undefined, client);
     const count = _count ?? 1;
 
-    console.log("Successfully queried Blocks count and Blocks.");
+    console.log("Successfully queried Blocks.");
     console.log([count, blocks]);
 
     client.release();

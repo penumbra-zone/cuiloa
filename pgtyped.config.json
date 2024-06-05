@@ -13,7 +13,7 @@
     "typesOverrides": {
       "date": "string",
       "int8": {
-        "parameter": "bigint",
+        "parameter": "bigint | number",
         "return": "bigint"
       }
     }

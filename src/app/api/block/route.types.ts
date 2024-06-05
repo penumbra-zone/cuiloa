@@ -3,7 +3,7 @@ export type stringArray = (string)[];
 
 /** 'GetBlock' parameters type */
 export interface IGetBlockParams {
-  ht: bigint;
+  ht: bigint | number;
 }
 
 /** 'GetBlock' return type */
