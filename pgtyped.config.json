@@ -11,6 +11,10 @@
     "camelCaseColumnNames": false,
     "dbUrl": "You shouldn't need this with the justfile command for running pgtyped",
     "typesOverrides": {
-        "bigint": "BigInt"
+      "date": "string",
+      "int8": {
+        "parameter": "bigint",
+        "return": "bigint"
+      }
     }
   }

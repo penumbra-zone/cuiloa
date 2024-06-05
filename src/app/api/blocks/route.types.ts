@@ -1,17 +1,16 @@
 /** Types generated for queries found in "src/app/api/blocks/route.ts" */
-export type NumberOrString = number | string;
 
 /** 'GetBlocksByDesc' parameters type */
 export interface IGetBlocksByDescParams {
-  pageOffset: NumberOrString;
-  queryLimit: NumberOrString;
+  pageOffset: bigint;
+  queryLimit: bigint;
 }
 
 /** 'GetBlocksByDesc' return type */
 export interface IGetBlocksByDescResult {
   created_at: Date;
-  height: string;
-  rowid: string;
+  height: bigint;
+  rowid: bigint;
 }
 
 /** 'GetBlocksByDesc' query type */

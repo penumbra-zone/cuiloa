@@ -5,11 +5,14 @@
 */
 import { PrismaClient } from "@prisma/client";
 import pg from "pg";
-const { Pool } = pg;
+const { Pool, types } = pg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
+
+types.setTypeParser(types.builtins.DATE, (val: string) => val);
+types.setTypeParser(types.builtins.INT8, (val: string) => BigInt(val));
 
 /**
  * `getClient` returns a Promise<pg.PoolClient> open and perform transactions against the DB.
