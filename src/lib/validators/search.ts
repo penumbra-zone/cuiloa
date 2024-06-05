@@ -16,7 +16,7 @@ export const HashResultValidator = z.union([
 // A preprocessor validator that helps avoid coercion runtime errors with BigInt validation by piping the results of converting a string to an integer.
 const toNonNegInt = z.number().or(z.string()).pipe(z.coerce.number().int().nonnegative());
 
-// This validator is to check whether a block height conforms to what is expected by the `height` column of the 
+// This validator is to check whether a block height conforms to what is expected by the `height` column of the
 // `blocks` table defined in cometbft's psql indexer schema. The final .pipe() doesn't require a nonnegative check because of toNonNegInt.
 export const BlockHeightValidator = z.bigint().nonnegative({ message: "Block height must be a non-negative integer."}).or(toNonNegInt).pipe(z.coerce.bigint());
 
@@ -139,20 +139,62 @@ export const TransactionResult = z.tuple([
   }),
 ]);
 
-// zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/block?q=<height>
-export const BlockData = z.object({
-  created_at: z.string().datetime(),
-  height: z.coerce.bigint(),
-  events: z.array(
-    z.object({
-      type: z.string(),
-      attributes: z.array(z.object({
-        value: z.string().nullable(),
-        key: z.string(),
-      })),
-    }),
-  ),
-  tx_results: z.array(z.object({ tx_hash: z.string() })),
+// Schema for JSON data by GET /api/block?q=<height>
+// Transforms data
+export const BlockData = z.array(
+  z.object({
+    created_at: z.string().datetime().nullable(),
+    tx_hashes: z.array(z.string()).nullable(),
+    type: z.string(),
+    key: z.string(),
+    value: z.string().nullable(),
+  }),
+).transform(( val, ctx ) => {
+
+  const blockInfo = val.filter((v) => v.type === "block").at(0);
+
+  if (!blockInfo) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "block API violation, BlockData contains no record with type 'block'",
+    });
+    return z.NEVER;
+  }
+
+  const tx_hashes = blockInfo.tx_hashes ?? [];
+  const created_at = blockInfo?.created_at;
+
+  if (!(created_at ?? "")) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "block API violation, 'created_at' is not defined for BlockData row with type 'block'",
+    });
+    return z.NEVER;
+  }
+
+  // Collect all KVs into an array by the `type` of an attribute.
+  const events:
+    Array<{
+      type: string,
+      attributes: Array<{
+        key: string,
+        value: string | null}>
+    }> = val
+      .map(({ key, type, value}) => ({ key, type, value}))
+      .reduce((acc, curr) => {
+        for (let index = 0; index < acc.length; index++) {
+          const { type, attributes } = acc[index];
+          if (type === curr.type) {
+            attributes.push({ key: curr.key, value: curr.value });
+            acc[index].attributes = attributes;
+            return acc;
+          }
+        }
+        acc.push({ type: curr.type, attributes: [{ key: curr.key, value: curr.value}]});
+        return acc;
+      },
+      [] as Array<{type:string, attributes: Array<{ key: string, value: string | null}>}>);
+  return { tx_hashes, created_at, events };
 });
 
 export type TransactionResultPayload = z.infer<typeof TransactionResult>;
