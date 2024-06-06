@@ -15,6 +15,7 @@ export async function GET(req: Request) {
 
     console.log(`Acquiring DB client and querying database for attribute data of block with height ${ht}.`);
 
+    // TODO: Update query to match Transaction, can use EventAttribute validator instead of the ad-hoc validation + transform.
     const getBlock = sql<IGetBlockQuery>`
       WITH txs (block_id, tx_hash) AS (
           SELECT tx.block_id, tx.tx_hash FROM tx_results tx

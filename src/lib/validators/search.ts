@@ -1,5 +1,7 @@
 import { Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { z } from "zod";
+import { jsonSchema } from "./json";
+
 // This validator is to check whether a sha256 hash conforms to what is expected by the `tx_hash` column
 // of the `tx_result` table defined in cometbft's psql indexer schema.
 export const HashResultValidator = z.union([
@@ -115,22 +117,24 @@ export const SearchResultValidator = z.discriminatedUnion("kind", [
   }),
 ]);
 
+const EventAttribute = z.array(
+  z.object({
+    type: z.string(),
+    attributes: z.array(
+      z.object({
+        key: z.string(),
+        value: z.string().nullable(),
+      })),
+    }),
+);
+
 // zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/transaction?q=<hash>
 export const TransactionResult = z.tuple([
   z.object({
     tx_hash: z.string(),
+    height: z.coerce.bigint(),
     created_at: z.string().datetime(),
-    events: z.array(z.object({
-      type: z.string(),
-      attributes: z.array(z.object({
-        value: z.string().nullable(),
-        key: z.string(),
-      })),
-    })),
-    blocks: z.object({
-      height: z.coerce.bigint(),
-      chain_id: z.string(),
-    }),
+    events: jsonSchema.pipe(EventAttribute),
   }),
   // NOTE: Not sure how good this perf wise relative to JsonValue equivalent, but I would need to type out the entire object structure.
   z.string().transform((jsonString) => {

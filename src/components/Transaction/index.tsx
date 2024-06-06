@@ -26,7 +26,7 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
         </div>
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 w-full sm:text-lg font-semibold">Block Height</p>
-          <Link href={`/block/${txResult.blocks.height}`}><pre className="underline sm:w-0 sm:text-lg w-full">{txResult.blocks.height.toString()}</pre></Link>
+          <Link href={`/block/${txResult.height}`}><pre className="underline sm:w-0 sm:text-lg w-full">{txResult.height.toString()}</pre></Link>
         </div>
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 w-full sm:text-lg font-semibold">Timestamp</p>
