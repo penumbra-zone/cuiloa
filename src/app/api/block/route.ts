@@ -26,8 +26,8 @@ export async function GET(req: Request) {
         be.type as "type!",
         be.key as "key!",
         be.value,
-        CASE be.type
-            WHEN  'block' THEN array_agg(txs.tx_hash)
+        CASE
+            WHEN be.type='block' AND EXISTS (SELECT 1 FROM txs) THEN array_agg(txs.tx_hash)
         END tx_hashes,
         CASE be.type
             WHEN 'block' THEN b.created_at

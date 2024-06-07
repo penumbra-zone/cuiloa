@@ -6,7 +6,7 @@ import { getPgClient } from "@/lib/db";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  console.log("POST req on /api/blocks/", req);
+  console.log("POST req on /api/blocks/");
   try {
     const url = new URL(req.url);
     const pageParam = url.searchParams.get("page")?.trim() ?? "";
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     console.log("pageOffset", pageOffset);
 
     const getBlocksByDesc = sql<IGetBlocksByDescQuery>`
-      SELECT b.rowid, b.height, b.created_at FROM blocks b
+      SELECT b.height, b.created_at FROM blocks b
       ORDER BY b.height DESC LIMIT $queryLimit! OFFSET $pageOffset!;
     `;
     const getBlocksCount = sql<IGetBlocksCountQuery>`SELECT COUNT(*)::int as _count FROM blocks;`;

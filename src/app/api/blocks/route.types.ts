@@ -10,7 +10,6 @@ export interface IGetBlocksByDescParams {
 export interface IGetBlocksByDescResult {
   created_at: Date;
   height: bigint;
-  rowid: bigint;
 }
 
 /** 'GetBlocksByDesc' query type */
