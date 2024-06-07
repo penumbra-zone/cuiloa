@@ -1,157 +1,64 @@
-import util from "util";
-import db from "@/lib/db";
-import { type NextRequest } from "next/server";
+import { getPgClient } from "@/lib/db";
+import { sql } from "@pgtyped/runtime";
+import { IGetIbcChannelsQuery } from "./route.types";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(_req: NextRequest) {
+export async function GET() {
   console.log("SUCCESS: GET /api/ibc/channels");
   try {
-    console.log("Querying indexer for IBC channels");
+    console.log("Acquiring PgClient and querying for IBC channels");
 
-    const channelsQuery = await db.events.findMany({
-      select: {
-        attributes: {
-          select: {
-            key: true,
-            value: true,
-          },
-          where: {
-            NOT: {
-              OR: [
-                {
-                  key: "counterparty_port_id",
-                },
-                {
-                  key: "port_id",
-                },
-                {
-                  key: "version",
-                },
-              ],
-            },
-          },
-        },
-      },
-      where: {
-        type: {
-          equals: "channel_open_init",
-        },
-      },
-      orderBy: {
-        rowid: "desc",
-      },
-    });
+    const client = await getPgClient();
 
-    console.log("Successfully queried for IBC channels.", channelsQuery);
-    // console.log(channelsQuery[0].attributes);
+    // TODO: A lot to improve on here. Create stable views instead of CTE's per client request. Laterals not a bad idea, either.
+    // NOTE: The only suq-query that I'm not 100% on how to improve later is for getting the most up-to-date consensusHeight for a counterparty
+    //       in type_consensus_by_client.
+    const getIbcChannels = sql<IGetIbcChannelsQuery>`
+    WITH channel_connection (channel_id, connection_id) AS (
+      SELECT ea.value as channel_id, _ea.value as connection_id
+      FROM event_attributes ea
+      INNER JOIN event_attributes _ea
+        ON _ea.block_id=ea.block_id
+        AND _ea.composite_key='channel_open_init.connection_id'
+      WHERE
+        ea.composite_key='channel_open_init.channel_id'
+    ), connections_counterparty_by_client (client_id, connection_id, counterparty_client_id) AS (
+      SELECT ea.value as client_id, c_ea.value as connection_id, p_ea.value as counterparty_client_id
+      FROM event_attributes ea
+      INNER JOIN event_attributes c_ea
+        ON ea.block_id=c_ea.block_id
+        AND c_ea.composite_key='connection_open_init.connection_id'
+      INNER JOIN event_attributes p_ea
+        ON p_ea.block_id=c_ea.block_id
+        AND p_ea.composite_key='connection_open_init.counterparty_client_id'
+      WHERE
+        ea.composite_key='connection_open_init.client_id'
+    ), type_consensus_by_client (client_id, client_type, consensus_height) AS (
+      SELECT DISTINCT ON (updates.client_id, updates.client_type)
+        updates.client_id, updates.client_type, updates.consensus_height
+      FROM (
+        SELECT ea.block_id, ea.value as client_id, t_ea.value as client_type, h_ea.value as consensus_height
+        FROM event_attributes ea
+        INNER JOIN event_attributes h_ea
+          ON h_ea.block_id=ea.block_id
+          AND h_ea.composite_key='update_client.consensus_height'
+        INNER JOIN event_attributes t_ea
+          ON t_ea.block_id=ea.block_id
+          AND t_ea.composite_key='update_client.client_type'
+        WHERE
+          ea.composite_key='update_client.client_id'
+        ORDER BY ea.block_id DESC
+      ) updates
+    )
+    SELECT cc.channel_id, tcc.client_id, ccc.connection_id, tcc.client_type, ccc.counterparty_client_id, tcc.consensus_height
+    FROM channel_connection cc
+    LEFT JOIN connections_counterparty_by_client ccc ON cc.connection_id=ccc.connection_id
+    LEFT JOIN type_consensus_by_client tcc ON tcc.client_id=ccc.client_id;
+    `;
 
-    console.log("Searching for connections associated with IBC Channels...");
-    // TODO: I currently don't know of a good way to find the last known consensus height for every channel's counterparty chain.
-    //       See note in /api/ibc/channels/route.ts#L85
-    const connections = await db.events.findMany({
-      select: {
-        attributes: {
-          select: {
-            key: true,
-            value: true,
-          },
-          where: {
-            OR: [
-              {
-                key: {
-                  equals: "client_id",
-                },
-              },
-              {
-                key: {
-                  equals: "connection_id",
-                },
-              },
-            ],
-          },
-        },
-      },
-      where: {
-        type: "connection_open_init",
-      },
-      orderBy: {
-        block_id: "desc",
-      },
-    });
+    const channels = await getIbcChannels.run(undefined, client);
+    client.release();
 
-    console.log("Successfully queried for associated IBC Connections.", connections);
-
-    // NOTE: Entry #5000 in why Prisma is being ripped out, please ignore the precariously bad and borderline incorrect code, this will be removed in due time.
-    console.log("Searching for client updates associated with IBC Channels...");
-    const counterpartyHeights = await db.events.findMany({
-      select: {
-        attributes: {
-          select: {
-            key: true,
-            value: true,
-          },
-          where: {
-            OR: [
-              {
-                key: {
-                  equals: "consensus_height",
-                },
-              },
-              {
-                key: {
-                  equals: "client_id",
-                },
-              },
-            ],
-          },
-        },
-      },
-      where: {
-        type: {
-          equals: "update_client",
-        },
-      },
-      orderBy: {
-        block_id: "desc",
-      },
-    });
-
-    console.log("Successfully queried for client updates.", util.inspect(counterpartyHeights, { showHidden: false, depth: null, colors: true }));
-
-    const uniqueClients : Array<{ clientId: string, consensusHeight: string }> = [];
-
-    counterpartyHeights.forEach(({ attributes }) => {
-      const _client = attributes[0].key === "client_id" ? attributes[0].value : attributes[1].value;
-      const _height = attributes[0].key === "consensus_height" ? attributes[0].value : attributes[1].value;
-      if (!uniqueClients.find(({ clientId }) => clientId===_client) && _client !== null && _height !== null) {
-        uniqueClients.push({ clientId: _client, consensusHeight: _height });
-      }
-    });
-
-    console.log("Unique clients", uniqueClients);
-
-    // NOTE: this is why i should remove Prisma. I don't care if there is a way to massage the database into making this unecessary or that I could skip over it using RAWQUERY; the fact that this is what you are forced to do either of these for something so simple is ridiculous.
-    //       included in this is that I would have an entire third query if I wasn't relying on the way `client_id`s are built off of `client_type`s
-    console.log("Merging query data...");
-    const channels = channelsQuery.map((channel) => {
-      // Precondition: An attribute with key "connection_id" should never have a value of null.
-      const connectionId = channel.attributes.find(({ key }) => key==="connection_id")?.value as string;
-      // Precondition: An attribute with key "client_id" should never have a value of null.
-      const clientID = connections.find(({ attributes }) => !!attributes.find(({ key, value }) => key==="connection_id" && connectionId===value))?.attributes.find(({ key }) => key==="client_id") as {key: string, value: string};
-      channel.attributes.push(clientID);
-      const consensusHeight = uniqueClients.find(({ clientId: _clientID }) => clientID.value===_clientID)?.consensusHeight as string;
-      channel.attributes.push({ key: "consensusHeight", value: consensusHeight});
-      // NOTE: Abusing the fact that `ibc_types::core::client::ClientId` is built from `ibc_types::core::client::ClientType` by hyphenating an id_counter.
-      //       I don't want to rely this on the longrun.
-      // TODO: Verify whether we want counterparty_client_id or not.
-      const idx = clientID.value.lastIndexOf("-");
-      const counterpartyID = clientID.value.substring(0, idx);
-      channel.attributes.push({ key: "client_type", value: counterpartyID });
-      // Enforce ordering on attributes for the consuming table on the client.
-      channel.attributes.sort((a, b) => a.key.toUpperCase() < b.key.toUpperCase() ? -1 : (a.key.toUpperCase() > b.key.toUpperCase() ? 1 : 0));
-      return channel.attributes;
-    });
-    console.log("Successfully merged channels and clients.", channels);
+    console.log("Successfully queried channels:", channels);
 
     return new Response(JSON.stringify(channels));
 
