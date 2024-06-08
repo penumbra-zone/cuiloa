@@ -10,13 +10,13 @@ import { getAsset1, getAsset2 } from "@penumbra-zone/getters/trading-pair";
 import type { Delegate, FundingStream, Undelegate, UndelegateClaim, ValidatorDefinition } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/stake/v1/stake_pb";
 import { Ics20Withdrawal } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/ibc/v1/ibc_pb";
 import type { ActionDutchAuctionEnd, ActionDutchAuctionSchedule, ActionDutchAuctionScheduleView, ActionDutchAuctionWithdrawView, DutchAuctionDescription } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/component/auction/v1/auction_pb";
-import { createRegistry } from "@bufbuild/protobuf";
+import { Any, createRegistry } from "@bufbuild/protobuf";
 import { MsgUpdateClient, MsgCreateClient } from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/tx_pb";
-import { Header } from "@buf/cosmos_ibc.bufbuild_es/ibc/lightclients/tendermint/v1/tendermint_pb";
+import { Header, ClientState, ConsensusState } from "@buf/cosmos_ibc.bufbuild_es/ibc/lightclients/tendermint/v1/tendermint_pb";
 import { MsgAcknowledgement, MsgChannelOpenAck, MsgChannelOpenInit, MsgRecvPacket } from "@buf/cosmos_ibc.bufbuild_es/ibc/core/channel/v1/tx_pb";
 import { MsgConnectionOpenInit, MsgConnectionOpenAck } from "@buf/cosmos_ibc.bufbuild_es/ibc/core/connection/v1/tx_pb";
 
-// Provides registry types for decoding known typeURLs in ibcRelayAction.rawAction.Any
+// Provides registry types for decoding the known google.protobuf.Any typeURLs in IbcRelay.raw_action
 // TODO: figure out how to add this at the top level (just re-export the relevant schemas, maybe?) so that this doesn't need to be passed around.
 export const ibcRegistry = createRegistry(
   MsgUpdateClient,
@@ -27,7 +27,13 @@ export const ibcRegistry = createRegistry(
   MsgChannelOpenAck,
   MsgConnectionOpenInit,
   MsgConnectionOpenAck,
+  // Types for tendermint light clients.
+  // TODO: Do we want to add anymore before catching with Any?
   Header,
+  ClientState,
+  ConsensusState,
+  // This should ultimately catch any other Any values without throwing an error.
+  Any,
 );
 
 export const makeActionView = ({ action }: Action): ActionView | undefined => {
