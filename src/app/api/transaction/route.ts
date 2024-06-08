@@ -1,9 +1,10 @@
 import { getPgClient } from "@/lib/db";
 import { sql } from "@pgtyped/runtime";
 import { IGetTransactionQuery } from "./route.types";
-import { transactionFromBytes } from "@/lib/protobuf";
+import { transactionFromBytes, ibcRegistry } from "@/lib/protobuf";
 import { HashResultValidator } from "@/lib/validators/search";
 import { z } from "zod";
+// import { } from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/"
 
 export const dynamic = "force-dynamic";
 
@@ -45,14 +46,16 @@ export async function GET(req: Request) {
     client.release();
 
     console.log("pgClient finished querying, transaction:");
-    console.dir(transaction, { depth: 3 });
+    console.dir(transaction, { depth: 2 });
 
+    // NOTE: At this point, it might be better to simply pass tx_result in the response and decode the Transaction
+    //       on the client?
+    //       The reasoning is that there are two calls to .fromBinary() on tx_result's data before ultimately re-encoding it to a JSON serializable value.
+    //       This then gets de-serialized back into a JSON Value, then to a Transaction, and then back into a JSON string.
     const { tx_result, ...tx } = transaction;
     const penumbraTx = transactionFromBytes(tx_result);
 
-    // console.log("Successfully decoded Transaction?", penumbraTx);
-
-    return new Response(JSON.stringify([tx, penumbraTx.toJsonString()]));
+    return new Response(JSON.stringify([tx, penumbraTx.toJson({ typeRegistry: ibcRegistry })]));
   } catch (error) {
     console.log(error);
     if (error instanceof z.ZodError) {

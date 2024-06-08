@@ -1,6 +1,7 @@
 import { Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { z } from "zod";
 import { jsonSchema } from "./json";
+import { ibcRegistry } from "../protobuf";
 
 // This validator is to check whether a sha256 hash conforms to what is expected by the `tx_hash` column
 // of the `tx_result` table defined in cometbft's psql indexer schema.
@@ -136,11 +137,7 @@ export const TransactionResult = z.tuple([
     created_at: z.string().datetime(),
     events: jsonSchema.pipe(EventAttribute),
   }),
-  // NOTE: Not sure how good this perf wise relative to JsonValue equivalent, but I would need to type out the entire object structure.
-  z.string().transform((jsonString) => {
-    const parsed = Transaction.fromJsonString(jsonString);
-    return parsed;
-  }),
+  jsonSchema.transform((json) => Transaction.fromJson(json, { typeRegistry: ibcRegistry })),
 ]);
 
 // Schema for JSON data by GET /api/block?q=<height>
