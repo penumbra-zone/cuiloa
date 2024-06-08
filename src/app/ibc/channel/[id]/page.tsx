@@ -18,7 +18,7 @@ const Page : FC<PageProps> = ({ params }) => {
       console.log(`Fetching: GET /api/ibc/channel/${channelId}`);
       const { data } = await axios.get(`/api/ibc/channel?q=${channelId}`);
       console.log("Fetched result:", data);
-      return data as { connectionId: string, clientId: string, consensusHeight: string, recentTransactions: Array<{hash: string}>};
+      return data as { connectionId: string, clientId: string, consensusHeight: string, recentTxs: string[]};
       // TODO: enforce validation
       // const result = IbcChannelValidator.safeParse(data);
     },
@@ -65,7 +65,7 @@ const Page : FC<PageProps> = ({ params }) => {
               <div className="flex flex-wrap justify-start w-full">
                 <p className="sm:w-1/6 w-full font-semibold">Recent Transactions</p>
                 <div className="sm:w-5/6 w-full">
-                  {data.recentTransactions.map(({ hash }, i) => <Link href={`/transaction/${hash}`} key={i} className="underline"><pre className="sm:font-base font-sm overflow-hidden overflow-ellipsis">{hash}</pre></Link>)}
+                  {data.recentTxs.map(( hash , i) => <Link href={`/transaction/${hash}`} key={i} className="underline"><pre className="sm:font-base font-sm overflow-hidden overflow-ellipsis">{hash}</pre></Link>)}
                 </div>
               </div>
             </div>

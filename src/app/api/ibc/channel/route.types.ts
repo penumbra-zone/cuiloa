@@ -9,11 +9,12 @@ export interface IGetChannelInfoParams {
 /** 'GetChannelInfo' return type */
 export interface IGetChannelInfoResult {
   block_id: bigint | null;
+  channel_id: string;
   client_id: string;
   connection_id: string;
   consensus_height: string | null;
   counterparty_client_id: string | null;
-  tx_hashs: stringArray | null;
+  recent_txs: stringArray;
 }
 
 /** 'GetChannelInfo' query type */
