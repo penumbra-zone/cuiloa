@@ -5,17 +5,11 @@ import { type FC } from "react";
 interface Props {
   className?: string,
   data: Array<{
-    tx_results: {
-      tx_hash: string | null,
-    },
-    blocks: {
-      created_at: string,
-      height: bigint,
-    },
-    attributes: Array<{
-      key: string,
-      value: string | null,
-    }>,
+    client_id: string,
+    block_id: bigint,
+    last_updated_at: string,
+    hash: string,
+    consensus_height: string | null
   }>,
 }
 
