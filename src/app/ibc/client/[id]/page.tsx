@@ -1,4 +1,5 @@
 "use client";
+
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
@@ -19,7 +20,7 @@ const Page : FC<PageProps> = ({ params }) => {
       console.log("Fetched result:", data);
       // TODO: enforce validation
       // const result = IbcClientValidator.safeParse(data);
-      return data as { channelId: string, connectionId: string, clientId: string, clientType: string, consensusHeight: string, header: string };
+      return data as Array<{ channels: string[], connection_id: string, client_id: string, events: string }>;
     },
     queryKey: ["IbcClient", id],
     retry: false,
@@ -28,48 +29,53 @@ const Page : FC<PageProps> = ({ params }) => {
     },
   });
 
-  if (isError) {
+  // Not the best.
+  if (isError || data?.length === undefined) {
     return (
       <div className="py-5 flex justify-center">
         <h1 className="text-4xl font-semibold">No results found.</h1>
       </div>
     );
   }
+  // ... Still Not The Best.
+  const { client_id: clientId, connection_id: connectionId, channels, events: eventsJSON} = data[0];
+  const events: Array<{ key: string, value: string }> = JSON.parse(eventsJSON);
+  const consensusHeight = events.find(({ key }) => key === "consensus_height")?.value ?? "NONE";
+  const clientType = events.find(({ key }) => key === "client_type")?.value ?? "NONE";
+  // TODO: Do we just want a header and not the whole transaction decoded? packets?
+  // const header = events.find(({ key }) => key === "header")?.value ?? "NONE";
 
   return (
     <div>
       {isFetched ? (
         <div className="flex flex-col items-center gap-5 pt-5">
           <h1 className="sm:text-2xl text-lg font-bold">IBC Client</h1>
-        {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        data  ? (
           <div className="sm:w-11/12 w-full bg-white rounded-sm shadow-md">
             <div className="flex flex-col justify-start p-5 gap-y-5 w-full">
               <div className="flex flex-wrap justify-start w-full">
                 <p className="sm:w-1/6 w-full font-semibold">Client ID</p>
-                <pre className="sm:w-0 w-full">{data.clientId}</pre>
+                <pre className="sm:w-0 w-full">{clientId}</pre>
               </div>
               <div className="flex flex-wrap justify-start w-full">
                 <p className="sm:w-1/6 w-full font-semibold">Client Type</p>
-                <pre className="sm:w-0 w-full">{data.clientType}</pre>
+                <pre className="sm:w-0 w-full">{clientType}</pre>
               </div>
               <div className="flex flex-wrap justify-start w-full">
                 <p className="sm:w-1/6 w-full font-semibold">Counterparty Height</p>
-                <pre className="sm:w-0 w-full">{data.consensusHeight}</pre>
-              </div>
-              <div className="flex flex-wrap justify-start w-full">
-                <p className="sm:w-1/6 w-full font-semibold">Channel ID</p>
-                <Link href={`/ibc/channel/${data.channelId}`} className="underline sm:w-0 w-full"><pre>{data.clientId}</pre></Link>
+                <pre className="sm:w-0 w-full">{consensusHeight}</pre>
               </div>
               <div className="flex flex-wrap justify-start w-full">
                 <p className="sm:w-1/6 w-full font-semibold">Connection IDs</p>
-                <Link href={`/ibc/connection/${data.connectionId}`} className="underline sm:w-0 w-full"><pre>{data.connectionId}</pre></Link>
+                <Link href={`/ibc/connection/${connectionId}`} className="underline sm:w-0 w-full"><pre>{connectionId}</pre></Link>
+              </div>
+              <div className="flex flex-wrap justify-start w-full">
+                <p className="sm:w-1/6 w-full font-semibold">Channel IDs</p>
+                <div className="">
+                  {channels.map(( channelId, i ) => <Link href={`/ibc/channel/${channelId}`} key={i} className="underline sm:w-0 w-full"><pre>{channelId}</pre></Link>)}
+                </div>
               </div>
             </div>
           </div>
-        ) : (
-          <p>No results</p>
-        )}
        </div>
       ) : (
         <p>loading...</p>
