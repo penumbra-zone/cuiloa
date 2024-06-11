@@ -12,24 +12,24 @@ interface PageProps {
 }
 
 const Page : FC<PageProps> = ({ params }) => {
-  const { id: connectionId } = params;
+  const { id } = params;
   const { data, isFetched, isError } = useQuery({
     queryFn: async () => {
-      console.log(`Fetching: GET /api/ibc/connection/${connectionId}`);
-      const { data } = await axios.get(`/api/ibc/connection?q=${connectionId}`);
+      console.log(`Fetching: GET /api/ibc/connection/${id}`);
+      const { data } = await axios.get(`/api/ibc/connection?q=${id}`);
       console.log("Fetched result:", data);
-      return data as { clientId: string, channelIds: string[]};
+      return data as Array<{ connection_id: string, client_id: string, channel_ids: string[] }>;
       // TODO: enforce validation
       // const result = IbcConnectionValidator.safeParse(data);
     },
-    queryKey: ["IbcConnection", connectionId],
+    queryKey: ["IbcConnection", id],
     retry: false,
     meta: {
       errorMessage: "Failed to query IBC Connection by id. Please try again.",
     },
   });
 
-  if (isError) {
+  if (isError || !data) {
     return (
       <div className="py-5 flex justify-center">
         <h1 className="text-4xl font-semibold">No results found.</h1>
@@ -37,13 +37,13 @@ const Page : FC<PageProps> = ({ params }) => {
     );
   }
 
+  const { connection_id: connectionId, client_id: clientId, channel_ids: channelIds } = data[0];
+
   return (
     <div>
       {isFetched ? (
         <div className="flex flex-col items-center gap-5 pt-5">
           <h1 className="sm:text-2xl text-lg font-bold">IBC Connection</h1>
-        {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        data  ? (
           <div className="sm:w-11/12 w-full bg-white rounded-sm shadow-md">
             <div className="flex flex-col justify-start p-5 gap-y-5 w-full">
               <div className="flex flex-wrap justify-start w-full">
@@ -52,19 +52,16 @@ const Page : FC<PageProps> = ({ params }) => {
               </div>
               <div className="flex flex-wrap justify-start w-full">
                 <p className="sm:w-1/6 w-full font-semibold">Client ID</p>
-                <Link href={`/ibc/client/${data.clientId}`} className="underline sm:w-0 w-full"><pre>{data.clientId}</pre></Link>
+                <Link href={`/ibc/client/${clientId}`} className="underline sm:w-0 w-full"><pre>{clientId}</pre></Link>
               </div>
               <div className="flex flex-wrap justify-start w-full">
                 <p className="sm:w-1/6 w-full font-semibold">Channel IDs</p>
                 <div className="">
-                  {data.channelIds.map(( channelId, i ) => <Link href={`/channel/${channelId}`} key={i} className="underline sm:w-0 w-full"><pre>{channelId}</pre></Link>)}
+                  {channelIds.map(( channelId, i ) => <Link href={`/ibc/channel/${channelId}`} key={i} className="underline sm:w-0 w-full"><pre>{channelId}</pre></Link>)}
                 </div>
               </div>
             </div>
           </div>
-        ) : (
-          <p>No results</p>
-        )}
        </div>
       ) : (
         <p>loading...</p>
