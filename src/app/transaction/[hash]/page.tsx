@@ -22,6 +22,7 @@ const Page : FC<PageProps> = ({ params }) => {
       const { data } = await axios.get(`/api/transaction?q=${hash}`);
       console.log("Fetched result:", data);
       const result = TransactionResult.safeParse(data);
+
       if (result.success) {
         return result.data;
       } else {

@@ -5,7 +5,7 @@ import { type FC } from "react";
 
 export interface RelatedQuery {
   type: string,
-  identifier: string,
+  hash: string,
 }
 
 export interface SearchResult {

@@ -52,8 +52,8 @@ export const columns : Array<ColumnDef<SearchResultsColumns>> = [
         return (
         <ul>
           {/* {related.map(({ type, indentifier }, i) => <li key={i}>{type} : {indentifier}</li>)} */}
-          {related.map(({ type, identifier }, i) => {
-            return <li key={i}>{type}: <Link href={`/transaction/${identifier}`}><p className="underline sm:text-base text-xs">{identifier}</p></Link></li>;
+          {related.map(({ type, hash }, i) => {
+            return <li key={i}>{type}: <Link href={`/transaction/${hash}`}><p className="underline sm:text-base text-xs">{hash}</p></Link></li>;
           })
           }
         </ul>

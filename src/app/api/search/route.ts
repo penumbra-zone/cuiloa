@@ -1,8 +1,10 @@
-import db from "@/lib/db";
+import { getPgClient } from "@/lib/db";
+import { sql } from "@pgtyped/runtime";
 import { QueryKind, SearchValidator } from "@/lib/validators/search";
+import { IGetBlockSearchQuery, IGetChannelSearchQuery, IGetClientSearchQuery, IGetConnectionSearchQuery, IGetTransactionSearchQuery } from "./route.types";
 
 export async function POST(req: Request) {
-  console.log("POST req on /api/search", req);
+  console.log("POST req on /api/search");
   try {
     const url = new URL(req.url);
     const queryParam = url.searchParams.get("q")?.trim() ?? "";
@@ -13,158 +15,136 @@ export async function POST(req: Request) {
       return new Response("Invalid query", { status: 404 });
     }
 
+    const pgClient = await getPgClient();
+
     const searchQuery = res.data;
-    // TODO: pagination will be more relevant when there are different types of values to search across for a given query...
-    //       i.e. for a given block height, find any associated ABCI stuff
-    // const pageParam = url.searchParams.get("page")?.trim() ?? "";
-    // const pageOffset = (parseInt(pageParam, 10)) * 10;
 
     if (searchQuery.kind === QueryKind.BlockHeight) {
-      const blocksQuery = await db.blocks.findFirst({
-        select: {
-          height: true,
-        },
-        where: {
-          // value will be bigint when kind is BlockHeight
-          height: searchQuery.value as bigint,
-        },
-      });
+
+      const blockParam = BigInt(searchQuery.value);
+      console.log(`Searching for block ${blockParam}`);
+
+      const getBlockSearch = sql<IGetBlockSearchQuery>`
+        SELECT b.height as "height"
+        FROM blocks b
+        WHERE b.height=$blockParam!
+      ;`;
+
+      const block = await getBlockSearch.run({ blockParam }, pgClient);
+      pgClient.release();
 
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
-        identifier: blocksQuery?.height,
+        identifier: block.at(0)?.height,
       }));
 
     } else if (searchQuery.kind === QueryKind.TxHash) {
-      const txQuery = await db.tx_results.findFirst({
-        select: {
-          tx_hash: true,
-        },
-        where: {
-          // value will be string when kind is TxHash
-          tx_hash: searchQuery.value as string,
-        },
-      });
+
+      const txParam = searchQuery.value as string;
+      console.log(`Searching for transaction hash ${txParam}`);
+      const getTransactionSearch = sql<IGetTransactionSearchQuery>`
+        SELECT tx.tx_hash as "hash"
+        FROM tx_results tx
+        WHERE tx.tx_hash=$txParam!
+      ;`;
+
+      const txHash = await getTransactionSearch.run({ txParam }, pgClient);
+
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
-        identifier: txQuery?.tx_hash,
+        identifier: txHash.at(0)?.hash,
       }));
     } else if (searchQuery.kind === QueryKind.IbcClient) {
-      console.log("Searching for IBC Clients...");
-      const clientQuery = await db.events.findMany({
-        select: {
-          type: true,
-          tx_results: {
-            select: {
-              tx_hash: true,
-            },
-          },
-        },
-        where: {
-          attributes: {
-            some: {
-              AND: [
-                {
-                  key: {
-                    equals: "client_id",
-                  },
-                },
-                {
-                  value: {
-                    equals: searchQuery.value as string,
-                  },
-                },
-              ],
-            },
-          },
-        },
-        orderBy: {
-          block_id: "desc",
-        },
-        take: 10,
-      });
-      console.log("Successfully queried for IBC Client Search Results.", clientQuery);
-      const clientData = clientQuery.map(({ type, tx_results: txResults }) => ({type, identifier: txResults?.tx_hash }));
+
+      const clientId = searchQuery.value as string;
+      console.log(`Searching for IBC client ${clientId}`);
+
+      // TODO: Also search for packets involving the client's connection
+      const getClientSearch = sql<IGetClientSearchQuery>`
+        SELECT ea.type as "type!", tx.tx_hash as "hash"
+        FROM event_attributes ea
+        LEFT JOIN tx_results tx ON ea.tx_id=tx.rowid
+        WHERE
+          ea.value=$clientId!
+          AND
+          (ea.composite_key='update_client.client_id'
+          OR
+          ea.composite_key='create_client.client_id')
+        ORDER BY ea.block_id DESC
+        LIMIT 5
+      ;`;
+
+      const clientSearch = await getClientSearch.run({ clientId }, pgClient);
+      pgClient.release();
+
+      if (clientSearch.length === 0) return new Response("No results.", { status: 404 });
+
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
         identifier: searchQuery.value,
-        related: clientData,
+        related: clientSearch,
       }));
     } else if (searchQuery.kind === QueryKind.IbcChannel) {
-      console.log("Searching for IBC Channels...");
-      const recentTransactions = await db.events.findMany({
-        select: {
-          block_id: true,
-        },
-        where: {
-          attributes: {
-            some: {
-              value: {
-                equals: searchQuery.value as string,
-              },
-            },
-          },
-        },
-      });
-      console.log("Recent transactions involving IBC Channel.", recentTransactions);
-      const channelQuery = await db.events.findMany({
-        select: {
-          type: true,
-          tx_results: {
-            select: {
-              tx_hash: true,
-            },
-          },
-        },
-        where: {
-          block_id: {
-            in: recentTransactions.map(({ block_id: blockId }) => blockId),
-          },
-        },
-        orderBy: {
-          block_id: "desc",
-        },
-        take: 10,
-      });
-      console.log("Successfully queried for IBC Channel Search Results.", channelQuery);
-      const channelData = channelQuery.map(({ type, tx_results: txResults }) => ({type, identifier: txResults?.tx_hash }));
+
+      const channelId = searchQuery.value as string;
+      console.log(`Searching for IBC channel ${channelId}`);
+
+      const getChannelSearch = sql<IGetChannelSearchQuery>`
+        SELECT ea.type as "type!", tx.tx_hash as "hash"
+        FROM event_attributes ea
+        LEFT JOIN tx_results tx ON ea.tx_id=tx.rowid
+        WHERE
+          ea.value=$channelId!
+          AND
+          (ea.composite_key='send_packet.packet_src_channel'
+          OR
+          ea.composite_key='recv_packet.packet_dst_channel'
+          OR
+          ea.composite_key='channel_open_init.channel_id')
+        ORDER BY ea.block_id DESC
+        LIMIT 5
+      ;`;
+
+      const channelSearch = await getChannelSearch.run({ channelId }, pgClient);
+      pgClient.release();
+
+      if (channelSearch.length === 0) return new Response("No results.", { status: 404 });
+
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
         identifier: searchQuery.value,
-        related: channelData,
+        related: channelSearch,
       }));
     } else if (searchQuery.kind === QueryKind.IBCConnection) {
-      console.log("Searching for IBC Connections...");
-      const connectionQuery = await db.events.findFirst({
-        select: {
-          attributes: {
-            select: {
-              value: true,
-            },
-            where: {
-              AND: [
-                {
-                  key: {
-                    equals: "connection_id",
-                  },
-                },
-                {
-                  value: {
-                    equals: searchQuery.value as string,
-                  },
-                },
-              ],
-            },
-          },
-        },
-        orderBy: {
-          block_id: "desc",
-        },
-      });
-      console.log("Successfully queried for IBC Connection Search Results.", connectionQuery);
+
+      const connectionId = searchQuery.value as string;
+      console.log(`Searching for IBC Connection ${connectionId}`);
+
+      const getConnectionSearch = sql<IGetConnectionSearchQuery>`
+        SELECT ea.type as "type!", tx.tx_hash as "hash"
+        FROM event_attributes ea
+        LEFT JOIN tx_results tx ON ea.tx_id=tx.rowid
+        WHERE
+          ea.value=$connectionId!
+          AND
+          (ea.composite_key='send_packet.packet_connection'
+          OR
+          ea.composite_key='recv_packet.packet_connection'
+          OR
+          ea.composite_key='connection_open_init.connection_id')
+        ORDER BY ea.block_id DESC
+        LIMIT 5
+      ;`;
+
+      const connectionSearch = await getConnectionSearch.run({ connectionId }, pgClient);
+      pgClient.release();
+
+      if (connectionSearch.length === 0) return new Response("No results.", { status: 404 });
+
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
         identifier: searchQuery.value,
+        related: connectionSearch,
       }));
     } else {
       // This should be impossible.

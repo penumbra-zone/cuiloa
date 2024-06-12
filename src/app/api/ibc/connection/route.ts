@@ -1,5 +1,7 @@
-import db from "@/lib/db";
+import { getPgClient } from "@/lib/db";
+import { sql } from "@pgtyped/runtime";
 import { type NextRequest } from "next/server";
+import { IGetConnectionInfoQuery } from "./route.types";
 
 export async function GET(req: NextRequest) {
   console.log("SUCCESS: GET /api/ibc/connection");
@@ -11,76 +13,53 @@ export async function GET(req: NextRequest) {
       throw new Error("No channel id provided.");
     }
 
-    console.log("Querying for client_id and channel_id of connection...");
+    console.log("Acquiring pgClient and querying for IBC Connection info.");
+    const client = await getPgClient();
 
-    const connectionInfo = await db.events.findMany({
-      select: {
-        attributes: {
-          select: {
-            key: true,
-            value: true,
-          },
-          where: {
-            OR: [
-              {
-                key: {
-                  equals: "client_id",
-                },
-              },
-              {
-                key: {
-                  equals: "channel_id",
-                },
-              },
-            ],
-          },
-        },
-      },
-      where: {
-        AND: [
-          {
-            attributes: {
-              some: {
-                value: {
-                  equals: connectionId,
-                },
-              },
-            },
-          },
-          {
-            OR: [
-              {
-                type: {
-                  equals: "connection_open_init",
-                },
-              },
-              {
-                type: {
-                  equals: "channel_open_init",
-                },
-              },
-            ],
-          },
-        ],
-      },
-      orderBy: {
-        rowid: "desc",
-      },
-    });
+    // TODO: Establish that it's only channels that a connection can be 1:N with, not also clients (possibility of aliasing across chains????)
+    const getConnectionInfo = sql<IGetConnectionInfoQuery>`
+      SELECT
+        channel_inits.connection_id as "connection_id!",
+        clients.client_id as "client_id!",
+        array_agg(channels.channel_id) as "channel_ids!"
+      FROM (
+        SELECT ea.block_id, ea.value as "connection_id"
+        FROM event_attributes ea
+        WHERE
+          ea.composite_key='channel_open_init.connection_id'
+          AND
+          ea.value=$connectionId!
+      ) channel_inits LEFT JOIN LATERAL (
+        SELECT ea.value as "channel_id"
+        FROM event_attributes ea
+        WHERE
+          ea.block_id=channel_inits.block_id
+          AND
+          ea.composite_key='channel_open_init.channel_id'
+      ) channels ON true LEFT JOIN LATERAL (
+        SELECT ea.block_id
+        FROM event_attributes ea
+        WHERE
+          ea.composite_key='connection_open_init.connection_id'
+          AND
+          ea.value=channel_inits.connection_id
+      ) connection_inits ON true LEFT JOIN LATERAL (
+        SELECT ea.value as "client_id"
+        FROM event_attributes ea
+        WHERE
+          ea.block_id=connection_inits.block_id
+          AND
+          ea.composite_key='connection_open_init.client_id'
+      ) clients ON TRUE
+      GROUP BY channel_inits.connection_id, clients.client_id
+      LIMIT 1
+    ;`;
+    const connections = await getConnectionInfo.run({ connectionId }, client);
+    client.release();
 
-    console.log("Successfully queried data for IBC connection.", connectionInfo);
+    console.log("pgClient finished!", connections);
 
-    const channelIds: string[] = [];
-    let clientId = "";
-    connectionInfo.map(({ attributes }) => attributes).flat().forEach(({ key, value }) => {
-      if (key==="client_id" && value !== null) {
-        clientId = value;
-      } else if (key==="channel_id" && value !== null) {
-        channelIds.push(value);
-      }
-    });
-
-    return new Response(JSON.stringify({clientId, channelIds}));
+    return new Response(JSON.stringify(connections));
 
   } catch (error) {
     console.error("GET request failed.", error);

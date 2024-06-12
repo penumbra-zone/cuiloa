@@ -1,40 +1,24 @@
-import db from "@/lib/db";
-import { type NextRequest } from "next/server";
+import { getPgClient } from "@/lib/db";
+import { sql } from "@pgtyped/runtime";
+import { IGetConnectionsQuery } from "./route.types";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(_req: NextRequest) {
+export async function GET() {
   console.log("SUCCESS: GET /api/ibc/connections");
   try {
-    console.log("Querying indexer for IBC connections");
+    console.log("Acquiring db and querying for IBC Connections.");
 
-    const connectionsQuery = await db.events.findMany({
-      select: {
-        attributes: {
-          select: {
-            key: true,
-            value: true,
-          },
-          where: {
-            key: {
-              equals: "connection_id",
-            },
-          },
-        },
-      },
-      where: {
-        type: {
-          equals: "connection_open_init",
-        },
-      },
-      orderBy: {
-        rowid: "desc",
-      },
-    });
+    const client = await getPgClient();
+    const getConnections = sql<IGetConnectionsQuery>`
+      SELECT ea.value as "connection_id!"
+      FROM event_attributes ea
+      WHERE ea.composite_key='connection_open_init.connection_id'
+      ORDER BY ea.block_id DESC;
+    `;
 
-    console.log("Successfully queried for IBC connections.", connectionsQuery);
-    // console.log(connectionsQuery[0].attributes);
+    const connections = await getConnections.run(undefined, client);
+    client.release();
 
-    const connections = connectionsQuery.map(({ attributes }) => attributes).flat();
+    console.log("Successfully queried:", connections);
 
     return new Response(JSON.stringify(connections));
 

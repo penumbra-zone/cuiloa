@@ -21,12 +21,13 @@
     "@connectrpc/connect-web": "^1.4.0",
     "@penumbra-zone/getters": "^4.0.0",
     "@penumbra-zone/types": "^5.0.0",
-    "@prisma/client": "^5.4.1",
+    "@pgtyped/runtime": "^2.3.0",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
     "@tanstack/react-query": "^5.0.5",
     "@tanstack/react-table": "^8.10.6",
+    "@types/pg": "^8.11.6",
     "axios": "^1.5.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -35,6 +36,7 @@
     "lucide-react": "^0.284.0",
     "next": "13.5.4",
     "npm": "^10.8.0",
+    "pg": "^8.11.5",
     "react": "^18",
     "react-dom": "^18",
     "react-json-view-lite": "^1.4.0",
@@ -45,6 +47,7 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.2.3",
+    "@pgtyped/cli": "^2.3.0",
     "@stylistic/eslint-plugin": "^2.1.0",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20",
@@ -58,7 +61,6 @@
     "eslint-plugin-react": "^7.34.1",
     "husky": "^9.0.11",
     "postcss": "^8",
-    "prisma": "^5.4.1",
     "tailwindcss": "^3",
     "typescript": "^5.4.5"
   }

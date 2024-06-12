@@ -5,7 +5,7 @@ import Link from "next/link";
 import { type FC } from "react";
 import ABCIEventsTable from "../ABCIEventsTable";
 import { TransactionView } from "../TransactionView";
-// import { FlexCol, FlexRow } from "../ui/flex";
+import { ibcRegistry } from "@/lib/protobuf";
 
 interface TransactionProps {
   txData: TransactionResultPayload
@@ -26,7 +26,7 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
         </div>
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 w-full sm:text-lg font-semibold">Block Height</p>
-          <Link href={`/block/${txResult.blocks.height}`}><pre className="underline sm:w-0 sm:text-lg w-full">{txResult.blocks.height.toString()}</pre></Link>
+          <Link href={`/block/${txResult.height}`}><pre className="underline sm:w-0 sm:text-lg w-full">{txResult.height.toString()}</pre></Link>
         </div>
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 w-full sm:text-lg font-semibold">Timestamp</p>
@@ -35,7 +35,7 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 sm:shrink-0 w-full sm:text-lg font-semibold">Transaction Data</p>
           <pre className="sm:w-5/6 w-full break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
-            <JsonView data={penumbraTx.toJson() as object} shouldExpandNode={allExpanded} clickToExpandNode={true} style={defaultStyles}/>
+            <JsonView data={penumbraTx.toJson({ typeRegistry: ibcRegistry }) as object} shouldExpandNode={allExpanded} clickToExpandNode={true} style={defaultStyles}/>
           </pre>
         </div>
         <div className="flex justify-start flex-wrap w-full gap-y-5">

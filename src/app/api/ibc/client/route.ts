@@ -1,5 +1,7 @@
 import { type NextRequest } from "next/server";
-import db from "@/lib/db";
+import { getPgClient } from "@/lib/db";
+import { sql } from "@pgtyped/runtime";
+import { IGetClientQuery } from "./route.types";
 
 export async function GET(req: NextRequest) {
   console.log("SUCCESS: GET /api/ibc/client");
@@ -10,164 +12,71 @@ export async function GET(req: NextRequest) {
       throw new Error("No client id provided.");
     }
     console.log(`Querying indexer for IBC client with id ${clientIdParam}.`);
-    // This will return the block id for the latest client_update event type for a given client_id.
-    const lastClientUpdate = await db.events.findFirstOrThrow({
-      select: {
-        rowid: true,
-        // NOTE: This actually gets us the same result as the data queried in clientAttributes.
-        //       I don't want to keep using Prisma so it probably doesn't matter but the clientAttributes query,
-        //       as it exists, may be entirely unnecessary.
-        // attributes: {
-        //   select: {
-        //     key: true,
-        //     value: true,
-        //   },
-        // },
-      },
-      where: {
-        type: {
-          equals: "update_client",
-        },
-        attributes: {
-          some: {
-            AND: {
-              key: {
-                equals: "client_id",
-              },
-              value: {
-                equals: clientIdParam,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        block_id: "desc",
-      },
-    });
+    const pgClient = await getPgClient();
+    // TODO?: as commented elsewhere, still need to clarify the mapping of connections with clients,
+    //        ie can there ever be more than one, can a client (or an connection) change its connection (and vice versa)
+    const getClient = sql<IGetClientQuery>`
+      SELECT
+        client.client_id as "client_id!",
+        client_connection.connection_id as "connection_id!",
+        array_agg(DISTINCT channels.channel_id) as "channels!",
+        json_agg(json_build_object('key', events.key, 'value', events.value))::text as "events!"
+      FROM (
+        SELECT ea.block_id, ea.value as "client_id"
+        FROM event_attributes ea
+        WHERE
+          ea.composite_key='update_client.client_id'
+          AND
+          ea.value=$clientIdParam!
+        ORDER BY ea.block_id DESC
+        LIMIT 1
+      ) client LEFT JOIN LATERAL (
+        -- this will have consensus_height and client_type
+        SELECT ea.key, ea.value
+        FROM event_attributes ea
+        WHERE
+          ea.block_id=client.block_id
+          AND
+          ea.type='update_client'
+      ) events ON true LEFT JOIN LATERAL (
+        SELECT ea.block_id
+        FROM event_attributes ea
+        WHERE
+          ea.composite_key='connection_open_init.client_id'
+          AND
+          ea.value=client.client_id
+      ) client_connection_init ON true LEFT JOIN LATERAL (
+        SELECT ea.value as "connection_id"
+        FROM event_attributes ea
+        WHERE
+          ea.block_id=client_connection_init.block_id
+          AND
+          ea.composite_key='connection_open_init.connection_id'
+      ) client_connection ON true LEFT JOIN LATERAL (
+        SELECT ea.block_id
+        FROM event_attributes ea
+        WHERE
+          ea.composite_key='channel_open_init.connection_id'
+          AND
+          ea.value=client_connection.connection_id
+        ORDER BY ea.block_id DESC
+      ) channel_inits ON true LEFT JOIN LATERAL (
+        SELECT ea.value as "channel_id"
+        FROM event_attributes ea
+        WHERE
+          ea.block_id=channel_inits.block_id
+          AND
+          ea.composite_key='channel_open_init.channel_id'
+      ) channels ON true
+      GROUP BY client.client_id, client_connection.connection_id
+    ;`;
+    const _client = await getClient.run({ clientIdParam }, pgClient);
+    pgClient.release();
 
-    console.log("Successfully queried last update for IBC Client.", lastClientUpdate);
-    console.log("Querying for associated channel and connection data...");
+    console.log("Successfully queried Client");
+    // console.dir(["pgClient result:", _client], { depth: 4});
 
-    const ibcConnection = await db.events.findFirstOrThrow({
-      select: {
-        attributes: {
-          select: {
-            key: true,
-            value: true,
-          },
-          where: {
-            key: {
-              equals: "connection_id",
-            },
-          },
-        },
-      },
-      where: {
-        AND: [
-          {
-            type: {
-              equals: "connection_open_init",
-            },
-          },
-          {
-            attributes: {
-              some: {
-                AND: [
-                  {
-                    key: {
-                      equals: "client_id",
-                    },
-                  },
-                  {
-                    value: {
-                      equals: clientIdParam,
-                    },
-                  },
-                ],
-              },
-            },
-          },
-        ],
-      },
-    });
-
-    const ibcChannel = await db.events.findFirstOrThrow({
-      select: {
-        attributes: {
-          select: {
-            key: true,
-            value: true,
-          },
-          where: {
-            key: {
-              equals: "channel_id",
-            },
-          },
-        },
-      },
-      where: {
-        AND: [
-          {
-            type: {
-              equals: "channel_open_init",
-            },
-          },
-          {
-            attributes: {
-              some: {
-                AND: [
-                  {
-                    key: {
-                      equals: "connection_id",
-                    },
-                  },
-                  {
-                    value: {
-                      equals: ibcConnection.attributes[0].value,
-                    },
-                  },
-                ],
-              },
-            },
-          },
-        ],
-      },
-    });
-
-    console.log("Successfully queried IBC Channel and Connection data.", ibcChannel, ibcConnection);
-
-    // Return all event attributes for the latest client_update for a specific client.
-    // TODO: Verify that it is NOT possible for there to be more than one client `client_update` for the same event.
-    const lastUpdate = await db.attributes.findMany({
-      select: {
-        key: true,
-        value: true,
-        composite_key: true,
-      },
-      where: {
-        event_id: {
-          equals: lastClientUpdate.rowid,
-        },
-      },
-    });
-
-    console.log("Successfully queried for latest client state.", lastUpdate);
-
-    let client = { channelId: ibcChannel.attributes[0].value, connectionId: ibcConnection.attributes[0].value };
-    lastUpdate.forEach(({ key, value }) => {
-      if (key==="client_id") {
-        client = Object.assign({ "clientId": value }, client);
-      } else if (key==="client_type") {
-        client = Object.assign({ "clientType": value }, client);
-      } else if (key==="consensus_height") {
-        client = Object.assign({ "consensusHeight": value }, client);
-      } else if (key==="header") {
-        client = Object.assign({ "header": value }, client);
-      }
-    });
-
-    return new Response(JSON.stringify(client));
+    return new Response(JSON.stringify(_client));
 
   } catch (error) {
     console.error("GET request failed.", error);
