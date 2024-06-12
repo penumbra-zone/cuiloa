@@ -129,7 +129,7 @@ const EventAttribute = z.array(
     }),
 );
 
-// zod schema equivalent to the /parsed/ JSON data returned by prisma in GET /api/transaction?q=<hash>
+// zod schema equivalent to the /parsed/ JSON data returned by GET /api/transaction?q=<hash>
 export const TransactionResult = z.tuple([
   z.object({
     tx_hash: z.string(),

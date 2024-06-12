@@ -5,8 +5,12 @@ import { type FC } from "react";
 interface Props {
   className?: string,
   data: Array<{
-    key: string,
-    value: string | null,
+    channel_id: string,
+    client_id: string,
+    connection_id: string,
+    client_type: string,
+    counterparty_client_id: string,
+    consensus_height: bigint
   }>,
 }
 
