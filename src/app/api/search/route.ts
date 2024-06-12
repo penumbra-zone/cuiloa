@@ -22,6 +22,8 @@ export async function POST(req: Request) {
     if (searchQuery.kind === QueryKind.BlockHeight) {
 
       const blockParam = BigInt(searchQuery.value);
+      console.log(`Searching for block ${blockParam}`);
+
       const getBlockSearch = sql<IGetBlockSearchQuery>`
         SELECT b.height as "height"
         FROM blocks b
@@ -39,6 +41,7 @@ export async function POST(req: Request) {
     } else if (searchQuery.kind === QueryKind.TxHash) {
 
       const txParam = searchQuery.value as string;
+      console.log(`Searching for transaction hash ${txParam}`);
       const getTransactionSearch = sql<IGetTransactionSearchQuery>`
         SELECT tx.tx_hash as "hash"
         FROM tx_results tx
@@ -53,25 +56,28 @@ export async function POST(req: Request) {
       }));
     } else if (searchQuery.kind === QueryKind.IbcClient) {
 
-      console.log("Searching for IBC Clients...");
-
       const clientId = searchQuery.value as string;
+      console.log(`Searching for IBC client ${clientId}`);
+
+      // TODO: Also search for packets involving the client's connection
       const getClientSearch = sql<IGetClientSearchQuery>`
         SELECT ea.type as "type!", tx.tx_hash as "hash"
         FROM event_attributes ea
         LEFT JOIN tx_results tx ON ea.tx_id=tx.rowid
         WHERE
-          ea.composite_key='update_client.client_id'
-          OR
-          ea.composite_key='create_client.client_id'
-          AND
           ea.value=$clientId!
+          AND
+          (ea.composite_key='update_client.client_id'
+          OR
+          ea.composite_key='create_client.client_id')
         ORDER BY ea.block_id DESC
         LIMIT 5
       ;`;
 
       const clientSearch = await getClientSearch.run({ clientId }, pgClient);
       pgClient.release();
+
+      if (clientSearch.length === 0) return new Response("No results.", { status: 404 });
 
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
@@ -80,24 +86,29 @@ export async function POST(req: Request) {
       }));
     } else if (searchQuery.kind === QueryKind.IbcChannel) {
 
-      console.log("Searching for IBC Channels...");
-
       const channelId = searchQuery.value as string;
+      console.log(`Searching for IBC channel ${channelId}`);
+
       const getChannelSearch = sql<IGetChannelSearchQuery>`
         SELECT ea.type as "type!", tx.tx_hash as "hash"
         FROM event_attributes ea
         LEFT JOIN tx_results tx ON ea.tx_id=tx.rowid
         WHERE
-          ea.composite_key='send_packet.packet_src_channel'
+          ea.value=$channelId!
+          AND
+          (ea.composite_key='send_packet.packet_src_channel'
           OR
           ea.composite_key='recv_packet.packet_dst_channel'
-          AND
-          ea.value=$channelId!
+          OR
+          ea.composite_key='channel_open_init.channel_id')
         ORDER BY ea.block_id DESC
         LIMIT 5
       ;`;
+
       const channelSearch = await getChannelSearch.run({ channelId }, pgClient);
       pgClient.release();
+
+      if (channelSearch.length === 0) return new Response("No results.", { status: 404 });
 
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
@@ -106,23 +117,29 @@ export async function POST(req: Request) {
       }));
     } else if (searchQuery.kind === QueryKind.IBCConnection) {
 
-      console.log("Searching for IBC Connections...");
       const connectionId = searchQuery.value as string;
+      console.log(`Searching for IBC Connection ${connectionId}`);
+
       const getConnectionSearch = sql<IGetConnectionSearchQuery>`
         SELECT ea.type as "type!", tx.tx_hash as "hash"
         FROM event_attributes ea
         LEFT JOIN tx_results tx ON ea.tx_id=tx.rowid
         WHERE
-          ea.composite_key='send_packet.packet_connection'
+          ea.value=$connectionId!
+          AND
+          (ea.composite_key='send_packet.packet_connection'
           OR
           ea.composite_key='recv_packet.packet_connection'
-          AND
-          ea.value=$connectionId!
+          OR
+          ea.composite_key='connection_open_init.connection_id')
         ORDER BY ea.block_id DESC
         LIMIT 5
       ;`;
+
       const connectionSearch = await getConnectionSearch.run({ connectionId }, pgClient);
       pgClient.release();
+
+      if (connectionSearch.length === 0) return new Response("No results.", { status: 404 });
 
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
