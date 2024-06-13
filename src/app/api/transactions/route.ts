@@ -14,8 +14,9 @@ export async function POST(req: Request) {
     const pageLimit = 10;
 
     const getTransactions = sql<IGetTransactionsQuery>`
-      SELECT tx.block_id as "height!", tx.created_at, tx.tx_hash
+      SELECT b.height as "height!", tx.created_at, tx.tx_hash
       FROM tx_results tx
+      LEFT JOIN blocks b ON b.rowid=tx.block_id
       ORDER BY tx.block_id DESC LIMIT $pageLimit! OFFSET $pageOffset!;
     `;
     const getTransactionsCount = sql<IGetTransactionsCountQuery>`SELECT COUNT(*)::int as "count!" FROM tx_results;`;

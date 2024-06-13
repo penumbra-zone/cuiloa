@@ -16,10 +16,13 @@ export async function GET(req: Request) {
     console.log(`Acquiring DB client and querying database for attribute data of block with height ${ht}.`);
 
     // TODO: Update query to match Transaction, can use EventAttribute validator instead of the ad-hoc validation + transform.
+    // TODO: can I add a AND txs.tx_hash IS NOT NULL instead of the check occuring in the case...?
     const getBlock = sql<IGetBlockQuery>`
       WITH txs (block_id, tx_hash) AS (
-          SELECT tx.block_id, tx.tx_hash FROM tx_results tx
-          WHERE tx.block_id=$ht!
+          SELECT tx.block_id, tx.tx_hash
+          FROM tx_results tx
+          LEFT JOIN blocks b ON b.rowid=tx.block_id
+          WHERE b.height=$ht!
       )
       SELECT
         DISTINCT ON (be.type, be.key, be.value)
