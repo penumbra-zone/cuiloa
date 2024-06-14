@@ -29,14 +29,15 @@ export async function GET(req: Request) {
       )
       SELECT
         tx.tx_hash,
-        tx.block_id as "height!",
+        b.height,
         tx.tx_result,
         tx.created_at,
         json_agg(json_build_object('type', e.type, 'attributes',e.attrs_array)) as "events!"
       FROM tx_results tx
+      LEFT JOIN blocks b ON b.rowid=tx.block_id
       JOIN events_by_type e ON e.tx_id=tx.rowid
       WHERE tx.tx_hash=$hash!
-      GROUP BY tx.tx_hash, tx.block_id, tx.tx_result, tx.created_at;
+      GROUP BY tx.tx_hash, b.height, tx.tx_result, tx.created_at;
     `;
 
     console.log(`Acquiring PgClient and querying for Transaction with hash ${hash}.`);
