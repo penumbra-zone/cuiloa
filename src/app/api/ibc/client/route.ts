@@ -22,22 +22,21 @@ export async function GET(req: NextRequest) {
         array_agg(DISTINCT channels.channel_id) as "channels!",
         json_agg(json_build_object('key', events.key, 'value', events.value))::text as "events!"
       FROM (
-        SELECT ea.block_id, ea.value as "client_id"
+        SELECT MAX(ea.block_id) as "block_id", ea.value as "client_id"
         FROM event_attributes ea
         WHERE
-          ea.composite_key='update_client.client_id'
-          AND
           ea.value=$clientIdParam!
-        ORDER BY ea.block_id DESC
-        LIMIT 1
+          AND
+          (ea.composite_key='update_client.client_id'
+          OR
+          ea.composite_key='create_client.client_id')
+        GROUP BY ea.value
       ) client LEFT JOIN LATERAL (
         -- this will have consensus_height and client_type
-        SELECT ea.key, ea.value
+        SELECT DISTINCT ON (ea.key) ea.key, ea.value
         FROM event_attributes ea
         WHERE
           ea.block_id=client.block_id
-          AND
-          ea.type='update_client'
       ) events ON true LEFT JOIN LATERAL (
         SELECT ea.block_id
         FROM event_attributes ea
