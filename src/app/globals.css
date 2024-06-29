@@ -48,11 +48,11 @@
     --background: 0 0% 0% / 1.0;
     --foreground: 0 0% 98% / 1.0;
  
-    --card: 0 0% 0% / 0.6;
+    --card: 0 0% 0% / 0.6;  
     --card-foreground: 0 0% 98% / 1.0;
  
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 0% / 1.0;
+    --popover-foreground: 0 0% 98% / 1.0;
  
     --primary: 0 0% 0% / 0.6;
     --primary-foreground: 0 0% 96% / 1.0;

@@ -33,10 +33,10 @@ const SearchBar : FC = () => {
   return (
     <Command
       ref={cmdRef}
-      className="relative rounded-lg border max-w-lg z-50 overflow-visible"
+      className="relative rounded-full bg-popover border max-w-lg z-50 overflow-visible"
       shouldFilter={false}>
       <CommandInput
-        className="sm:text-sm text-xs"
+        className="text-sm"
         ref={inputRef}
         placeholder="Search by height, hash, or IBC identifier..."
         value={input}

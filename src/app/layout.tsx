@@ -32,7 +32,7 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           <div className="flex flex-col container xs-container justify-start min-h-[640px]">
-            <div className="p-1 sm:p-2 rounded-lg border-solid border-[1px] border-slate-200 shadow-sm mb-auto">
+            <div className="p-1 sm:p-2 mb-auto">
               {children}
             </div>
             <div className="self-center py-5">
