@@ -15,26 +15,26 @@ type SearchResultsColumns = SearchResult;
 export const columns : Array<ColumnDef<SearchResultsColumns>> = [
   {
     accessorKey: "kind",
-    header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">Kind</div>,
+    header: () => <div className="text-sm">Kind</div>,
     cell: ({ row }) => {
       const kind : string = row.getValue("kind");
-      return <p className="text-center sm:text-base text-sm">{kind}</p>;
+      return <p className="text-sm">{kind}</p>;
     },
   },
   {
     accessorKey: "identifier",
-    header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">ID</div>,
+    header: () => <div className="text-sm">ID</div>,
     cell: ({ row }) => {
       const identifier : string = row.getValue("identifier");
       const kind : string = row.getValue("kind");
       const prefix = kind === "TX_HASH" ? "/transaction" : (kind === "BLOCK_HEIGHT" ? "/block" : (kind === "IBC_CLIENT" ? "/ibc/client" : (kind === "IBC_CHANNEL" ? "/ibc/channel" : "/ibc/connection")));
-      return <Link href={`${prefix}/${identifier}`}><p className="sm:text-base text-sm text-center underline">{identifier}</p></Link>;
+      return <Link href={`${prefix}/${identifier}`} className="text-link text-sm"><pre>{identifier}</pre></Link>;
     },
   },
   {
     id: "related",
     accessorKey: "related",
-    header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm break-words">Related Queries</div>,
+    header: () => <div className="text-sm break-words">Related Queries</div>,
     cell: ({ row }) => {
       console.log(row);
       // const kind : string = row.getValue("kind");
@@ -53,7 +53,7 @@ export const columns : Array<ColumnDef<SearchResultsColumns>> = [
         <ul>
           {/* {related.map(({ type, indentifier }, i) => <li key={i}>{type} : {indentifier}</li>)} */}
           {related.map(({ type, hash }, i) => {
-            return <li key={i}>{type}: <Link href={`/transaction/${hash}`}><p className="underline sm:text-base text-xs">{hash}</p></Link></li>;
+            return <li key={i}>{type}: <Link href={`/transaction/${hash}`} className="text-link text-sm"><pre>{hash}</pre></Link></li>;
           })
           }
         </ul>

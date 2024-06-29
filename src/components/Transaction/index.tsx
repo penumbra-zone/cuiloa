@@ -16,7 +16,7 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
   const abciEvents = txResult.events;
 
   return (
-    <div className="bg-white rounded-sm shadow-md">
+    <div className="bg-primary rounded-sm shadow-md">
       <div className="flex flex-wrap justify-between sm:p-5 p-2 sm:gap-y-10 gap-y-5 w-full">
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 w-full sm:text-lg font-semibold">Hash</p>
