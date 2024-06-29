@@ -12,7 +12,7 @@ export interface BlocksColumns {
 export const columns : Array<ColumnDef<BlocksColumns>> = [
   {
     accessorKey: "height",
-    header: () => <div className="font-medium text-sm text-muted-foreground">Height</div>,
+    header: () => <div className="text-sm">Height</div>,
     cell: ({ row }) => {
       const ht : bigint = row.getValue("height");
       return <Link href={`/block/${ht}`} className="text-link text-sm"><pre>{ht.toString()}</pre></Link>;
@@ -20,7 +20,7 @@ export const columns : Array<ColumnDef<BlocksColumns>> = [
   },
   {
     accessorKey: "created_at",
-    header: () => <div className="font-medium text-sm text-muted-foreground">Timestamp</div>,
+    header: () => <div className="text-sm">Timestamp</div>,
     cell: ({ row }) => {
       const timestamp : string = row.getValue("created_at");
       return <pre className="text-sm">{timestamp}</pre>;
