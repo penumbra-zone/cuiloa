@@ -15,42 +15,42 @@ export interface ClientsColumns {
 export const columns : Array<ColumnDef<ClientsColumns>> = [
   {
     accessorKey: "client_id",
-    header: () => <div className="font-semibold text-gray-800 sm:text-lg text-sm text-center">Client ID</div>,
+    header: () => <div className="text-sm">Client ID</div>,
     cell: ({ getValue }) => {
       const clientId: string = getValue() as string;
-      return <Link href={`/ibc/client/${clientId}`} className="underline sm:text-base text-xs"><p className="text-center">{clientId}</p></Link>;
+      return <Link href={`/ibc/client/${clientId}`} className="text-link text-sm"><pre>{clientId}</pre></Link>;
     },
   },
   {
     accessorKey: "block_id",
-    header: () => <div className="font-semibold text-gray-800 sm:text-lg text-sm text-center">Height</div>,
+    header: () => <div className="text-sm">Height</div>,
     cell: ({ getValue }) => {
       const ht: bigint = getValue() as bigint;
-      return <Link href={`/block/${ht}`} className="underline sm:text-base text-xs"><p className="text-center">{ht.toString()}</p></Link>;
+      return <Link href={`/block/${ht}`} className="text-link text-sm"><pre>{ht.toString()}</pre></Link>;
     },
   },
   {
     accessorKey: "last_updated_at",
-    header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">Last Updated</div>,
+    header: () => <div className="text-sm">Last Updated</div>,
     cell: ({ getValue }) => {
       const timestamp : string = getValue() as string;
-      return <p className="sm:text-sm text-xs text-center break-all">{timestamp}</p>;
+      return <pre className="text-sm break-all">{timestamp}</pre>;
     },
   },
   {
     accessorKey: "hash",
-    header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">Transaction Hash</div>,
+    header: () => <div className="text-sm">Transaction Hash</div>,
     cell: ({ getValue }) => {
       const hash = getValue() as string;
-      return <Link href={`/transaction/${hash}`} className="underline sm:text-base text-xs text-center"><pre className="sm:max-w-full max-w-[45px] overflow-hidden overflow-ellipsis">{hash}</pre></Link>;
+      return <Link href={`/transaction/${hash}`} className="text-link text-sm"><pre className="sm:max-w-full max-w-[45px] overflow-hidden overflow-ellipsis">{hash}</pre></Link>;
     },
   },
   {
     accessorKey: "consensus_height",
-    header: () => <div className="font-semibold text-gray-800 text-center sm:text-lg text-sm">Last Consensus Height</div>,
+    header: () => <div className="text-sm">Last Consensus Height</div>,
     cell: ({ getValue }) => {
       const consesusHeight: string = getValue() as string | null ?? "None";
-      return <p className="sm:text-sm text-xs text-center break-all">{consesusHeight}</p>;
+      return <pre className="text-sm break-all">{consesusHeight}</pre>;
     },
   },
 ];

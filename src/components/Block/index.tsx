@@ -11,7 +11,7 @@ interface BlockProps extends BlockDataPayload {
 // TODO: Similar to TransactionEvent, it looks increasingly likely that tanstack/table will actually work here so pulling out different DataTable representations will need to happen.
 const Block : FC<BlockProps> = ({ height, created_at, tx_hashes, events }) => {
   return (
-    <div className="bg-white rounded-sm shadow-md">
+    <div>
       <div className="flex flex-wrap justify-between sm:p-5 p-2 sm:gap-y-10 gap-y-5 w-full">
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 w-full font-semibold">Block Height</p>

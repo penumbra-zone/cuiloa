@@ -14,7 +14,7 @@ interface PageProps {
 const Page : FC<PageProps> = ({ params }) => {
   const { query } = params;
 
-  const { data: searchResultData , isFetched, isError } = useQuery({
+  const { data: searchResultData , isError } = useQuery({
     queryFn: async () => {
       console.log(`Fetching: GET /api/search?q=${query}`);
       const { data } = await axios.post(`/api/search?q=${query}`);
@@ -44,20 +44,12 @@ const Page : FC<PageProps> = ({ params }) => {
   }
 
   return (
-    <div>
-      {isFetched ? (
-        <div className="flex flex-col gap-5 pt-5 items-center">
-          <h1 className="sm:text-2xl font-bold">Search results</h1>
+    <div className="flex flex-col gap-5 pt-5 items-center bg-primary">
+        <h1 className="sm:text-2xl font-bold">Search results</h1>
         {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        searchResultData ? (
-          <SearchResultsTable className="sm:w-1/2 w-full" data={[searchResultData]}/>
-        ) : (
-          <p>No results</p>
-        )}
-       </div>
-      ) : (
-        <p>loading...</p>
-      )}
+          searchResultData ? <SearchResultsTable className="sm:w-1/2 w-full" data={[searchResultData]}/>
+          : <p>No results</p>
+        }
     </div>
   );
 };
