@@ -38,13 +38,13 @@ const Page : FC<PageProps> = ({ params }) => {
   }
 
   return (
-    <div>
+    <div className="bg-primary rounded-sm shadow-md">
       {isFetched ? (
         <div className="flex flex-col items-center gap-5 pt-5">
           <h1 className="sm:text-2xl text-lg font-bold">IBC Channel</h1>
         {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         data  ? (
-          <div className="sm:w-11/12 w-full bg-white rounded-sm shadow-md">
+          <div className="sm:w-11/12 w-full">
             <div className="flex flex-col justify-start p-5 gap-y-5 w-full">
               <div className="flex flex-wrap justify-start w-full">
                 <p className="sm:w-1/6 w-full font-semibold">Channel ID</p>

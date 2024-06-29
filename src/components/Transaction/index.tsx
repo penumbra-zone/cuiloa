@@ -3,7 +3,6 @@ import { JsonView, allExpanded, defaultStyles } from "react-json-view-lite";
 import "react-json-view-lite/dist/index.css";
 import Link from "next/link";
 import { type FC } from "react";
-import ABCIEventsTable from "../ABCIEventsTable";
 import { TransactionView } from "../TransactionView";
 import { ibcRegistry } from "@/lib/protobuf";
 
@@ -13,10 +12,10 @@ interface TransactionProps {
 
 const Transaction : FC<TransactionProps> = ({ txData }) => {
   const [txResult, penumbraTx] = txData;
-  const abciEvents = txResult.events;
+  // const abciEvents = txResult.events;
 
   return (
-    <div className="bg-primary rounded-sm shadow-md">
+    <div>
       <div className="flex flex-wrap justify-between sm:p-5 p-2 sm:gap-y-10 gap-y-5 w-full">
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 w-full sm:text-lg font-semibold">Hash</p>
@@ -37,14 +36,6 @@ const Transaction : FC<TransactionProps> = ({ txData }) => {
           <pre className="sm:w-5/6 w-full break-all whitespace-pre-wrap text-xs p-1 bg-slate-100">
             <JsonView data={penumbraTx.toJson({ typeRegistry: ibcRegistry }) as object} shouldExpandNode={allExpanded} clickToExpandNode={true} style={defaultStyles}/>
           </pre>
-        </div>
-        <div className="flex justify-start flex-wrap w-full gap-y-5">
-          <p className="sm:text-lg font-semibold">Block Event Attributes</p>
-          {abciEvents.length !== 0 ? abciEvents.map(({ type, attributes }, i) => (
-            <div key={i} className="flex flex-col sm:items-start items-center w-full gap-y-1">
-              <ABCIEventsTable className="sm:w-2/3 w-full" type={type} attributes={attributes}/>
-            </div>
-          )) : <p>None</p>}
         </div>
         <TransactionView tx={penumbraTx}/>
       </div>

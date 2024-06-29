@@ -16,7 +16,7 @@ interface PageProps {
 const Page : FC<PageProps> = ({ params }) => {
   const { hash } = params;
 
-  const { data: txData , isFetched, isError } = useQuery({
+  const { data: txData , isError } = useQuery({
     queryFn: async () => {
       console.log(`Fetching: GET /api/transaction?q=${hash}`);
       const { data } = await axios.get(`/api/transaction?q=${hash}`);
@@ -47,23 +47,16 @@ const Page : FC<PageProps> = ({ params }) => {
   // TODO: Replace with data table component views once those are fleshed out.
   // TODO: add Suspense
   return (
-    <div>
-      {isFetched ? (
-        <div>
-        {txData ? (
-          <div className="flex flex-col items-center gap-5 pt-5">
-            <h1 className="sm:text-2xl text-lg font-bold">Transaction Event Summary</h1>
-            <div className="sm:w-11/12 w-full">
-              <Transaction txData={txData} />
-            </div>
+    <div className="bg-primary rounded-sm shadow-md">
+      {txData ? (
+        <div className="flex flex-col items-center gap-5 pt-5">
+          <h1 className="sm:text-2xl text-lg font-bold">Transaction Event Summary</h1>
+          <div className="sm:w-11/12 w-full">
+            <Transaction txData={txData} />
           </div>
-        ) : (
-          <p>No results</p>
-        )}
-       </div>
-      ) : (
-        <p>loading...</p>
-      )}
+        </div>
+        ) : <p>No results</p>
+      }
     </div>
   );
 };

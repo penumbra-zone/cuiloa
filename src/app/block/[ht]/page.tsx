@@ -15,7 +15,7 @@ interface PageProps {
 const Page : FC<PageProps> = ({ params }) => {
   const { ht } = params;
 
-  const { data: blockData , isFetched, isError } = useQuery({
+  const { data: blockData , isError } = useQuery({
     queryFn: async () => {
       console.log(`Fetching: GET /api/block?q=${ht}`);
       const { data } = await axios.get(`/api/block?q=${ht}`);
@@ -44,25 +44,19 @@ const Page : FC<PageProps> = ({ params }) => {
 
   // TODO: Replace with data table component views once those are fleshed out.
   return (
-    <div>
-      {isFetched ? (
-        <div>
-          {blockData ? (
-          <div className="flex flex-col gap-5 pt-5 items-center">
-            <h1 className="sm:text-2xl text-lg font-bold">Block Summary</h1>
-            <div className="sm:w-11/12 w-full">
-              <Block height={ht} {...blockData}/>
-            </div>
+    <div className="bg-primary rounded-sm shadow-md">
+      {blockData ? (
+        <div className="flex flex-col gap-5 pt-5 items-center">
+          <h1 className="sm:text-2xl text-lg font-bold">Block Summary</h1>
+          <div className="sm:w-11/12 w-full">
+            <Block height={ht} {...blockData}/>
           </div>
-          ) : (
-            <div>
-              <p className="font-semibold">No block event</p>
-              <p>To be frank... You shouldn&apos;t be able to see this.</p>
-            </div>
-          )}
         </div>
       ) : (
-        <p>Loading...</p>
+        <div>
+          <p className="font-semibold">No block event</p>
+          <p>To be frank... You shouldn&apos;t be able to see this.</p>
+        </div>
       )}
     </div>
   );
