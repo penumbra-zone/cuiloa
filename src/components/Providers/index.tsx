@@ -6,7 +6,12 @@ import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import { TransportProvider } from "@connectrpc/connect-query";
 import { Toaster } from "../ui/toaster";
 import { useToast } from "../ui/use-toast";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { type ThemeProviderProps } from "next-themes/dist/types";
 
+export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+}
 
 const penumbraTransport = createGrpcWebTransport({
   baseUrl: "https://grpc.testnet.penumbra.zone",
@@ -57,8 +62,15 @@ const Providers = ({ children } : { children: React.ReactNode }) => {
   return (
     <TransportProvider transport={penumbraTransport}>
       <QueryClientProvider client={queryClient}>
-        {children}
-        <Toaster/>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster/>
+        </ThemeProvider>
       </QueryClientProvider>
     </TransportProvider>
   );

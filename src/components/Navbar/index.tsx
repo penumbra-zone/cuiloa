@@ -1,7 +1,10 @@
+"use client";
+
 import { type FC } from "react";
 import SearchBar from "../Searchbar";
 import Link from "next/link";
 
+import { ThemeToggleButton } from "../ThemeToggleButton";
 
 
 const Navbar : FC = () => {
@@ -11,6 +14,7 @@ const Navbar : FC = () => {
     <div className="w-5/6 sm:max-w-lg">
       <SearchBar/>
     </div>
+    <ThemeToggleButton />
   </div>
   );
 };

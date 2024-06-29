@@ -25,6 +25,8 @@ export default function RootLayout({
         ioveskaSans.variable,
         ioveskaTerm.variable,
       )}
+      // Necessary for next-themes: https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
+      suppressHydrationWarning
     >
       <body className="bg-gradient-repeat-radial min-w-full min-h-screen">
         <Providers>
