@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { QueryCache, QueryClient, QueryClientProvider  } from "@tanstack/react-query";
+import { QueryCache, QueryClient, QueryClientProvider, isServer  } from "@tanstack/react-query";
 import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import { TransportProvider } from "@connectrpc/connect-query";
 import { Toaster } from "../ui/toaster";
-import { useToast } from "../ui/use-toast";
+import { toast } from "../ui/use-toast";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
 
@@ -17,9 +17,11 @@ const penumbraTransport = createGrpcWebTransport({
   baseUrl: "https://grpc.testnet.penumbra.zone",
 });
 
-const Providers = ({ children } : { children: React.ReactNode }) => {
-  const { toast } = useToast();
-  const [ queryClient ] = useState(() => new QueryClient({
+let browserQueryClient: QueryClient | undefined = undefined;
+
+const makeQueryClient = () => {
+  // const { toast } = useToast();
+  return new QueryClient({
     defaultOptions: {
       queries: {
         // Direct suggestion by tanstack, to prevent over-eager refetching from the client.
@@ -57,7 +59,32 @@ const Providers = ({ children } : { children: React.ReactNode }) => {
         }
       },
     }),
-  }));
+  });
+};
+
+const getQueryClient = () => {
+  if (isServer) {
+    // Server: always make a new query client
+    return makeQueryClient();
+  } else {
+    // Browser: make a new query client if we don't already have one
+    // This is very important, so we don't re-make a new client if React
+    // suspends during the initial render. This may not be needed if we
+    // have a suspense boundary BELOW the creation of the query client
+    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    return browserQueryClient;
+  }
+};
+
+
+const Providers = ({ children } : { children: React.ReactNode }) => {
+  // NOTE: there is a very explicit warning in the TanStack docs about using useState for handling QueryClient (de)hydration within the provider in the scenario where
+  //       there is no Suspense boundary between the instantiation (here) and the context that is being wrapped; however, it is more or less considered best practice to
+  //       use useState for QueryClient because... this is how you keep a stable reference to the client. I believe it is safe to use useState here because
+  //       NextJS, in theory, injects a React.Suspense boundary around app/page.tsx when loading.tsx is provided (as I have). This is a detail that goes undocumented and
+  //       unconnected in the reference docs for using this functionality with NextJS itself. If this note is confusing/unnerving, then you are having a healthy response
+  //       to the current state of the core React ecosystem. I am being serious. This is what passes for non-beta software.
+  const [ queryClient ] = useState(() => getQueryClient());
 
   return (
     <TransportProvider transport={penumbraTransport}>
