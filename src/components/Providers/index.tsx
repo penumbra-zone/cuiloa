@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { QueryCache, QueryClient, QueryClientProvider, isServer  } from "@tanstack/react-query";
+import { QueryCache, QueryClient, QueryClientProvider, defaultShouldDehydrateQuery, isServer  } from "@tanstack/react-query";
 import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import { TransportProvider } from "@connectrpc/connect-query";
 import { Toaster } from "../ui/toaster";
@@ -26,6 +26,13 @@ const makeQueryClient = () => {
       queries: {
         // Direct suggestion by tanstack, to prevent over-eager refetching from the client.
         staleTime: 60 * 1000,
+        refetchOnWindowFocus: false,
+      },
+      dehydrate: {
+        // only successful and pending Queries are included per defaults
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) ||
+          query.state.status === "pending",
       },
     },
     queryCache: new QueryCache({

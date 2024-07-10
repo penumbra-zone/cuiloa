@@ -1,5 +1,3 @@
-"use server";
-
 import { TransactionsTableData } from "@/lib/validators/table";
 
 export default async function getTransactions({ endpoint, pageIndex } : { endpoint: string, pageIndex: number}) {
