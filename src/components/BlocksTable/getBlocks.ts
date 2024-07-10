@@ -1,5 +1,3 @@
-"use server";
-
 import { BlocksTableQuery } from "@/lib/validators/table";
 
 export default async function getBlocks ({ endpoint, pageIndex } : ({ endpoint: string, pageIndex: number })) {
