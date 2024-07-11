@@ -32,7 +32,7 @@ export function TransactionsTable ({
   const [pagination, setPagination] = useState<PaginationState>({...defaultQueryOptions});
 
   const { data } = useSuspenseQuery({
-    queryKey: [queryName, pagination],
+    queryKey: [queryName, pagination.pageIndex],
     queryFn: () => getTransactions({ endpoint, pageIndex: pagination.pageIndex }),
     meta: {
       errorMessage,

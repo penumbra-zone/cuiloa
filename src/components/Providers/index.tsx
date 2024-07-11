@@ -26,7 +26,6 @@ const makeQueryClient = () => {
       queries: {
         // Direct suggestion by tanstack, to prevent over-eager refetching from the client.
         staleTime: 60 * 1000,
-        refetchOnWindowFocus: false,
       },
       dehydrate: {
         // only successful and pending Queries are included per defaults

@@ -33,7 +33,7 @@ export function BlocksTable ({
   const [pagination, setPagination] = useState<PaginationState>({...defaultQueryOptions});
 
   const { data } = useSuspenseQuery({
-    queryKey: [queryName, pagination],
+    queryKey: [queryName, pagination.pageIndex],
     queryFn: () => getBlocks({ endpoint, pageIndex: pagination.pageIndex }),
     meta: {
       errorMessage,
@@ -60,5 +60,3 @@ export function BlocksTable ({
     </div>
   );
 };
-
-export default BlocksTable;

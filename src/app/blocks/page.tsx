@@ -1,4 +1,4 @@
-import BlocksTable from "@/components/BlocksTable";
+import { BlocksTable } from "@/components/BlocksTable";
 import getBlocks from "@/components/BlocksTable/getBlocks";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 
@@ -11,13 +11,14 @@ const Page = () => {
     pageIndex: 0,
     pageSize: 10,
   };
+
   const queryName = "BlocksTable";
   const endpoint = "/api/blocks";
   const errorMessage = "Failed to query data while trying to generate blocks table, please try reloading the page.";
 
   queryClient.prefetchQuery({
     queryFn: () => getBlocks({ endpoint, pageIndex: 0}),
-    queryKey: [queryName, defaultQueryOptions],
+    queryKey: [queryName, defaultQueryOptions.pageIndex],
     meta: {
       errorMessage,
     },

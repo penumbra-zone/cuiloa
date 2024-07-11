@@ -19,7 +19,7 @@ const Page = () => {
 
   queryClient.prefetchQuery({
     queryFn: () => getTransactions({ endpoint, pageIndex: 0}),
-    queryKey: [queryName, defaultQueryOptions],
+    queryKey: [queryName, defaultQueryOptions.pageIndex],
     meta: {
       errorMessage,
     },
