@@ -50,6 +50,7 @@
     "@next/eslint-plugin-next": "^14.2.3",
     "@pgtyped/cli": "^2.3.0",
     "@stylistic/eslint-plugin": "^2.1.0",
+    "@tanstack/react-query-devtools": "^5.51.1",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20",
     "@types/react": "^18",
