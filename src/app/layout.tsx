@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import "@/lib/patch-toJSON-BigInt";
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { CodeIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -41,6 +42,7 @@ export default function RootLayout({
               </Link>
             </div>
           </div>
+          <ReactQueryDevtools initialIsOpen={false} />
         </Providers>
       </body>
     </html>

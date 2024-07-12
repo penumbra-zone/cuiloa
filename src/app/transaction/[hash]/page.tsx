@@ -1,10 +1,8 @@
-"use client";
-
 import { type FC } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { TransactionResult } from "@/lib/validators/search";
-import axios from "axios";
-import Transaction from "@/components/Transaction";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { Transaction } from "@/components/Transaction";
+import { getTransaction } from "@/components/Transaction/getTransaction";
+import { getQueryClient } from "@/lib/utils";
 
 interface PageProps {
   params: {
@@ -12,51 +10,31 @@ interface PageProps {
   }
 }
 
-// TODO: this entire page could probably be rendered statically on the server via layout.ts & some minor optimization via tanstack query context.
 const Page : FC<PageProps> = ({ params }) => {
   const { hash } = params;
 
-  const { data: txData , isError } = useQuery({
-    queryFn: async () => {
-      console.log(`Fetching: GET /api/transaction?q=${hash}`);
-      const { data } = await axios.get(`/api/transaction?q=${hash}`);
-      console.log("Fetched result:", data);
-      const result = TransactionResult.safeParse(data);
+  const queryClient = getQueryClient();
 
-      if (result.success) {
-        return result.data;
-      } else {
-        throw new Error(result.error.message);
-      }
-    },
-    queryKey: ["txQuery", hash],
-    retry: false,
+  const endpoint = "/api/transaction/";
+  const queryName = "txQuery";
+  const errorMessage = "Failed to query transaction, please try reloading the page.";
+
+  queryClient.prefetchQuery({
+    queryKey: [queryName, hash],
+    queryFn: () => getTransaction({ endpoint, hash }),
     meta: {
-      errorMessage: "Failed to find transaction event with provided hash. Please check hash or try a different query.",
+      errorMessage,
     },
   });
 
-  if (isError) {
-    return (
-      <div className="py-5 flex justify-center">
-        <h1 className="text-4xl font-semibold">No results found.</h1>
-      </div>
-    );
-  }
-
-  // TODO: Replace with data table component views once those are fleshed out.
-  // TODO: add Suspense
   return (
-    <div className="bg-primary rounded-sm shadow-md">
-      {txData ? (
-        <div className="flex flex-col items-center gap-5 pt-5">
-          <h1 className="sm:text-2xl text-lg font-bold">Transaction Event Summary</h1>
-          <div className="sm:w-11/12 w-full">
-            <Transaction txData={txData} />
-          </div>
+    <div className="bg-primary flex flex-col gap-5 pt-5 items-center ">
+      <h1 className="font-medium">Transaction Summary</h1>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className="sm:w-11/12 w-full">
+          <Transaction {...{endpoint, queryName, hash}}/>
         </div>
-        ) : <p>No results</p>
-      }
+      </HydrationBoundary>
     </div>
   );
 };

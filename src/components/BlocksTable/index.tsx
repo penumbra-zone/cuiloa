@@ -1,48 +1,62 @@
-"use server";
+"use client";
 
 import { columns } from "./columns";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { PaginatedDataTable } from "../ui/paginated-data-table";
+import { PaginationState, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import getBlocks from "./getBlocks";
+import { cn } from "@/lib/utils";
 
-export interface BlocksTableRow {
-  height: number,
-  createdAt: Date,
-  // TODO: It would be nice to associate all events with a given row. Need to get testnet setup again and pull in example data for building this out.
-  // events: any[],
-};
+export interface QueryOptions {
+  pageIndex: number,
+  pageSize: number,
+}
 
-const BlocksTable = async ({ className } : { className: string }) => {
-  const queryClient = new QueryClient();
+interface PaginatedDataTableProps {
+  className?: string,
+  queryName: string,
+  defaultQueryOptions: QueryOptions,
+  endpoint: string,
+  errorMessage: string,
+}
 
-  const defaultQueryOptions = {
-    pageIndex: 0,
-    pageSize: 10,
-  };
-  const queryName = "BlocksTable";
-  const endpoint = "/api/blocks";
-  const errorMessage = "Failed to query data while trying to generate blocks table, please try reloading the page.";
 
-  await queryClient.prefetchQuery({
-    queryFn: async () => await getBlocks({ endpoint, pageIndex: 0}),
-    queryKey: [queryName, defaultQueryOptions],
+export function BlocksTable ({
+  className,
+  queryName,
+  defaultQueryOptions,
+  endpoint,
+  errorMessage,
+} : PaginatedDataTableProps) {
+
+  const [pagination, setPagination] = useState<PaginationState>({...defaultQueryOptions});
+
+  const { data } = useSuspenseQuery({
+    queryKey: [queryName, pagination.pageIndex],
+    queryFn: () => getBlocks({ endpoint, pageIndex: pagination.pageIndex }),
     meta: {
       errorMessage,
     },
   });
 
+  const { pages: pageCount, results: tableData } = data ?? { pages: 0, results: []};
+
+  const table = useReactTable({
+    data: tableData,
+    columns,
+    pageCount,
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+  });
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <PaginatedDataTable
-        className={className}
-        queryName={queryName}
-        defaultQueryOptions={defaultQueryOptions}
-        columns={columns}
-        fetcher={getBlocks}
-        endpoint={endpoint}
-        errorMessage={errorMessage}/>
-    </HydrationBoundary>
+    <div className={cn("", className)}>
+      <PaginatedDataTable table={table} columns={columns}/>
+    </div>
   );
 };
-
-export default BlocksTable;

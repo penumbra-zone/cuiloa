@@ -10,7 +10,7 @@ import { ThemeToggleButton } from "../ThemeToggleButton";
 const Navbar : FC = () => {
   return (
   <div className="flex items-center justify-between py-5 max-w-[1200px] ml-auto mr-auto">
-    <h1 className="font-bold text-lg py-5"><Link href="/">Penumbra Explorer</Link></h1>
+    <h1 className="font-bold text-lg py-5"><Link href="/">Cuiloa Block Explorer</Link></h1>
     <div className="w-5/6 sm:max-w-lg">
       <SearchBar/>
     </div>
