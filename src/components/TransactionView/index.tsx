@@ -1,9 +1,10 @@
 import { type FC } from "react";
-import { TransactionView as TransactionViewSchema, type Transaction, TransactionBodyView as TransactionBodyViewSchema, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
+import { TransactionView as TransactionViewSchema, Transaction, TransactionBodyView as TransactionBodyViewSchema, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { makeActionView } from "@/lib/protobuf";
 import { TransactionBodyView } from "./TransactionBodyView";
 import { FlexRow } from "../ui/flex";
 import { ActionRow } from "../ActionView";
+import { ZodJson } from "@/lib/validators/json";
 
 const BindingSig = ActionRow;
 const MerkleRoot = ActionRow;
@@ -34,11 +35,11 @@ const makeTransactionView = ({ body, ...tx }: Transaction) : TransactionViewSche
 };
 
 interface TransactionViewProps {
-  tx: Transaction
+  tx: ZodJson
 }
 
 export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
-  const txView = makeTransactionView(tx);
+  const txView = makeTransactionView(Transaction.fromJson(tx));
   return (
     <FlexRow className="flex-wrap justify-start w-full">
       <p className="font-semibold sm:text-lg">Transaction View</p>

@@ -1,12 +1,13 @@
 import { TransactionsTable } from "@/components/TransactionsTable";
 import getTransactions from "@/components/TransactionsTable/getTransactions";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { getQueryClient } from "@/lib/utils";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
 // TODO: do we want this anymore? what is the story of caching between the client and events.
 export const dynamic = "force-dynamic";
 
 const Page = () => {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
 
   const defaultQueryOptions = {
     pageIndex: 0,

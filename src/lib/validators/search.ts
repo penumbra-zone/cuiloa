@@ -1,7 +1,5 @@
-import { Transaction } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
 import { z } from "zod";
 import { jsonSchema } from "./json";
-import { ibcRegistry } from "../protobuf";
 
 // This validator is to check whether a sha256 hash conforms to what is expected by the `tx_hash` column
 // of the `tx_result` table defined in cometbft's psql indexer schema.
@@ -130,14 +128,15 @@ const EventAttribute = z.array(
 );
 
 // zod schema equivalent to the /parsed/ JSON data returned by GET /api/transaction?q=<hash>
-export const TransactionResult = z.tuple([
+export const TransactionData = z.tuple([
   z.object({
     tx_hash: z.string(),
     height: z.coerce.bigint(),
     created_at: z.string().datetime(),
     events: jsonSchema.pipe(EventAttribute),
   }),
-  jsonSchema.transform((json) => Transaction.fromJson(json, { typeRegistry: ibcRegistry })),
+  jsonSchema,
+  // jsonSchema.transform((json) => Transaction.fromJson(json, { typeRegistry: ibcRegistry })),
 ]);
 
 // Schema for JSON data by GET /api/block?q=<height>
@@ -198,5 +197,5 @@ export const BlockData = z.array(
   return { tx_hashes, created_at, events };
 });
 
-export type TransactionResultPayload = z.infer<typeof TransactionResult>;
+export type TransactionDataPayload = z.infer<typeof TransactionData>;
 export type BlockDataPayload = z.infer<typeof BlockData>;
