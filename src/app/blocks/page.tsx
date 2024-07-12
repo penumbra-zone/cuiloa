@@ -1,11 +1,12 @@
 import { BlocksTable } from "@/components/BlocksTable";
 import getBlocks from "@/components/BlocksTable/getBlocks";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { getQueryClient } from "@/lib/utils";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
 export const dynamic = "force-dynamic";
 
 const Page = () => {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
 
   const defaultQueryOptions = {
     pageIndex: 0,
