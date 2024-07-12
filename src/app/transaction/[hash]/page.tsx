@@ -1,8 +1,7 @@
-// "use client";
 import { type FC } from "react";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Transaction } from "@/components/Transaction";
-import getTransaction from "@/components/Transaction/getTransaction";
+import { getTransaction } from "@/components/Transaction/getTransaction";
 import { getQueryClient } from "@/lib/utils";
 
 interface PageProps {

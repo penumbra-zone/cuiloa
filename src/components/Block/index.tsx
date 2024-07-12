@@ -1,21 +1,32 @@
-import { type BlockDataPayload } from "@/lib/validators/search";
+"use client";
+
 import Link from "next/link";
 import { type FC } from "react";
 import ABCIEventsTable from "../ABCIEventsTable";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getBlock } from "./getBlock";
 
-
-interface BlockProps extends BlockDataPayload {
-  height: string
+interface BlockProps {
+  endpoint: string,
+  queryName: string,
+  ht: string,
 }
 
-// TODO: Similar to TransactionEvent, it looks increasingly likely that tanstack/table will actually work here so pulling out different DataTable representations will need to happen.
-const Block : FC<BlockProps> = ({ height, created_at, tx_hashes, events }) => {
+export const Block : FC<BlockProps> = ({ endpoint, queryName, ht }) => {
+
+  const { data } = useSuspenseQuery({
+    queryKey: [queryName, ht],
+    queryFn: () => getBlock({ endpoint, ht }),
+  });
+
+  const { created_at, tx_hashes, events } = data;
+
   return (
     <div>
       <div className="flex flex-wrap justify-between sm:p-5 p-2 sm:gap-y-10 gap-y-5 w-full">
         <div className="flex flex-wrap justify-start w-full">
           <p className="sm:w-1/6 w-full font-semibold">Block Height</p>
-          <pre className="sm:w-0 w-full">{height}</pre>
+          <pre className="sm:w-0 w-full">{ht}</pre>
         </div>
         <div className="flex flex-wrap justify-start w-full">
           <p className="w-1/6 font-semibold">Timestamp</p>
@@ -40,5 +51,3 @@ const Block : FC<BlockProps> = ({ height, created_at, tx_hashes, events }) => {
     </div>
   );
 };
-
-export default Block;

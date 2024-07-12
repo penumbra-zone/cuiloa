@@ -5,10 +5,9 @@ import Link from "next/link";
 import { type FC } from "react";
 import { TransactionView } from "../TransactionView";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import getTransaction from "./getTransaction";
+import { getTransaction } from "./getTransaction";
 
 interface TransactionProps {
-  // txData: TransactionDataPayload
   endpoint: string,
   queryName: string,
   hash: string,
