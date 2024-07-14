@@ -1,6 +1,6 @@
 import { getPgClient } from "@/lib/db";
 import { sql } from "@pgtyped/runtime";
-import { IGetIbcChannelsQuery } from "./route.types";
+import { IGetChannelsCountQuery, IGetIbcChannelsQuery } from "./route.types";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -60,17 +60,14 @@ export async function GET(req: NextRequest) {
       LEFT JOIN type_consensus_by_client tcc ON tcc.client_id=ccc.client_id
       LIMIT $pageLimit OFFSET $pageOffset!
     ;`;
-
-    const getChannelsCount = sql`
+    const getChannelsCount = sql<IGetChannelsCountQuery>`
       SELECT COUNT(*)::int as "count!"
       FROM event_attributes ea
-      WHERE
-        ea.composite_key='channel_open_init.channel_id'
-      ;`;
+      WHERE ea.composite_key='channel_open_init.channel_id'
+    ;`;
 
     const channels = await getIbcChannels.run({ pageLimit, pageOffset }, client);
     const [ { count },,] = await getChannelsCount.run(undefined, client);
-
     client.release();
 
     console.log("Successfully queried channels:", [channels, count]);

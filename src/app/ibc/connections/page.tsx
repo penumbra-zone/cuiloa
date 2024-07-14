@@ -1,39 +1,39 @@
-"use client";
-
 import ConnectionsTable from "@/components/ibc/connections/ConnectionsTable";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { getIbcConnections } from "@/components/ibc/connections/getIbcConnections";
+import { getQueryClient } from "@/lib/utils";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
 const Page = () => {
-  const { data , isError } = useQuery({
-    queryFn: async () => {
-      console.log("Fetching: GET /api/ibc/connections");
-      const { data } = await axios.get("/api/ibc/connections");
-      console.log("Fetched result:", data);
-      // TODO: enforce validation
-      return data;
-    },
-    queryKey: ["IbcConnections"],
-    retry: false,
+  const queryClient = getQueryClient();
+
+  const defaultQueryOptions = {
+    pageIndex: 0,
+    pageSize: 0,
+  };
+
+  const endpoint = "/api/ibc/connections";
+  const queryName = "IbcConnections";
+  const errorMessage = "Failed to query for IBC Connections. Please try again.";
+
+  queryClient.prefetchQuery({
+    queryKey: [queryName, defaultQueryOptions.pageIndex],
+    queryFn: () => getIbcConnections({ endpoint, pageIndex: defaultQueryOptions.pageIndex }),
     meta: {
-      errorMessage: "Failed to query for IBC Connections. Please try again.",
+      errorMessage,
     },
   });
 
-  if (isError) {
-    return (
-      <div className="py-5 flex justify-center">
-        <h1 className="text-4xl font-semibold">No results found.</h1>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-primary flex flex-col gap-5 items-center pt-5">
-      <h1 className="sm:text-2xl font-bold">IBC Connections</h1>
-      {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        data ? <ConnectionsTable className="sm:w-1/2 w-full" data={data} /> : <p>No results</p>
-      }
+      <h1 className="sm:text-2xl font-bold">IBC Channels</h1>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <ConnectionsTable
+          className="sm:w-11/12 w-full"
+          queryName={queryName}
+          defaultQueryOptions={defaultQueryOptions}
+          endpoint={endpoint}
+          errorMessage={errorMessage}/>
+      </HydrationBoundary>
     </div>
   );
 };
