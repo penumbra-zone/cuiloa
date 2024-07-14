@@ -1,7 +1,10 @@
 /** Types generated for queries found in "src/app/api/ibc/channels/route.ts" */
 
 /** 'GetIbcChannels' parameters type */
-export type IGetIbcChannelsParams = void;
+export interface IGetIbcChannelsParams {
+  pageLimit?: bigint | number | null | void;
+  pageOffset: bigint | number;
+}
 
 /** 'GetIbcChannels' return type */
 export interface IGetIbcChannelsResult {
@@ -17,5 +20,19 @@ export interface IGetIbcChannelsResult {
 export interface IGetIbcChannelsQuery {
   params: IGetIbcChannelsParams;
   result: IGetIbcChannelsResult;
+}
+
+/** 'GetChannelsCount' parameters type */
+export type IGetChannelsCountParams = void;
+
+/** 'GetChannelsCount' return type */
+export interface IGetChannelsCountResult {
+  count: number;
+}
+
+/** 'GetChannelsCount' query type */
+export interface IGetChannelsCountQuery {
+  params: IGetChannelsCountParams;
+  result: IGetChannelsCountResult;
 }
 
