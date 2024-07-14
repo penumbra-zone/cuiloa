@@ -1,5 +1,5 @@
 import { TransactionsTable } from "@/components/TransactionsTable";
-import getTransactions from "@/components/TransactionsTable/getTransactions";
+import { getTransactions } from "@/components/TransactionsTable/getTransactions";
 import { getQueryClient } from "@/lib/utils";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
