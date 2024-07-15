@@ -13,7 +13,7 @@ export interface QueryOptions {
   pageSize: number,
 }
 
-interface PaginatedDataTableProps {
+interface BlocksTableProps {
   className?: string,
   queryName: string,
   defaultQueryOptions: QueryOptions,
@@ -28,7 +28,7 @@ export function BlocksTable ({
   defaultQueryOptions,
   endpoint,
   errorMessage,
-} : PaginatedDataTableProps) {
+} : BlocksTableProps) {
 
   const [pagination, setPagination] = useState<PaginationState>({...defaultQueryOptions});
 

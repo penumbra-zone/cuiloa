@@ -23,7 +23,7 @@ export type IGetBlocksCountParams = void;
 
 /** 'GetBlocksCount' return type */
 export interface IGetBlocksCountResult {
-  _count: number | null;
+  count: number;
 }
 
 /** 'GetBlocksCount' query type */
