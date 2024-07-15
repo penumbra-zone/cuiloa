@@ -11,7 +11,6 @@ export interface IGetClientsResult {
   block_id: bigint;
   client_id: string;
   consensus_height: string | null;
-  hash: string;
   last_updated_at: Date;
 }
 
