@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
       FROM channel_connection cc
       LEFT JOIN connections_counterparty_by_client ccc ON cc.connection_id=ccc.connection_id
       LEFT JOIN type_consensus_by_client tcc ON tcc.client_id=ccc.client_id
-      LIMIT $pageLimit OFFSET $pageOffset!
+      LIMIT $pageLimit! OFFSET $pageOffset!
     ;`;
     const getChannelsCount = sql<IGetChannelsCountQuery>`
       SELECT COUNT(*)::int as "count!"
@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
     ;`;
 
     const channels = await getIbcChannels.run({ pageLimit, pageOffset }, client);
-    const [ { count },,] = await getChannelsCount.run(undefined, client);
+    const [{ count },,] = await getChannelsCount.run(undefined, client);
     client.release();
 
     console.log("Successfully queried channels:", [channels, count]);

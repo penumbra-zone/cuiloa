@@ -20,14 +20,13 @@ export async function POST(req: Request) {
       SELECT b.height, b.created_at FROM blocks b
       ORDER BY b.height DESC LIMIT $queryLimit! OFFSET $pageOffset!;
     `;
-    const getBlocksCount = sql<IGetBlocksCountQuery>`SELECT COUNT(*)::int as _count FROM blocks;`;
+    const getBlocksCount = sql<IGetBlocksCountQuery>`SELECT COUNT(*)::int as "count!" FROM blocks;`;
 
     console.log("Acquiring DB Client and Querying database for recent blocks.");
 
     const client = await getPgClient();
     const blocks = await getBlocksByDesc.run({queryLimit, pageOffset}, client);
-    const [{ _count },,] = await getBlocksCount.run(undefined, client);
-    const count = _count ?? 1;
+    const [{ count },,] = await getBlocksCount.run(undefined, client);
 
     console.log("Successfully queried Blocks.");
     console.log([count, blocks]);

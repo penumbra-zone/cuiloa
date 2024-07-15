@@ -2,7 +2,7 @@
 
 /** 'GetIbcChannels' parameters type */
 export interface IGetIbcChannelsParams {
-  pageLimit?: bigint | number | null | void;
+  pageLimit: bigint | number;
   pageOffset: bigint | number;
 }
 
