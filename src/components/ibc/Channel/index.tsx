@@ -12,7 +12,11 @@ interface ChannelProps {
 }
 
 export const Channel : FC<ChannelProps> = ({ endpoint, queryName, channelId }) => {
-  const { data } = useSuspenseQuery({
+  const { data } : {
+    data: {
+      connectionId: string, clientId: string, consensusHeight: string, recentTxs: string[]
+    }
+  } = useSuspenseQuery({
     queryKey: [queryName, channelId],
     queryFn: () => getIbcChannel({ endpoint, channelId }),
   });
