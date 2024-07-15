@@ -15,8 +15,7 @@ export async function GET(req: NextRequest) {
       SELECT
         clients.client_id as "client_id!",
         clients.block_id as "block_id!",
-        hashes.created_at as "last_updated_at!",
-        hashes.tx_hash as "hash!",
+        last_updated.created_at as "last_updated_at!",
         update_attrs.max_value as "consensus_height"
         -- Useful for aggregating other event data if that is desired later.
         -- array_agg(array[update_attrs.key, update_attrs.value]) as "events!"
@@ -29,25 +28,18 @@ export async function GET(req: NextRequest) {
           ea.composite_key='create_client.client_id'
         ORDER BY client_id, ea.block_id DESC
       ) clients LEFT JOIN LATERAL (
-        SELECT MAX(ea.value) as "max_value", ea.tx_id
+        SELECT MAX(ea.value) as "max_value"
         FROM event_attributes ea
         WHERE
           ea.block_id=clients.block_id
           AND
           ea.key='consensus_height'
-        GROUP BY ea.tx_id
       ) update_attrs ON true LEFT JOIN LATERAL (
-        -- NOTE: null check probably no longer needed since both create_client and update_client indices are now in clients
-        SELECT tx.tx_hash, tx.created_at
+        SELECT tx.created_at
         FROM tx_results tx
         WHERE
-          tx.rowid=update_attrs.tx_id
-          OR
-          update_attrs.tx_id IS NULL
-          AND
           tx.rowid=clients.tx_id
-        LIMIT 1
-      ) hashes ON true
+      ) last_updated ON true
       ORDER BY clients.block_id DESC
       LIMIT $pageLimit! OFFSET $pageOffset!
     ;`;

@@ -30,7 +30,6 @@ export const ClientsTable : FC<ClientsTableProps> = ({className, queryName, defa
           client_id: string,
           block_id: bigint,
           last_updated_at: string,
-          hash: string,
           consensus_height: string | null
         }>,
       pages: number

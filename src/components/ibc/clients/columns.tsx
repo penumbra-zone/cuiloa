@@ -7,7 +7,6 @@ export interface ClientsColumns {
   client_id: string,
   last_updated_at: string,
   block_id: bigint,
-  hash: string,
   consensus_height: string | null,
 };
 
@@ -35,14 +34,6 @@ export const columns : Array<ColumnDef<ClientsColumns>> = [
     cell: ({ getValue }) => {
       const timestamp : string = getValue() as string;
       return <pre className="text-sm break-all">{timestamp}</pre>;
-    },
-  },
-  {
-    accessorKey: "hash",
-    header: () => <div className="text-sm">Transaction Hash</div>,
-    cell: ({ getValue }) => {
-      const hash = getValue() as string;
-      return <Link href={`/transaction/${hash}`} className="text-link text-sm"><pre className="sm:max-w-full max-w-[45px] overflow-hidden overflow-ellipsis">{hash}</pre></Link>;
     },
   },
   {
