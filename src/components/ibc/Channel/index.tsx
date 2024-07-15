@@ -22,7 +22,6 @@ export const Channel : FC<ChannelProps> = ({ endpoint, queryName, channelId }) =
   });
 
   return (
-    <div className="sm:w-11/12 w-full">
     <div className="flex flex-col justify-start p-5 gap-y-5 w-full">
       <div className="flex flex-wrap justify-start w-full">
         <p className="sm:w-1/6 w-full font-semibold">Channel ID</p>
@@ -30,7 +29,12 @@ export const Channel : FC<ChannelProps> = ({ endpoint, queryName, channelId }) =
       </div>
       <div className="flex flex-wrap justify-start w-full">
         <p className="sm:w-1/6 w-full font-semibold">Client ID</p>
-        <Link href={`/ibc/client/${data.clientId}`} className="underline sm:w-0 w-full"><pre>{data.clientId}</pre></Link>
+        <Link
+          href={`/ibc/client/${data.clientId}`}
+          className="underline sm:w-0 w-full"
+        >
+          <pre>{data.clientId}</pre>
+        </Link>
       </div>
       <div className="flex flex-wrap justify-start w-full">
         <p className="sm:w-1/6 w-full font-semibold">Counterparty Height</p>
@@ -38,15 +42,25 @@ export const Channel : FC<ChannelProps> = ({ endpoint, queryName, channelId }) =
       </div>
       <div className="flex flex-wrap justify-start w-full">
         <p className="sm:w-1/6 w-full font-semibold">Connection IDs</p>
-        <Link href={`/ibc/connection/${data.connectionId}`} className="underline sm:w-0 w-full"><pre>{data.connectionId}</pre></Link>
+        <Link
+          href={`/ibc/connection/${data.connectionId}`}
+          className="underline sm:w-0 w-full"
+        >
+          <pre>{data.connectionId}</pre>
+        </Link>
       </div>
       <div className="flex flex-wrap justify-start w-full">
         <p className="sm:w-1/6 w-full font-semibold">Recent Transactions</p>
         <div className="sm:w-5/6 w-full">
-          {data.recentTxs.map(( hash , i) => <Link href={`/transaction/${hash}`} key={i} className="underline"><pre className="sm:font-base font-sm overflow-hidden overflow-ellipsis">{hash}</pre></Link>)}
+          {data.recentTxs.map((hash, i) => (
+            <Link href={`/transaction/${hash}`} key={i} className="underline">
+              <pre className="sm:font-base font-sm overflow-hidden overflow-ellipsis">
+                {hash}
+              </pre>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
-  </div>
   );
 };
