@@ -1,5 +1,3 @@
-"use client";
-
 import { type ColumnDef } from "@tanstack/react-table";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -12,13 +10,13 @@ export const makeColumns = ( header: string ) => {
   const columns : Array<ColumnDef<ABCIEventsColumns>> = [
     {
       id: "type",
-      header: () => <div className="break-all text-sm">{header}</div>,
+      header: () => <div className="break-all text-sm text-foreground">{header}</div>,
       columns: [
         {
           accessorKey: "key",
           cell: ({ getValue }) => {
             const abciKey = getValue() as string;
-            return <pre className="text-sm">{abciKey}</pre>;
+            return <pre className="text-sm text-muted-foreground">{abciKey}</pre>;
           },
         },
         {

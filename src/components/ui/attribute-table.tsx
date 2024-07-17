@@ -45,11 +45,11 @@ export function AttributeTable<TData, TValue>({
     <div className={`${className ?? ""}`}>
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="">
             {table.getHeaderGroups()[0].headers.map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {
-                    <TableHead key={headerGroup.id} colSpan={2}>
+                    <TableHead key={headerGroup.id} colSpan={2} className="bg-muted rounded-t-md">
                       {headerGroup.isPlaceholder
                         ? null
                         : flexRender(
@@ -66,6 +66,7 @@ export function AttributeTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  className="hover:bg-muted"
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
