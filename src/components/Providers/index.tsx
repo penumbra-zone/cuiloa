@@ -14,7 +14,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 }
 
 const penumbraTransport = createGrpcWebTransport({
-  baseUrl: "https://grpc.testnet.penumbra.zone",
+  baseUrl: process.env.PENUMBRA_GRPC_ENDPOINT ? process.env.PENUMBRA_GRPC_ENDPOINT : "http://localhost:8080",
 });
 
 
