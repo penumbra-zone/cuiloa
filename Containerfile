@@ -10,10 +10,11 @@ COPY --chown=node:node . .
 USER node
 
 # Install project.
-RUN pnpm config set @buf:registry  https://buf.build/gen/npm/v1/
-RUN pnpm install
-RUN pnpm build
+RUN npm config set @buf:registry  https://buf.build/gen/npm/v1/
+RUN npm install
+# prod build not supported
+# RUN npm build
 
 # Run.
 EXPOSE 3000
-CMD [ "pnpm", "dev" ]
+CMD [ "npm", "run", "dev" ]
