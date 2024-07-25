@@ -1,8 +1,7 @@
+export const dynamic = "force-dynamic";
 import { getPgClient } from "@/lib/db";
 import { sql } from "@pgtyped/runtime";
 import { IGetTransactionsCountQuery, IGetTransactionsQuery } from "./route.types";
-
-export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   console.log("Success: POST /api/transactions");

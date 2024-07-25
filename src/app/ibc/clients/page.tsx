@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { ClientsTable } from "@/components/ibc/clients/ClientsTable";
 import { getIbcClients } from "@/components/ibc/clients/getIbcClients";
 import { getQueryClient } from "@/lib/utils";

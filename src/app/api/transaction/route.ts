@@ -1,12 +1,10 @@
+export const dynamic = "force-dynamic";
 import { getPgClient } from "@/lib/db";
 import { sql } from "@pgtyped/runtime";
 import { IGetTransactionQuery } from "./route.types";
 import { transactionFromBytes, ibcRegistry } from "@/lib/protobuf";
 import { HashResultValidator } from "@/lib/validators/search";
 import { z } from "zod";
-// import { } from "@buf/cosmos_ibc.bufbuild_es/ibc/core/client/v1/"
-
-export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   console.log("Success: GET /api/transaction");

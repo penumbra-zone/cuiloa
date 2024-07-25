@@ -1,10 +1,9 @@
+export const dynamic = "force-dynamic";
 import { sql } from "@pgtyped/runtime";
 import { getPgClient } from "@/lib/db";
 import { IGetBlockQuery } from "./route.types";
 import { BlockHeightValidator } from "@/lib/validators/search";
 import { z } from "zod";
-
-export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   console.log("Sucess: GET /api/block");
