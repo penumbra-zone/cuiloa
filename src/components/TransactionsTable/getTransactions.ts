@@ -1,8 +1,10 @@
+import { getBaseURL } from "@/lib/utils";
 import { TransactionsTableData } from "@/lib/validators/table";
 
 export async function getTransactions({ endpoint, pageIndex } : { endpoint: string, pageIndex: number}) {
-  console.log(`Fetching: POST ${endpoint}?page=${pageIndex}`);
-  const res = await fetch(`http://localhost:3000${endpoint}?page=${pageIndex}`, { method: "POST" });
+  const baseUrl = getBaseURL();
+  console.log(`Fetching: POST ${baseUrl}/${endpoint}?page=${pageIndex}`);
+  const res = await fetch(`${baseUrl}/${endpoint}?page=${pageIndex}`, { method: "GET" });
   const json = await res.json();
   console.log("Fetched Result:", json);
   const result = TransactionsTableData.safeParse(json);
