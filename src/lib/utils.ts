@@ -1,4 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
+import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import { QueryCache, QueryClient, defaultShouldDehydrateQuery, isServer } from "@tanstack/react-query";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -71,3 +72,19 @@ export const getQueryClient = () => {
     return browserQueryClient;
   }
 };
+
+
+export const penumbraTransport = createGrpcWebTransport({
+  baseUrl: process.env.PENUMBRA_GRPC_ENDPOINT ?? "http://localhost:8080",
+});
+
+
+export function getBaseURL() {
+  if (!isServer) {
+    return "";
+  }
+  if (process?.env?.APP_URL !== undefined) {
+    return `${process.env.APP_URL}`;
+  }
+  return "http://localhost:3000";
+}
