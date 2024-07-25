@@ -5,7 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { PaginatedDataTable } from "../ui/paginated-data-table";
 import { PaginationState, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import getBlocks from "./getBlocks";
+import { getBlocks } from "./getBlocks";
 import { cn } from "@/lib/utils";
 
 export interface QueryOptions {

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import ConnectionsTable from "@/components/ibc/connections/ConnectionsTable";
 import { getIbcConnections } from "@/components/ibc/connections/getIbcConnections";
 import { getQueryClient } from "@/lib/utils";

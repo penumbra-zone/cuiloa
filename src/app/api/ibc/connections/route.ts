@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getPgClient } from "@/lib/db";
 import { sql } from "@pgtyped/runtime";
 import { IGetConnectionsCountQuery, IGetConnectionsQuery } from "./route.types";

@@ -1,9 +1,9 @@
+export const dynamic = "force-dynamic";
 import { BlocksTable } from "@/components/BlocksTable";
-import getBlocks from "@/components/BlocksTable/getBlocks";
+import { getBlocks } from "@/components/BlocksTable/getBlocks";
 import { getQueryClient } from "@/lib/utils";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
-export const dynamic = "force-dynamic";
 
 const Page = () => {
   const queryClient = getQueryClient();

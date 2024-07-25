@@ -1,9 +1,8 @@
+export const dynamic = "force-dynamic";
 import { ChannelsTable } from "@/components/ibc/channels/ChannelsTable";
 import { getIbcChannels } from "@/components/ibc/channels/getIbcChannels";
 import { getQueryClient } from "@/lib/utils";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-
-
 
 const Page = () => {
   const queryClient = getQueryClient();
