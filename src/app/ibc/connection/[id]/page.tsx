@@ -15,7 +15,7 @@ const Page : FC<PageProps> = ({ params }) => {
 
   const queryClient = getQueryClient();
 
-  const endpoint = "/api/ibc/connection";
+  const endpoint = "api/ibc/connection";
   const queryName = "IbcConnection";
   const errorMessage = "Failed to query IBC Connection by id. Please try again.";
   queryClient.prefetchQuery({
