@@ -2,20 +2,17 @@
 
 import React, { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createGrpcWebTransport } from "@connectrpc/connect-web";
 import { TransportProvider } from "@connectrpc/connect-query";
 import { Toaster } from "../ui/toaster";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
-import { getQueryClient } from "@/lib/utils";
+import { getQueryClient, penumbraTransport } from "@/lib/utils";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
-const penumbraTransport = createGrpcWebTransport({
-  baseUrl: process.env?.PENUMBRA_GRPC_ENDPOINT ?? "http://localhost:8080",
-});
+
 
 
 const Providers = ({ children } : { children: React.ReactNode }) => {

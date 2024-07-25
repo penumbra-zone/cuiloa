@@ -15,7 +15,7 @@ const Page : FC<PageProps> = ({ params }) => {
 
   const queryClient = getQueryClient();
 
-  const endpoint = "/api/transaction/";
+  const endpoint = "api/transaction/";
   const queryName = "txQuery";
   const errorMessage = "Failed to query transaction, please try reloading the page.";
 

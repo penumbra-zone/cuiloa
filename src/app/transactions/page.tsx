@@ -14,7 +14,7 @@ const Page = () => {
     pageSize: 10,
   };
 
-  const endpoint = "/api/transactions";
+  const endpoint = "api/transactions/";
   const queryName = "TransactionsTable";
   const errorMessage = "Failed to query data while trying to generate event table, please try reloading the page.";
 

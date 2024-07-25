@@ -12,7 +12,7 @@ const Page = () => {
     pageSize: 0,
   };
 
-  const endpoint = "/api/ibc/channels";
+  const endpoint = "api/ibc/channels";
   const queryName = "IbcChannels";
   const errorMessage = "Failed to query for IBC Channels. Please try again.";
 

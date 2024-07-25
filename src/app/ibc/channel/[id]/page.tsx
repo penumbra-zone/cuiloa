@@ -14,7 +14,7 @@ const Page : FC<PageProps> = ({ params }) => {
   const { id: channelId } = params;
   const queryClient = getQueryClient();
 
-  const endpoint = "/api/ibc/channel";
+  const endpoint = "api/ibc/channel";
   const queryName = "IbcChannel";
   const errorMessage = "Failed to query IBC Channel by id. Please try again.";
   queryClient.prefetchQuery({

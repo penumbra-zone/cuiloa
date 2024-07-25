@@ -14,7 +14,7 @@ const Page = () => {
   };
 
   const queryName = "BlocksTable";
-  const endpoint = "/api/blocks";
+  const endpoint = "api/blocks";
   const errorMessage = "Failed to query data while trying to generate blocks table, please try reloading the page.";
 
   queryClient.prefetchQuery({

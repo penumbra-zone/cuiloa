@@ -14,7 +14,7 @@ const Page : FC<PageProps> = ({ params }) => {
 
   const queryClient = getQueryClient();
 
-  const endpoint = "/api/block/";
+  const endpoint = "api/block/";
   const queryName = "htQuery";
   const errorMessage = "Failed to query block with provided height, please check height or try a different query";
 
