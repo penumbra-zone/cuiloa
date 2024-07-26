@@ -32,9 +32,9 @@ You will also need this information for the `config.toml` file that `cometbft` w
 
 ### Penumbra
 
-You need to have a full node setup with penumbra (including `cometbft`) as detailed [here for testnets](https://guide.penumbra.zone/main/pd/join-testnet.html#joining-a-testnet). Alternatively, you can configure a full node on a devnet as explained [here](https://guide.penumbra.zone/main/dev/devnet-quickstart.html). **In either case**, you need to modify the `config.toml` file that is created by `pd` after generating your configuration files.
+You need to have a full node setup with penumbra (including `cometbft`) as detailed [here](https://guide.penumbra.zone/node/pd/join-network). Alternatively, you can configure a full node on a devnet as explained [here](https://guide.penumbra.zone/main/dev/devnet-quickstart.html). **In either case**, you need to modify the `config.toml` file that is created by `pd` after generating your configuration files.
 
-`config.toml` should be found under `$HOME/.penumbra/testnet_data/node0/cometbft/config/`. In this file, there is a heading `[tx_index]` with the configuration variable of `indexer = "kv"`. Using the URI of the database you created with PostgreSQL from the previous section, you need to update the section under `[tx_index]` to the following:
+`config.toml` should be found under `$HOME/.penumbra/network_data/node0/cometbft/config/`. In this file, there is a heading `[tx_index]` with the configuration variable of `indexer = "kv"`. Using the URI of the database you created with PostgreSQL from the previous section, you need to update the section under `[tx_index]` to the following:
 
 ```toml
 [tx_index]
