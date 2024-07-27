@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { ioveskaSans, ioveskaTerm } from "./fonts";
 import { cn } from "@/lib/utils";
 import "@/lib/patch-toJSON-BigInt";
-import Navbar from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import Providers from "@/components/Providers";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { CodeIcon } from "lucide-react";

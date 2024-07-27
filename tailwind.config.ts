@@ -86,26 +86,27 @@ module.exports = {
         // The first is for the most notable "halo" seen on the landing page. Its first colorlist ensures
         // a white inner gradient and uses a fixed 300px to keep the size restrained on longer pages.
         // The second gradient is mostly observable on longer pages, i.e. it ensures that there are rings and hues of purple further down.
+        // hsla(176, 36%, 50%, 0.2)
         "gradient-repeat-radial": `repeating-radial-gradient(
             circle at left 40% bottom 10%,
             hsla(0 0% 100% / 0.3) 0 300px,
-            hsl(285 28 49 / 0.2) 45% 50%,
+            hsl(176 36% 50% / 0.2) 45% 50%,
             transparent 70% 90%,
-            hsl(285 28 49 / 0.2) 95% 98%,
+            hsl(176 36% 50% / 0.2) 95% 98%,
             transparent 100%
           ),
           repeating-radial-gradient(
             circle at left top,
             transparent 0% 40%,
-            hsl(285 28 49 / 0.2) 50% 60%,
+            hsl(176 36% 50% / 0.2) 50% 60%,
             transparent 70% 80%,
-            hsl(285 28 49 / 0.2) 95% 98%,
+            hsl(176 36% 50% / 0.2) 95% 98%,
             transparent 100%
           )`,
         // If medial selectors + gradients are revisited, using a single gradient for a stable purple halo on the first viewport span seems like a
         // like a good default where additional gradients are added for longer pages.
         // "gradient-repeat-radial": `
-        //   radial-gradient(circle at left 40% bottom 1%, hsla(0 0% 100% / 1.0) 0% 40%, hsla(285 28 49 / 0.2) 50% 55%, transparent 60% 100%)
+        //   radial-gradient(circle at left 40% bottom 1%, hsla(0 0% 100% / 1.0) 0% 40%, hsla(176 36% 50% / 0.2) 50% 55%, transparent 60% 100%)
         // `,
       },
     },

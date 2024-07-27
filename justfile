@@ -9,7 +9,7 @@ dev:
 build:
   npm run build
 
-start:
+start: build
   npm run start
 
 lint:

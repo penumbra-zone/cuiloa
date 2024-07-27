@@ -6,8 +6,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { useOnClickOutside } from "usehooks-ts";
 import { SearchValidator } from "@/lib/validators/search";
+import { cn } from "@/lib/utils";
 
-const SearchBar : FC = () => {
+interface SearchProps {
+  className?: string;
+}
+
+const SearchBar : FC<SearchProps> = ({ className }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [input, setInput] = useState<string>("");
@@ -33,12 +38,12 @@ const SearchBar : FC = () => {
   return (
     <Command
       ref={cmdRef}
-      className="relative rounded-full bg-popover border max-w-lg z-50 overflow-visible"
+      className={cn("relative rounded-full bg-popover border max-w-lg z-50 overflow-visible", className)}
       shouldFilter={false}>
       <CommandInput
         className="text-sm"
         ref={inputRef}
-        placeholder="Search by height, hash, or IBC identifier..."
+        placeholder="Search..."
         value={input}
         onValueChange={(text) => {
           setInput(text);

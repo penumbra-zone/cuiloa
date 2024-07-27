@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { SunIcon, MoonIcon } from "lucide-react";
+import { LeftPartialEclipse, RightPartialEclipse } from "./EclipseIcon";
 import { useTheme } from "next-themes";
 import { Button } from "../ui/button";
 
@@ -18,8 +18,8 @@ export const ThemeToggleButton = () => {
   const isLight = theme === "light";
 
   return (
-    <Button variant="outline" size="icon" onClick={() => setTheme(isLight ? "dark" : "light")}>
-      {isLight ? <SunIcon className="h-4 w-4"/> : <MoonIcon className="h-4 w-4"/>}
+    <Button className="rounded-full" variant="outline" size="icon" onClick={() => setTheme(isLight ? "dark" : "light")}>
+      {isLight ? <LeftPartialEclipse height={16} width={16}/>: <RightPartialEclipse height={16} width={16} />}
     </Button>
   );
 };
