@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { ioveskaSans, ioveskaTerm } from "./fonts";
+import { ioveskaTerm, poppins } from "./fonts";
 import { cn } from "@/lib/utils";
 import "@/lib/patch-toJSON-BigInt";
 import { Navbar } from "@/components/Navbar";
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        ioveskaSans.variable,
+        poppins.variable,
         ioveskaTerm.variable,
       )}
       // Necessary for next-themes: https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggleButton } from "../ThemeToggleButton";
 import radiantLogoRainbow from "./radiant-logo-rainbow.png";
+import { workSans } from "@/app/fonts";
 
 const RadiantLogoRainbow = ({ width, height, className } : { width: number, height: number, className?: string }) => {
   return (
@@ -22,8 +23,8 @@ export const Navbar : FC = () => {
       <Link href="https://radiantcommons.com" className="self-center" >
         <RadiantLogoRainbow height={24} width={24}/>
       </Link>
-      <h1 className="font-semibold text-2xl ml-1 mr-3"><Link href="/">Cuiloa</Link></h1>
-      <Link className="text-link font-medium text-bas" href="https://penumbra.zone/">
+      <h1 className={`font-semibold text-2xl ml-1 mr-3 ${workSans.className}`}><Link href="/">Cuiloa</Link></h1>
+      <Link className={`text-link font-medium font-display ${workSans.className}`} href="https://penumbra.zone/">
         A Block Explorer For Penumbra
       </Link>
     </div>

@@ -17,7 +17,9 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-iosevka-sans)"],
+        sans: ["var(--font-poppins)"],
+        body: ["var(--font-poppins)"],
+        display: ["var(--font-work-sans)"],
         mono: ["var(--font-iosevka-mono)"],
       },
       colors: {
