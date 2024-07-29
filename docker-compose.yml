@@ -6,55 +6,65 @@
 # https://github.com/penumbra-zone/penumbra/releases
 version: "3.7"
 services:
-  # Initialize node config, via `pd testnet join`. This init container handles
-  # munging the CometBFT config to enable event indexing via psql.
-  pd-init:
-    image: ghcr.io/penumbra-zone/penumbra:v0.64.1
-    command: /usr/local/bin/pd-init-cuiloa
-    restart: "no"
+  pd-node0-init:
+    platform: "linux/amd64"
+    image: ghcr.io/penumbra-zone/penumbra:latest
+    command: >-
+      sh -c
+      "
+      pd --version &&
+      if ! test -e /pd/network_data/node0/cometbft/config/config.toml ; then
+          >&2 printf 'WARN: network config not found. Creating fresh node identity.'
+          >&2 echo ' See docs for details: https://guide.penumbra.zone/node/pd/join-network.html'
+          /bin/pd network --network-dir /pd/network_data join http://void.s9.gay:26657/genesis &&
+          sed -i -e 's#^indexer.*#indexer = \"psql\"\\npsql-conn = \"postgresql://penumbra:penumbra@localhost:5432/penumbra_cometbft?sslmode=disable\"#' /pd/network_data/node0/cometbft/config/config.toml
+      else
+          >&2 echo 'Node config already found, using it'
+      fi &&
+      chown 100 -R /pd/network_data/node0/cometbft &&
+      chown 1000 -R /pd/network_data/node0/pd &&
+      ls -l /pd/network_data/node0/ && exit 0
+      "
+    restart: on-failure
     volumes:
-      - cuiloa-pd:/pd
-      - ./deploy/pd-init-cuiloa:/usr/local/bin/pd-init-cuiloa:ro
+      - cuiloa-pd-node0:/pd
     # run initcontainer as root so we can chown dirs for app containers.
     user: "0"
 
   # The Penumbra daemon
-  pd:
-    image: ghcr.io/penumbra-zone/penumbra:v0.64.1
+  pd-node0:
+    platform: "linux/amd64"
+    image: ghcr.io/penumbra-zone/penumbra:latest
     # consider verbose debugging logs:
     # environment:
       # RUST_LOG: h2=off,debug
     command: >-
-      /bin/pd start --home /pd/testnet_data/node0/pd
+      /bin/pd start --home /pd/network_data/node0/pd
       --grpc-bind 0.0.0.0:8080 --abci-bind 0.0.0.0:26658
+      --cometbft-addr http://cometbft-node0:26657
     restart: on-failure
     volumes:
-      - cuiloa-pd:/pd
-    # OK, I caved: running the pd container as root to avoid permissions problems.
-    # Ideally we'd run as 1000, same as in the container image, but alas.
-    # user: "1000"
+      - cuiloa-pd-node0:/pd
     user: "0"
     depends_on:
-      pd-init:
-        condition: service_completed_successfully
+      - pd-node0-init
     ports:
       - "26658:26658"
       - "8080:8080"
-
   # The CometBFT node
-  cometbft:
-    image: "docker.io/cometbft/cometbft:v0.37.2"
+  cometbft-node0:
+    image: "docker.io/cometbft/cometbft:v0.37.9"
     ports:
       - "26656:26656"
       - "26657:26657"
+    user: "0"
     volumes:
-      - cuiloa-pd:/cometbft
-    user: "100"
+      - cuiloa-pd-node0:/cometbft
     environment:
-      CMTHOME: /cometbft/testnet_data/node0/cometbft
-    command: start --proxy_app=tcp://pd:26658
+      CMTHOME: /cometbft/network_data/node0/cometbft
+    command: start --proxy_app=tcp://pd-node0:26658
     depends_on:
-      - postgres
+      - pd-node0
 
   # The Postgres database, for storing CometBFT indexing info
   postgres:
@@ -68,7 +78,7 @@ services:
       POSTGRES_USER: penumbra
       POSTGRES_DB: penumbra
     depends_on:
-      - pd
+      - pd-node0
 
   # The Cuiloa application, providing a web-based block explorer for Penumbra.
   cuiloa:
@@ -83,4 +93,4 @@ services:
       - postgres
 
 volumes:
-  cuiloa-pd: {}
+  cuiloa-pd-node0: {}
