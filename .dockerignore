@@ -7,6 +7,6 @@
 !pnpm-lock.yaml
 
 # nextjs files
-!prisma/
 !public/
 !src/
+!.next/
