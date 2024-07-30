@@ -12,9 +12,6 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
-
-
-
 const Providers = ({ children } : { children: React.ReactNode }) => {
   // NOTE: there is a very explicit warning in the TanStack docs about using useState for handling QueryClient (de)hydration within the provider in the scenario where
   //       there is no Suspense boundary between the instantiation (here) and the context that is being wrapped; however, it is more or less considered best practice to

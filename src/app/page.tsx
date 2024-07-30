@@ -8,6 +8,13 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
+import { getQueryClient } from "@/lib/utils";
+
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { PreviewTable } from "@/components/PreviewTable";
+import { getBlocks } from "@/components/BlocksTable/getBlocks";
+import { getTransactions } from "@/components/TransactionsTable/getTransactions";
+
 
 interface CardProps {
   buttonText: string,
@@ -23,7 +30,7 @@ const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, 
       <CardHeader>
         <CardTitle className="text-lg font-medium">{heading}</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-1 items-center w-full">
+      <CardContent className="flex flex-col gap-1 items-center">
         {children}
         <Button className="w-full" asChild>
           <Link href={buttonLink}>{buttonText}</Link>
@@ -33,20 +40,65 @@ const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, 
   );
 };
 
-export default async function Home() {
+export default function Home() {
+  const queryClient = getQueryClient();
+
+  const blocksQuery = "previewBlocks";
+  const transactionsQuery = "previewTransactions";
+  const blocksEndpoint = "api/blocks";
+  const transactionEndpoint = "api/transactions";
+  const errorMessage = "Problems were encountered while trying to query explorer data for the main page, please try again.";
+
+  Promise.all([
+    queryClient.prefetchQuery({
+      queryFn: () => getTransactions({ endpoint: transactionEndpoint, pageIndex: 0 }),
+      queryKey: [transactionsQuery],
+      meta: {
+        errorMessage,
+      },
+    }),
+    queryClient.prefetchQuery({
+      queryFn: () => getBlocks({ endpoint: blocksEndpoint, pageIndex: 0 }),
+      queryKey: [blocksQuery],
+      meta: {
+        errorMessage,
+      },
+    }),
+  ]);
+
   return (
     <div className="flex flex-wrap gap-3 items-center justify-between py-5">
       <LandingCard
         heading="Transactions"
         buttonLink="/transactions"
         buttonText="Explore Transactions"
-        className="basis-[45%] w-auto"
+        className="basis-[45%] w-full max-w-screen-sm"
+        children={
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <PreviewTable
+              className="w-full"
+              queryName={transactionsQuery}
+              pageIndex={0}
+              endpoint={transactionEndpoint}
+              errorMessage={errorMessage}/>
+          </HydrationBoundary>
+        }
       />
       <LandingCard
         heading="Blocks"
         buttonLink="/blocks"
         buttonText="Explore Blocks"
-        className="basis-[45%] w-auto"
+        className="basis-[50%] w-full max-w-screen-sm"
+        children={
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <PreviewTable
+              className="w-full"
+              queryName={blocksQuery}
+              pageIndex={0}
+              endpoint={blocksEndpoint}
+              errorMessage={errorMessage}/>
+          </HydrationBoundary>
+        }
       />
       <LandingCard
         heading="IBC Clients"
