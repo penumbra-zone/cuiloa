@@ -3,8 +3,8 @@ import { BlocksTableQuery } from "@/lib/validators/table";
 
 export async function getBlocks ({ endpoint, pageIndex } : ({ endpoint: string, pageIndex: number })) {
   const baseUrl = getBaseURL();
-  console.log(`Fetching: POST ${baseUrl}/?page=${pageIndex}`);
-  const res = await fetch(`${baseUrl}/${endpoint}?page=${pageIndex}`, { method: "POST" });
+  console.log(`Fetching: GET ${baseUrl}/${endpoint}/?page=${pageIndex}`);
+  const res = await fetch(`${baseUrl}/${endpoint}?page=${pageIndex}`, { method: "GET" });
   const json = await res.json();
 
   console.log("Fetched result:", json);
