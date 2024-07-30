@@ -32,18 +32,16 @@ export default function RootLayout({
       <body className="bg-gradient-repeat-radial min-w-full min-h-screen">
         <Providers>
           <Navbar />
-          <div className="flex flex-col container xs-container justify-start min-h-[640px]">
-            <div className="p-1 sm:p-2 mb-auto">
-              {children}
-            </div>
-            <div className="self-center py-5">
-              <Link href="https://github.com/penumbra-zone/cuiloa">
-                <CodeIcon className="w-4" />
-              </Link>
-            </div>
+          <div className="container xs-container justify-start min-h-[640px]">
+            {children}
           </div>
           <ReactQueryDevtools initialIsOpen={false} />
         </Providers>
+        <div className="flex flex-col justify-center items-center h-full">
+          <Link href="https://github.com/penumbra-zone/cuiloa">
+            <CodeIcon className="w-4" />
+          </Link>
+        </div>
       </body>
     </html>
   );

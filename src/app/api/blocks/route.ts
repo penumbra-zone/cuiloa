@@ -3,8 +3,8 @@ import { sql } from "@pgtyped/runtime";
 import { IGetBlocksByDescQuery, IGetBlocksCountQuery} from "./route.types";
 import { getPgClient } from "@/lib/db";
 
-export async function POST(req: Request) {
-  console.log("POST req on /api/blocks/");
+export async function GET(req: Request) {
+  console.log("GET req on /api/blocks/");
   try {
     const url = new URL(req.url);
     const pageParam = url.searchParams.get("page")?.trim() ?? "";

@@ -2,55 +2,140 @@ import Link from "next/link";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
+import { FC } from "react";
+import { getQueryClient } from "@/lib/utils";
 
-export default async function Home() {
-  // Idea: break out the buttons to their own cards where each uses the description to help describe the data to users.
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { PreviewTable } from "@/components/PreviewTable";
+import { getBlocks } from "@/components/BlocksTable/getBlocks";
+import { getTransactions } from "@/components/TransactionsTable/getTransactions";
+
+
+interface CardProps {
+  buttonText: string,
+  buttonLink: string,
+  children?: React.ReactNode,
+  className?: string,
+  heading: string,
+}
+
+const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, buttonLink }) => {
   return (
-    <div className="flex gap-5 items-center justify-center py-5">
-      <div>
-        <Card>
-          <CardHeader className="">
-            <CardTitle className="text-center text-lg sm:text-2xl">
-              Penumbra is constantly evolving...
-            </CardTitle>
-            <CardDescription className="text-center">
-              Navigate and explore public chain data with the links below.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-1 items-center">
-            <Button className="sm:w-2/3 w-full" asChild>
-              <Link href="/transactions">Recent Transactions</Link>
-            </Button>
-            <Button className="sm:w-2/3 w-full" asChild>
-              <Link href="/blocks">Recent Blocks</Link>
-            </Button>
-            <Button className="sm:w-2/3 w-full" asChild>
-              <Link href="/ibc/clients">IBC Clients</Link>
-            </Button>
-            <Button className="sm:w-2/3 w-full" asChild>
-              <Link href="/ibc/channels">IBC Channels</Link>
-            </Button>
-            <Button className="sm:w-2/3 w-full" asChild>
-              <Link href="/ibc/connections">IBC Connections</Link>
-            </Button>
-            <Button className="sm:w-2/3 w-full" asChild>
-              <Link href="/staking">Staking</Link>
-            </Button>
-            <Button className="sm:w-2/3 w-full" asChild>
-              <Link href="/dex">Dex</Link>
-            </Button>
-            <Button className="sm:w-2/3 w-full" asChild>
-              <Link href="/governance">Governance</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle className="text-lg font-medium">{heading}</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-1 items-center">
+        {children}
+        <Button className="w-full" asChild>
+          <Link href={buttonLink}>{buttonText}</Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default function Home() {
+  const queryClient = getQueryClient();
+
+  const blocksQuery = "previewBlocks";
+  const transactionsQuery = "previewTransactions";
+  const blocksEndpoint = "api/blocks";
+  const transactionEndpoint = "api/transactions";
+  const errorMessage = "Problems were encountered while trying to query explorer data for the main page, please try again.";
+
+  Promise.all([
+    queryClient.prefetchQuery({
+      queryFn: () => getTransactions({ endpoint: transactionEndpoint, pageIndex: 0 }),
+      queryKey: [transactionsQuery],
+      meta: {
+        errorMessage,
+      },
+    }),
+    queryClient.prefetchQuery({
+      queryFn: () => getBlocks({ endpoint: blocksEndpoint, pageIndex: 0 }),
+      queryKey: [blocksQuery],
+      meta: {
+        errorMessage,
+      },
+    }),
+  ]);
+
+  return (
+    <div className="flex flex-wrap gap-3 items-center justify-between py-5">
+      <LandingCard
+        heading="Transactions"
+        buttonLink="/transactions"
+        buttonText="Explore Transactions"
+        className="basis-[45%] w-full max-w-screen-sm"
+        children={
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <PreviewTable
+              className="w-full"
+              queryName={transactionsQuery}
+              pageIndex={0}
+              endpoint={transactionEndpoint}
+              errorMessage={errorMessage}/>
+          </HydrationBoundary>
+        }
+      />
+      <LandingCard
+        heading="Blocks"
+        buttonLink="/blocks"
+        buttonText="Explore Blocks"
+        className="basis-[50%] w-full max-w-screen-sm"
+        children={
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <PreviewTable
+              className="w-full"
+              queryName={blocksQuery}
+              pageIndex={0}
+              endpoint={blocksEndpoint}
+              errorMessage={errorMessage}/>
+          </HydrationBoundary>
+        }
+      />
+      <LandingCard
+        heading="IBC Clients"
+        buttonLink="/ibc/clients"
+        buttonText="Explore Clients"
+        className="w-[380px]"
+      />
+      <LandingCard
+        heading="IBC Connections"
+        buttonLink="/ibc/connections"
+        buttonText="Explore Connections"
+        className="w-[380px]"
+      />
+      <LandingCard
+        heading="IBC Channels"
+        buttonLink="/ibc/channels"
+        buttonText="Explore Channels"
+        className="w-[380px]"
+      />
+      <LandingCard
+        heading="Staking"
+        buttonLink="/staking"
+        buttonText="Explore Staking"
+        className="w-[380px]"
+      />
+      <LandingCard
+        heading="Dex"
+        buttonLink="/dex"
+        buttonText="Explore Dex"
+        className="w-[380px]"
+      />
+      <LandingCard
+        heading="Governance"
+        buttonLink="/governance"
+        buttonText="Explore Governance"
+        className="w-[380px]"
+      />
     </div>
   );
 }
