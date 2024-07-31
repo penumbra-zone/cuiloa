@@ -2,6 +2,7 @@ import { type FC } from "react";
 import { Block } from "@/components/Block";
 import { getBlock } from "@/components/Block/getBlock";
 import { getQueryClient } from "@/lib/utils";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 interface PageProps {
   params: {
@@ -19,8 +20,8 @@ const Page : FC<PageProps> = ({ params }) => {
   const errorMessage = "Failed to query block with provided height, please check height or try a different query";
 
   queryClient.prefetchQuery({
-    queryFn: () => getBlock({ endpoint, ht }),
     queryKey: ["htQuery", ht],
+    queryFn: () => getBlock({ endpoint, ht }),
     meta: {
       errorMessage,
     },
@@ -30,9 +31,11 @@ const Page : FC<PageProps> = ({ params }) => {
     <div className="bg-primary rounded-sm shadow-md">
       <div className="flex flex-col gap-5 pt-5 items-center">
         <h1 className="sm:text-2xl text-lg font-bold">Block Summary</h1>
-        <div className="sm:w-11/12 w-full">
-          <Block {...{endpoint, queryName, ht }}/>
-        </div>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <div className="sm:w-11/12 w-full">
+            <Block {...{endpoint, queryName, ht }}/>
+          </div>
+        </HydrationBoundary>
       </div>
     </div>
   );
