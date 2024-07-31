@@ -6,7 +6,7 @@ import "@/lib/patch-toJSON-BigInt";
 import { Navbar } from "@/components/Navbar";
 import Providers from "@/components/Providers";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { CodeIcon } from "lucide-react";
+import { TwitterIcon, BookIcon, GitPullRequestIcon, MessageSquareIcon } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -37,9 +37,18 @@ export default function RootLayout({
           </div>
           <ReactQueryDevtools initialIsOpen={false} />
         </Providers>
-        <div className="flex flex-col justify-center items-center h-full">
-          <Link href="https://github.com/penumbra-zone/cuiloa">
-            <CodeIcon className="w-4" />
+        <div className="flex justify-center items-center h-28 gap-3">
+          <Link href="https://discord.gg/penumbrazone" title="The Official Penumbra Discord">
+            <MessageSquareIcon className="w-4" />
+          </Link>
+          <Link href="https://guide.penumbra.zone/" title="Penumbra User Guide">
+            <BookIcon className="w-4" />
+          </Link>
+          <Link href="https://github.com/penumbra-zone/cuiloa" title="Cuiloa Source Code">
+            <GitPullRequestIcon className="w-4" />
+          </Link>
+          <Link href="https://twitter.com/penumbrazone" title="Penumbra's Twitter">
+            <TwitterIcon className="w-4" />
           </Link>
         </div>
       </body>
