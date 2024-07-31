@@ -32,7 +32,6 @@ const SearchBar : FC<SearchProps> = ({ className }) => {
 
   const searchCmd = () => {
     router.push(`/search/${input}`);
-    router.refresh();
   };
 
   return (
@@ -59,7 +58,7 @@ const SearchBar : FC<SearchProps> = ({ className }) => {
               toast({
                 variant: "destructive",
                 title: "Invalid search query.",
-                description: "Please try again with a block height or transaction hash.",
+                description: "Try again with a block height, hash hash, or IBC identifier.",
               });
             }
           }

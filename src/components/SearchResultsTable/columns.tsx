@@ -1,9 +1,5 @@
-"use client";
-
-// import { QueryKind } from "@/lib/validators/search";
 import { type ColumnDef } from "@tanstack/react-table";
-// import Link from "next/link";
-import { type RelatedQuery, type SearchResult } from ".";
+import { SearchResult, type RelatedQuery } from ".";
 import Link from "next/link";
 
 
@@ -32,7 +28,7 @@ export const columns : Array<ColumnDef<SearchResultsColumns>> = [
     },
   },
   {
-    id: "related",
+    // id: "related",
     accessorKey: "related",
     header: () => <div className="text-sm break-words">Related Queries</div>,
     cell: ({ row }) => {

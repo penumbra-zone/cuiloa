@@ -3,8 +3,8 @@ import { sql } from "@pgtyped/runtime";
 import { QueryKind, SearchValidator } from "@/lib/validators/search";
 import { IGetBlockSearchQuery, IGetChannelSearchQuery, IGetClientSearchQuery, IGetConnectionSearchQuery, IGetTransactionSearchQuery } from "./route.types";
 
-export async function POST(req: Request) {
-  console.log("POST req on /api/search");
+export async function GET(req: Request) {
+  console.log("GET req on /api/search");
   try {
     const url = new URL(req.url);
     const queryParam = url.searchParams.get("q")?.trim() ?? "";
@@ -78,6 +78,8 @@ export async function POST(req: Request) {
       pgClient.release();
 
       if (clientSearch.length === 0) return new Response("No results.", { status: 404 });
+
+      console.log("Results found:", { kind: searchQuery.kind, identifier: searchQuery.value, related: clientSearch});
 
       return new Response(JSON.stringify({
         kind: searchQuery.kind,
