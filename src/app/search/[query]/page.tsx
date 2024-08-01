@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import SearchResultsTable from "@/components/SearchResultsTable";
 import { getBaseURL, getQueryClient } from "@/lib/utils";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
