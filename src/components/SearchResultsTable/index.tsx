@@ -5,7 +5,6 @@ import { type FC } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getBaseURL } from "@/lib/utils";
 
-
 export interface RelatedQuery {
   type: string,
   hash: string,
@@ -16,9 +15,7 @@ export interface SearchResult {
   identifier: string,
   related?: RelatedQuery[],
 }
-// TODO?
-// interface TransactionSearchResult {}
-// interface BlockSearchResult {}
+
 interface SearchResultsTableProps {
   className?: string,
   query: string,
@@ -33,12 +30,13 @@ const SearchResultsTable : FC<SearchResultsTableProps> = ({ className, query }) 
       return await data.json();
     },
     queryKey: ["searchResult", query],
-  });
+  }) as { data: SearchResult };
 
-  const relatedVisible = !!(data as SearchResult)?.related?.at(0);
+  const relatedVisible = !!data?.related?.at(0);
+  const columnVisibility = { "related": relatedVisible };
 
   return (
-    <DataTable className={className} columns={columns} data={[data]} columnVisibility={{ "related": relatedVisible }}/>
+    <DataTable className={className} columns={columns} data={[data]} columnVisibility={columnVisibility}/>
   );
 };
 

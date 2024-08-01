@@ -33,7 +33,7 @@ export const columns : Array<ColumnDef<EventColumns>> = [
     header: () => <div className="text-sm">Hash</div>,
     cell: ({ row }) => {
       const tx_hash : string = row.getValue("tx_hash");
-      return <Link href={`/transaction/${tx_hash}`} className="text-link text-sm"><pre className="sm:max-w-full max-w-[90px] overflow-hidden overflow-ellipsis">{tx_hash}</pre></Link>;
+      return <Link href={`/transaction/${tx_hash}`} className="text-link text-sm"><pre className="sm:max-w-full max-w-24 overflow-hidden overflow-ellipsis">{tx_hash}</pre></Link>;
     },
   },
 ];
