@@ -1,8 +1,6 @@
-"use client";
 import SearchResultsTable from "@/components/SearchResultsTable";
-// import { SearchResultValidator } from "@/lib/validators/search";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { getBaseURL, getQueryClient } from "@/lib/utils";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { type FC } from "react";
 
 interface PageProps {
@@ -13,43 +11,27 @@ interface PageProps {
 
 const Page : FC<PageProps> = ({ params }) => {
   const { query } = params;
+  const queryClient = getQueryClient();
 
-  const { data: searchResultData , isError } = useQuery({
+  queryClient.prefetchQuery({
     queryFn: async () => {
-      console.log(`Fetching: GET /api/search?q=${query}`);
-      const { data } = await axios.post(`/api/search?q=${query}`);
-      console.log("Fetched result:", data);
-      return data;
-      // const result = SearchResultValidator.safeParse(data);
-      // if (result.success) {
-      //   console.log(result.data);
-      //   return result.data;
-      // } else {
-      //   throw new Error(result.error.message);
-      // }
+      const baseUrl = getBaseURL();
+      console.log(`FETCHING: GET ${baseUrl}/api/search?q=${query}`);
+      const data = await fetch(`${baseUrl}/api/search?q=${query}`, { method: "GET" });
+      return await data.json();
     },
     queryKey: ["searchResult", query],
-    retry: false,
     meta: {
-      errorMessage: "Failed to find any results from the provided query. Please try a different query.",
+      errorMessage: "Failed to find any results for the search term. Please try looking for something else.",
     },
   });
 
-  if (isError) {
-    return (
-      <div className="py-5 flex justify-center">
-        <h1 className="text-4xl font-semibold">No results found.</h1>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col gap-5 pt-5 items-center bg-primary">
-        <h1 className="sm:text-2xl font-bold">Search results</h1>
-        {// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          searchResultData ? <SearchResultsTable className="sm:w-1/2 w-full" data={[searchResultData]}/>
-          : <p>No results</p>
-        }
+    <div className="bg-primary flex flex-col gap-5 sm:p-8">
+      <h1 className="sm:text-2xl font-bold">Search results</h1>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <SearchResultsTable className="w-full" query={query}/>
+      </HydrationBoundary>
     </div>
   );
 };

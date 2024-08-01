@@ -1,18 +1,11 @@
-"use client";
-
-// import { QueryKind } from "@/lib/validators/search";
 import { type ColumnDef } from "@tanstack/react-table";
-// import Link from "next/link";
-import { type RelatedQuery, type SearchResult } from ".";
+import { SearchResult, type RelatedQuery } from ".";
 import Link from "next/link";
-
-
-type SearchResultsColumns = SearchResult;
 
 // NOTE: Search Results diverges from all the other table stylings in that most of the text is not xs on smaller devices.
 //       Until I start getting more data, it feels overkill to make it so small for now. This could turn out to be a dumb
 //       pre-caution that I will have to revert sooner than later.
-export const columns : Array<ColumnDef<SearchResultsColumns>> = [
+export const columns : Array<ColumnDef<SearchResult>> = [
   {
     accessorKey: "kind",
     header: () => <div className="text-sm">Kind</div>,
@@ -32,7 +25,7 @@ export const columns : Array<ColumnDef<SearchResultsColumns>> = [
     },
   },
   {
-    id: "related",
+    // id: "related",
     accessorKey: "related",
     header: () => <div className="text-sm break-words">Related Queries</div>,
     cell: ({ row }) => {
@@ -50,16 +43,19 @@ export const columns : Array<ColumnDef<SearchResultsColumns>> = [
       // }
       if (related !== undefined && related.length !== 0) {
         return (
-        <ul>
-          {/* {related.map(({ type, indentifier }, i) => <li key={i}>{type} : {indentifier}</li>)} */}
-          {related.map(({ type, hash }, i) => {
-            return <li key={i}>{type}: <Link href={`/transaction/${hash}`} className="text-link text-sm"><pre>{hash}</pre></Link></li>;
-          })
-          }
-        </ul>
+          <div className="flex flex-col w-full">
+            {related.map(({type, hash}, i) => {
+              return (
+                <div className="flex gap-x-4 gap-y-2 justify-start" key={i}>
+                  <p className="text=sm">{type}</p>
+                  <Link href={`/transaction/${hash}`} className="text-link text-sm"><pre className="sm:max-w-full max-w-24 overflow-hidden overflow-ellipsis">{hash}</pre></Link>
+                </div>
+              );
+            })}
+          </div>
         );
       }
-      return <p className="text-center">None</p>;
+      return <p className="text-center text-sm">None</p>;
     },
   },
 ];
