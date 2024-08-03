@@ -5,8 +5,8 @@ import SearchBar from "@/components/Searchbar";
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggleButton } from "../ThemeToggleButton";
-import radiantLogoRainbow from "./radiant-logo-rainbow.png";
-import radiantLogoBw from "./radiant-logo-bw.png";
+import radiantLogoLight from "./radiant-logo-light.png";
+import radiantLogoDark from "./radiant-logo-dark.png";
 import { workSans } from "@/app/fonts";
 import {
   Breadcrumb,
@@ -17,6 +17,7 @@ import {
   // BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+// TODO: Add collapsing menu for mobile
 // import {
 //   DropdownMenu,
 //   DropdownMenuContent,
@@ -25,30 +26,28 @@ import {
 // } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
 
-const RadiantLogoRainbow = ({ width, height, className } : { width: number, height: number, className?: string }) => {
+const RadiantLogoDark = ({ width, height, className } : { width: number, height: number, className?: string }) => {
   return (
     <div className={className}>
-      <Image src={radiantLogoRainbow} alt="RadiantCommons.com Logo" width={width} height={height} priority/>
+      <Image src={radiantLogoDark} alt="RadiantCommons.com Logo" width={width} height={height} priority/>
     </div>
   );
 };
 
-const RadiantLogoBw = ({ width, height, className } : { width: number, height: number, className?: string }) => {
+const RadiantLogoLight = ({ width, height, className } : { width: number, height: number, className?: string }) => {
   return (
     <div className={className}>
-      <Image src={radiantLogoBw} alt="RadiantCommons.com Logo" width={width} height={height} priority/>
+      <Image src={radiantLogoLight} alt="RadiantCommons.com Logo" width={width} height={height} priority/>
     </div>
   );
 };
 
 // const LEGAL_BREADCRUMB_SEGMENTS = ["transactions", "transaction", "blocks", "block", "ibc", "client", "clients", "channels", "channel", "connections", "connection", "gov", "dex", "staking"] as const;
 // type BreadcrumbSegment = typeof LEGAL_BREADCRUMB_SEGMENTS[number];
-
 // const isBreadcrumbPath = (path: string) : path is BreadcrumbSegment => {
 //   const _legal: readonly string[] = LEGAL_BREADCRUMB_SEGMENTS;
 //   return _legal.includes(path);
 // };
-
 // TBQF I don't think this sort of error checking is necessary. If anything, it'll cause errors whenever new paths are updated.
 // if (!segments.every(isBreadcrumbPath)) return null;
 
@@ -76,11 +75,11 @@ const Breadcrumbs = () => {
   const isTable = isTablePath(segments);
 
   // Handle case of /{transactions|blocks} and /ibc/{clients|channels|connections}
-  // if length === 2 && isIbc => ibc table
   if (isTable) {
-    const pathKind = isIbc ? segments[1] : segments[0];
-    const _href = isIbc ? `/ibc/${pathKind}` : `/${pathKind}`;
-    const linkText = isIbc ? `IBC ${capitalize(pathKind)}` : `Recent ${capitalize(pathKind)}`;
+    // /{transactions|blocks|clients|channels|connections}
+    const parent = isIbc ? segments[1] : segments[0];
+    const _href = isIbc ? `/ibc/${parent}` : `/${parent}`;
+    const linkText = isIbc ? `IBC ${capitalize(parent)}` : `Recent ${capitalize(parent)}`;
 
     return (
       <Breadcrumb>
@@ -98,11 +97,16 @@ const Breadcrumbs = () => {
   }
 
   if (isBlockOrTx || isIbc) {
+    // /{transaction|block|client|channel|connection}
     const parent = isIbc ? segments[1] : segments[0];
+    // /{parent}/{hash|height|ibc-identifier}
     const slug = isIbc ? segments[2] : segments[1];
+    // table routes are always just the pluralized form of the singular so transaction => transactions, client => clients, etc
     const parentTable = parent + "s";
+    // only difference is to prefix URI with /ibc if it's ibc related
     const tableRef = isIbc ? `/ibc/${parentTable}` : `/${parentTable}`;
     const _href = isIbc ? `/ibc/${parent}/${slug}` : `/${parent}/${slug}`;
+    // Same prefixing but for the "current" breadcrumb
     const linkText = isIbc ? `IBC ${capitalize(parent)} Summary` : `${capitalize(parent)} Summary`;
 
     return (
@@ -130,8 +134,8 @@ export const Navbar : FC = () => {
   <div className="flex flex-wrap justify-between items-center p-8 gap-2 max-w-[1400px] mx-auto">
     <div className="flex-grow flex flex-wrap">
       <Link href="https://radiantcommons.com" className="" >
-        <RadiantLogoRainbow height={48} width={48} className="dark:block hidden"/>
-        <RadiantLogoBw height={48} width={48} className="dark:hidden "/>
+        <RadiantLogoDark height={48} width={48} className="dark:block hidden"/>
+        <RadiantLogoLight height={48} width={48} className="dark:hidden"/>
       </Link>
       <div className="flex items-center">
         <h1 className={`font-semibold text-2xl ml-1 mr-3 ${workSans.className}`}><Link href="/">Cuiloa</Link></h1>
