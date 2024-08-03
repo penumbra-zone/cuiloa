@@ -24,9 +24,11 @@ interface CardProps {
   children?: React.ReactNode,
   className?: string,
   heading: string,
+  disabled?: boolean,
 }
 
-const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, buttonLink }) => {
+const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, buttonLink, disabled = false }) => {
+  console.log(heading, disabled);
   return (
     <Card className={className}>
       <CardHeader>
@@ -34,7 +36,7 @@ const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, 
       </CardHeader>
       <CardContent className="flex flex-col gap-1 items-center">
         {children}
-        <Button className="w-full" asChild>
+        <Button className="w-full" variant={ disabled ? "outline" : "default"} disabled={disabled} asChild={!disabled}>
           <Link href={buttonLink}>{buttonText}</Link>
         </Button>
       </CardContent>
@@ -123,20 +125,23 @@ export default function Home() {
       <LandingCard
         heading="Staking"
         buttonLink="/staking"
-        buttonText="Explore Staking"
+        buttonText="Coming Soon..."
         className="w-[380px]"
+        disabled={true}
       />
       <LandingCard
         heading="Dex"
         buttonLink="/dex"
-        buttonText="Explore Dex"
+        buttonText="Coming Soon..."
         className="w-[380px]"
+        disabled={true}
       />
       <LandingCard
         heading="Governance"
         buttonLink="/governance"
-        buttonText="Explore Governance"
+        buttonText="Coming Soon..."
         className="w-[380px]"
+        disabled={true}
       />
     </div>
   );

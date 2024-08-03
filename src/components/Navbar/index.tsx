@@ -139,6 +139,7 @@ export const Navbar : FC = () => {
       </Link>
       <div className="flex items-center">
         <h1 className={`font-semibold text-2xl ml-1 mr-3 ${workSans.className}`}><Link href="/">Cuiloa</Link></h1>
+        {/* NOTE: the 5px of padding-top is to better align the smaller text with the text above, please keep it. */}
         <p className={`text-link font-medium pt-[5px] ${workSans.className}`}>
           <Link href="https://penumbra.zone/" className="">
             A Block Explorer For Penumbra
