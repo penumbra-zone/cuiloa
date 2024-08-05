@@ -53,6 +53,8 @@ export function PreviewTable ({
   } = useSuspenseQuery({
     queryKey: [queryName],
     queryFn: () => getFn({ endpoint, pageIndex }),
+    // refresh preview data every 15 seconds
+    refetchInterval: 15 * 1000,
     meta: {
       errorMessage,
     },

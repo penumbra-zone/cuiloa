@@ -57,6 +57,7 @@ export default function Home() {
     queryClient.prefetchQuery({
       queryFn: () => getTransactions({ endpoint: transactionEndpoint, pageIndex: 0 }),
       queryKey: [transactionsQuery],
+      staleTime: 0,
       meta: {
         errorMessage,
       },
@@ -64,11 +65,14 @@ export default function Home() {
     queryClient.prefetchQuery({
       queryFn: () => getBlocks({ endpoint: blocksEndpoint, pageIndex: 0 }),
       queryKey: [blocksQuery],
+      staleTime: 0,
       meta: {
         errorMessage,
       },
     }),
   ]);
+
+  // console.log(queryClient)
 
   return (
     <div className="flex flex-wrap gap-3 items-center justify-between py-5">

@@ -17,6 +17,9 @@ const makeQueryClient = () => {
       queries: {
         // Direct suggestion by tanstack, to prevent over-eager refetching from the client.
         staleTime: 60 * 1000,
+        // TODO: configure gcTime to take advantage of queries that never update, ie /block/ht and /transaction/hash. These can be set to Infinite, basically.
+        //       not fine-tuning now because I don't want to accidentally break the other queries without further testing. Caching has already caused enough silly bugs.
+        gcTime: 5 * 60 * 1000,
       },
       dehydrate: {
         // only successful and pending Queries are included per defaults

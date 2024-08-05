@@ -20,6 +20,7 @@ const Page = () => {
   queryClient.prefetchQuery({
     queryFn: () => getBlocks({ endpoint, pageIndex: 0}),
     queryKey: [queryName, defaultQueryOptions.pageIndex],
+    staleTime: 0,
     meta: {
       errorMessage,
     },

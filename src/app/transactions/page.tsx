@@ -21,6 +21,7 @@ const Page = () => {
   queryClient.prefetchQuery({
     queryFn: () => getTransactions({ endpoint, pageIndex: 0}),
     queryKey: [queryName, defaultQueryOptions.pageIndex],
+    staleTime: 0,
     meta: {
       errorMessage,
     },
