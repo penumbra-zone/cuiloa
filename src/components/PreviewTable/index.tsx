@@ -15,7 +15,7 @@ export interface QueryOptions {
 
 interface PreviewTableProps {
   className?: string,
-  queryName: "previewBlocks" | "previewTransactions",
+  queryName: "BlocksTable" | "TransactionsTable",
   pageIndex: number,
   endpoint: string,
   errorMessage: string,
@@ -33,7 +33,7 @@ export function PreviewTable ({
   errorMessage,
 } : PreviewTableProps) {
 
-  const getFn  = queryName === "previewBlocks" ? getBlocks : getTransactions;
+  const getFn  = queryName === "BlocksTable" ? getBlocks : getTransactions;
 
   const { data } : {
     data : {
@@ -51,7 +51,7 @@ export function PreviewTable ({
       }[];
     }
   } = useSuspenseQuery({
-    queryKey: [queryName],
+    queryKey: [queryName, pageIndex],
     queryFn: () => getFn({ endpoint, pageIndex }),
     // refresh preview data every 15 seconds
     refetchInterval: 15 * 1000,
@@ -63,7 +63,7 @@ export function PreviewTable ({
   const { results } = data ?? { pages: 0, results: []};
 
   // Checks only necessary for safely enforcing type. See todo comment above.
-  if (queryName === "previewBlocks") {
+  if (queryName === "BlocksTable") {
     const tableData = results as {
       height: bigint,
       created_at: string,

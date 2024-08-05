@@ -47,8 +47,8 @@ const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, 
 export default function Home() {
   const queryClient = getQueryClient();
 
-  const blocksQuery = "previewBlocks";
-  const transactionsQuery = "previewTransactions";
+  const blocksQuery = "BlocksTable";
+  const transactionsQuery = "TransactionsTable";
   const blocksEndpoint = "api/blocks";
   const transactionEndpoint = "api/transactions";
   const errorMessage = "Problems were encountered while trying to query explorer data for the main page, please try again.";
@@ -56,7 +56,7 @@ export default function Home() {
   Promise.all([
     queryClient.prefetchQuery({
       queryFn: () => getTransactions({ endpoint: transactionEndpoint, pageIndex: 0 }),
-      queryKey: [transactionsQuery],
+      queryKey: [transactionsQuery, 0],
       staleTime: 0,
       meta: {
         errorMessage,
@@ -64,7 +64,7 @@ export default function Home() {
     }),
     queryClient.prefetchQuery({
       queryFn: () => getBlocks({ endpoint: blocksEndpoint, pageIndex: 0 }),
-      queryKey: [blocksQuery],
+      queryKey: [blocksQuery, 0],
       staleTime: 0,
       meta: {
         errorMessage,
