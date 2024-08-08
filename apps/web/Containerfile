@@ -17,7 +17,7 @@ RUN apk update
 # Set working directory
 WORKDIR /app
 COPY . .
-RUN turbo prune --scope=web --docker
+RUN turbo prune --scope=cuiloa-app --docker
 
 # Install and build app
 FROM base AS installer
@@ -38,7 +38,7 @@ RUN pnpm install --frozen-lockfile
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
 
-RUN turbo run build --filter=web
+RUN turbo run build --filter=cuiloa-app
 
 # Run container
 FROM alpine AS runner
