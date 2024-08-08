@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@buf/cometbft_cometbft.bufbuild_es": "^1.8.0-20240312114316-c0d3497e35d6.2",
