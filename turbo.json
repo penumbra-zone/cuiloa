@@ -3,13 +3,19 @@
     "tasks": {
       "build": {
         "dependsOn": ["^build"],
-        "inputs": ["$TURBO_DEFAULT$", ".env*"],
+        "env": ["DATABASE_URL"],
+        "inputs": ["$TURBO_DEFAULT$",".env.local", ".env.production", ".env"],
         "outputs": ["dist/**", ".next/**", "!.next/cache/**", "public/dist/**"]
+      },
+      "start": {
+        "cache": true,
+        "persistent": true
       },
       "lint": {
         "dependsOn": ["^lint"]
       },
       "dev": {
+        "inputs": ["$TURBO_DEFAULT$",".env.local", ".env"],
         "cache": false,
         "persistent": true
       }

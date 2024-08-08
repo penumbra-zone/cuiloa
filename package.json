@@ -1,9 +1,14 @@
 {
-    "name": "cuiloa",
-    "private": true,
-    "scripts": {
-      "build": "turbo build",
-      "dev": "turbo dev",
-      "lint": "turbo lint"
-    }
+  "name": "cuiloa",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "start:web": "turbo run start --filter=./apps/web",
+    "dev": "turbo dev",
+    "lint": "turbo lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.12"
+  },
+  "packageManager": "pnpm@9.6.0+sha1.65cd48c20dd329b7f455088b6dd17d4d5b6d02e3"
 }
