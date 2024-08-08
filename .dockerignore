@@ -5,8 +5,21 @@
 !*.js
 !*.json
 !pnpm-lock.yaml
+!pnpm-workspace.yaml
+
 
 # nextjs files
+!apps/*/src/
+!apps/*/public/
+!apps/*/.next/
+!apps/*/*.ts
+!apps/*/*.js
+!apps/*/*.json
+
 !public/
 !src/
 !.next/
+
+# this is for the new docker file...
+!.gitignore
+
