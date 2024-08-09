@@ -18,19 +18,19 @@ importers:
         specifier: ^1.8.0-20240312114316-c0d3497e35d6.2
         version: 1.8.0-20240701160653-fedbb9acfd2f.3(@bufbuild/protobuf@1.10.0)
       '@buf/cosmos_ibc.bufbuild_es':
-        specifier: ^1.9.0-20240327103030-e2006674271c.1
-        version: 1.9.0-20240806013332-7ba0ade26258.2(@bufbuild/protobuf@1.10.0)
+        specifier: 1.10.0-20240806013332-7ba0ade26258.1
+        version: 1.10.0-20240806013332-7ba0ade26258.1(@bufbuild/protobuf@1.10.0)
       '@buf/penumbra-zone_penumbra.bufbuild_es':
-        specifier: ^1.9.0-20240520205529-36b404d2dbac.1
-        version: 1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)
+        specifier: 1.10.0-20240807155725-ffd12c6ea3c1.1
+        version: 1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)
       '@buf/penumbra-zone_penumbra.connectrpc_es':
-        specifier: ^1.4.0-20240520205529-36b404d2dbac.2
-        version: 1.4.0-20240806161416-0b68f838c3de.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
+        specifier: 1.4.0-20240807155725-ffd12c6ea3c1.3
+        version: 1.4.0-20240807155725-ffd12c6ea3c1.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@buf/penumbra-zone_penumbra.connectrpc_query-es':
-        specifier: ^1.4.1-20240528180215-8fe1c79485f8.1
-        version: 1.4.1-20240806161416-0b68f838c3de.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: 1.4.1-20240807155725-ffd12c6ea3c1.1
+        version: 1.4.1-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@bufbuild/protobuf':
-        specifier: ^1.9.0
+        specifier: ^1.10.0
         version: 1.10.0
       '@connectrpc/connect':
         specifier: ^1.4.0
@@ -43,10 +43,10 @@ importers:
         version: 1.4.0(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@penumbra-zone/getters':
         specifier: ^4.0.0
-        version: 4.1.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))(@bufbuild/protobuf@1.10.0)
+        version: 4.1.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))(@bufbuild/protobuf@1.10.0)
       '@penumbra-zone/types':
         specifier: ^5.0.0
-        version: 5.0.0(@buf/cosmos_ibc.bufbuild_es@1.9.0-20240806013332-7ba0ade26258.2(@bufbuild/protobuf@1.10.0))(@buf/cosmos_ibc.connectrpc_es@1.4.0-20230913112312-7ab44ae956a0.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0)))(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))(@buf/penumbra-zone_penumbra.connectrpc_es@1.4.0-20240806161416-0b68f838c3de.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0)))(@bufbuild/protobuf@1.10.0)
+        version: 5.0.0(@buf/cosmos_ibc.bufbuild_es@1.10.0-20240806013332-7ba0ade26258.1(@bufbuild/protobuf@1.10.0))(@buf/cosmos_ibc.connectrpc_es@1.4.0-20240806013332-7ba0ade26258.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0)))(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))(@buf/penumbra-zone_penumbra.connectrpc_es@1.4.0-20240807155725-ffd12c6ea3c1.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0)))(@bufbuild/protobuf@1.10.0)
       '@pgtyped/runtime':
         specifier: ^2.3.0
         version: 2.3.0
@@ -193,6 +193,11 @@ packages:
     peerDependencies:
       '@bufbuild/protobuf': ^1.8.0
 
+  '@buf/cosmos_cosmos-proto.bufbuild_es@1.10.0-20211202220400-1935555c206d.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-proto.bufbuild_es/-/cosmos_cosmos-proto.bufbuild_es-1.10.0-20211202220400-1935555c206d.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
   '@buf/cosmos_cosmos-proto.bufbuild_es@1.7.2-20211202220400-1935555c206d.2':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-proto.bufbuild_es/-/cosmos_cosmos-proto.bufbuild_es-1.7.2-20211202220400-1935555c206d.2.tgz}
     peerDependencies:
@@ -200,11 +205,6 @@ packages:
 
   '@buf/cosmos_cosmos-proto.bufbuild_es@1.9.0-20211202220400-1935555c206d.1':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-proto.bufbuild_es/-/cosmos_cosmos-proto.bufbuild_es-1.9.0-20211202220400-1935555c206d.1.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
-  '@buf/cosmos_cosmos-proto.bufbuild_es@1.9.0-20211202220400-1935555c206d.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-proto.bufbuild_es/-/cosmos_cosmos-proto.bufbuild_es-1.9.0-20211202220400-1935555c206d.2.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
@@ -218,6 +218,16 @@ packages:
     peerDependencies:
       '@bufbuild/protobuf': ^v1.9.0
       '@connectrpc/connect-query': ^1.4.1
+
+  '@buf/cosmos_cosmos-sdk.bufbuild_es@1.10.0-20230522115704-e7a85cef453e.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-sdk.bufbuild_es/-/cosmos_cosmos-sdk.bufbuild_es-1.10.0-20230522115704-e7a85cef453e.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
+  '@buf/cosmos_cosmos-sdk.bufbuild_es@1.10.0-20230719110346-aa25660f4ff7.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-sdk.bufbuild_es/-/cosmos_cosmos-sdk.bufbuild_es-1.10.0-20230719110346-aa25660f4ff7.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
 
   '@buf/cosmos_cosmos-sdk.bufbuild_es@1.7.2-20230522115704-e7a85cef453e.2':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-sdk.bufbuild_es/-/cosmos_cosmos-sdk.bufbuild_es-1.7.2-20230522115704-e7a85cef453e.2.tgz}
@@ -234,18 +244,8 @@ packages:
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
-  '@buf/cosmos_cosmos-sdk.bufbuild_es@1.9.0-20230522115704-e7a85cef453e.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-sdk.bufbuild_es/-/cosmos_cosmos-sdk.bufbuild_es-1.9.0-20230522115704-e7a85cef453e.2.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
   '@buf/cosmos_cosmos-sdk.bufbuild_es@1.9.0-20230719110346-aa25660f4ff7.1':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-sdk.bufbuild_es/-/cosmos_cosmos-sdk.bufbuild_es-1.9.0-20230719110346-aa25660f4ff7.1.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
-  '@buf/cosmos_cosmos-sdk.bufbuild_es@1.9.0-20230719110346-aa25660f4ff7.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_cosmos-sdk.bufbuild_es/-/cosmos_cosmos-sdk.bufbuild_es-1.9.0-20230719110346-aa25660f4ff7.2.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
@@ -271,6 +271,16 @@ packages:
       '@bufbuild/protobuf': ^v1.9.0
       '@connectrpc/connect-query': ^1.4.1
 
+  '@buf/cosmos_gogo-proto.bufbuild_es@1.10.0-20221020125208-34d970b699f8.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_gogo-proto.bufbuild_es/-/cosmos_gogo-proto.bufbuild_es-1.10.0-20221020125208-34d970b699f8.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
+  '@buf/cosmos_gogo-proto.bufbuild_es@1.10.0-20230509103710-5e5b9fdd0180.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_gogo-proto.bufbuild_es/-/cosmos_gogo-proto.bufbuild_es-1.10.0-20230509103710-5e5b9fdd0180.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
   '@buf/cosmos_gogo-proto.bufbuild_es@1.7.2-20221020125208-34d970b699f8.2':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_gogo-proto.bufbuild_es/-/cosmos_gogo-proto.bufbuild_es-1.7.2-20221020125208-34d970b699f8.2.tgz}
     peerDependencies:
@@ -291,18 +301,8 @@ packages:
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
-  '@buf/cosmos_gogo-proto.bufbuild_es@1.9.0-20221020125208-34d970b699f8.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_gogo-proto.bufbuild_es/-/cosmos_gogo-proto.bufbuild_es-1.9.0-20221020125208-34d970b699f8.2.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
   '@buf/cosmos_gogo-proto.bufbuild_es@1.9.0-20230509103710-5e5b9fdd0180.1':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_gogo-proto.bufbuild_es/-/cosmos_gogo-proto.bufbuild_es-1.9.0-20230509103710-5e5b9fdd0180.1.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
-  '@buf/cosmos_gogo-proto.bufbuild_es@1.9.0-20230509103710-5e5b9fdd0180.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_gogo-proto.bufbuild_es/-/cosmos_gogo-proto.bufbuild_es-1.9.0-20230509103710-5e5b9fdd0180.2.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
@@ -328,8 +328,23 @@ packages:
       '@bufbuild/protobuf': ^v1.9.0
       '@connectrpc/connect-query': ^1.4.1
 
+  '@buf/cosmos_ibc.bufbuild_es@1.10.0-20230913112312-7ab44ae956a0.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ibc.bufbuild_es/-/cosmos_ibc.bufbuild_es-1.10.0-20230913112312-7ab44ae956a0.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
+  '@buf/cosmos_ibc.bufbuild_es@1.10.0-20240806013332-7ba0ade26258.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ibc.bufbuild_es/-/cosmos_ibc.bufbuild_es-1.10.0-20240806013332-7ba0ade26258.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
   '@buf/cosmos_ibc.bufbuild_es@1.7.2-20230913112312-7ab44ae956a0.2':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ibc.bufbuild_es/-/cosmos_ibc.bufbuild_es-1.7.2-20230913112312-7ab44ae956a0.2.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.7.2
+
+  '@buf/cosmos_ibc.bufbuild_es@1.7.2-20240806013332-7ba0ade26258.2':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ibc.bufbuild_es/-/cosmos_ibc.bufbuild_es-1.7.2-20240806013332-7ba0ade26258.2.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.7.2
 
@@ -338,18 +353,13 @@ packages:
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
-  '@buf/cosmos_ibc.bufbuild_es@1.9.0-20230913112312-7ab44ae956a0.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ibc.bufbuild_es/-/cosmos_ibc.bufbuild_es-1.9.0-20230913112312-7ab44ae956a0.2.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
-  '@buf/cosmos_ibc.bufbuild_es@1.9.0-20240806013332-7ba0ade26258.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ibc.bufbuild_es/-/cosmos_ibc.bufbuild_es-1.9.0-20240806013332-7ba0ade26258.2.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
   '@buf/cosmos_ibc.connectrpc_es@1.4.0-20230913112312-7ab44ae956a0.3':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ibc.connectrpc_es/-/cosmos_ibc.connectrpc_es-1.4.0-20230913112312-7ab44ae956a0.3.tgz}
+    peerDependencies:
+      '@connectrpc/connect': ^1.4.0
+
+  '@buf/cosmos_ibc.connectrpc_es@1.4.0-20240806013332-7ba0ade26258.3':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ibc.connectrpc_es/-/cosmos_ibc.connectrpc_es-1.4.0-20240806013332-7ba0ade26258.3.tgz}
     peerDependencies:
       '@connectrpc/connect': ^1.4.0
 
@@ -359,6 +369,11 @@ packages:
       '@bufbuild/protobuf': ^v1.9.0
       '@connectrpc/connect-query': ^1.4.1
 
+  '@buf/cosmos_ics23.bufbuild_es@1.10.0-20221207100654-55085f7c710a.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ics23.bufbuild_es/-/cosmos_ics23.bufbuild_es-1.10.0-20221207100654-55085f7c710a.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
   '@buf/cosmos_ics23.bufbuild_es@1.7.2-20221207100654-55085f7c710a.2':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ics23.bufbuild_es/-/cosmos_ics23.bufbuild_es-1.7.2-20221207100654-55085f7c710a.2.tgz}
     peerDependencies:
@@ -366,11 +381,6 @@ packages:
 
   '@buf/cosmos_ics23.bufbuild_es@1.9.0-20221207100654-55085f7c710a.1':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ics23.bufbuild_es/-/cosmos_ics23.bufbuild_es-1.9.0-20221207100654-55085f7c710a.1.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
-  '@buf/cosmos_ics23.bufbuild_es@1.9.0-20221207100654-55085f7c710a.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/cosmos_ics23.bufbuild_es/-/cosmos_ics23.bufbuild_es-1.9.0-20221207100654-55085f7c710a.2.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
@@ -384,6 +394,21 @@ packages:
     peerDependencies:
       '@bufbuild/protobuf': ^v1.9.0
       '@connectrpc/connect-query': ^1.4.1
+
+  '@buf/googleapis_googleapis.bufbuild_es@1.10.0-20220908150232-8d7204855ec1.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.10.0-20220908150232-8d7204855ec1.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
+  '@buf/googleapis_googleapis.bufbuild_es@1.10.0-20221214150216-75b4300737fb.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.10.0-20221214150216-75b4300737fb.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
+  '@buf/googleapis_googleapis.bufbuild_es@1.10.0-20230502210827-cc916c318597.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.10.0-20230502210827-cc916c318597.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
 
   '@buf/googleapis_googleapis.bufbuild_es@1.7.2-20220908150232-8d7204855ec1.2':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.7.2-20220908150232-8d7204855ec1.2.tgz}
@@ -405,28 +430,13 @@ packages:
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
-  '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20220908150232-8d7204855ec1.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.9.0-20220908150232-8d7204855ec1.2.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
   '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20221214150216-75b4300737fb.1':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.9.0-20221214150216-75b4300737fb.1.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
-  '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20221214150216-75b4300737fb.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.9.0-20221214150216-75b4300737fb.2.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
   '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20230502210827-cc916c318597.1':
     resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.9.0-20230502210827-cc916c318597.1.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
-  '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20230502210827-cc916c318597.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/googleapis_googleapis.bufbuild_es/-/googleapis_googleapis.bufbuild_es-1.9.0-20230502210827-cc916c318597.2.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
@@ -463,28 +473,28 @@ packages:
       '@bufbuild/protobuf': ^v1.9.0
       '@connectrpc/connect-query': ^1.4.1
 
-  '@buf/penumbra-zone_penumbra.bufbuild_es@1.7.2-20240806161416-0b68f838c3de.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.bufbuild_es/-/penumbra-zone_penumbra.bufbuild_es-1.7.2-20240806161416-0b68f838c3de.2.tgz}
+  '@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.bufbuild_es/-/penumbra-zone_penumbra.bufbuild_es-1.10.0-20240807155725-ffd12c6ea3c1.1.tgz}
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.10.0
+
+  '@buf/penumbra-zone_penumbra.bufbuild_es@1.7.2-20240807155725-ffd12c6ea3c1.2':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.bufbuild_es/-/penumbra-zone_penumbra.bufbuild_es-1.7.2-20240807155725-ffd12c6ea3c1.2.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.7.2
 
-  '@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.1':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.bufbuild_es/-/penumbra-zone_penumbra.bufbuild_es-1.9.0-20240806161416-0b68f838c3de.1.tgz}
+  '@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240807155725-ffd12c6ea3c1.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.bufbuild_es/-/penumbra-zone_penumbra.bufbuild_es-1.9.0-20240807155725-ffd12c6ea3c1.1.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^1.9.0
 
-  '@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.bufbuild_es/-/penumbra-zone_penumbra.bufbuild_es-1.9.0-20240806161416-0b68f838c3de.2.tgz}
-    peerDependencies:
-      '@bufbuild/protobuf': ^1.9.0
-
-  '@buf/penumbra-zone_penumbra.connectrpc_es@1.4.0-20240806161416-0b68f838c3de.3':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.connectrpc_es/-/penumbra-zone_penumbra.connectrpc_es-1.4.0-20240806161416-0b68f838c3de.3.tgz}
+  '@buf/penumbra-zone_penumbra.connectrpc_es@1.4.0-20240807155725-ffd12c6ea3c1.3':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.connectrpc_es/-/penumbra-zone_penumbra.connectrpc_es-1.4.0-20240807155725-ffd12c6ea3c1.3.tgz}
     peerDependencies:
       '@connectrpc/connect': ^1.4.0
 
-  '@buf/penumbra-zone_penumbra.connectrpc_query-es@1.4.1-20240806161416-0b68f838c3de.1':
-    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.connectrpc_query-es/-/penumbra-zone_penumbra.connectrpc_query-es-1.4.1-20240806161416-0b68f838c3de.1.tgz}
+  '@buf/penumbra-zone_penumbra.connectrpc_query-es@1.4.1-20240807155725-ffd12c6ea3c1.1':
+    resolution: {tarball: https://buf.build/gen/npm/v1/@buf/penumbra-zone_penumbra.connectrpc_query-es/-/penumbra-zone_penumbra.connectrpc_query-es-1.4.1-20240807155725-ffd12c6ea3c1.1.tgz}
     peerDependencies:
       '@bufbuild/protobuf': ^v1.9.0
       '@connectrpc/connect-query': ^1.4.1
@@ -3084,15 +3094,15 @@ snapshots:
       '@buf/cosmos_gogo-proto.bufbuild_es': 1.8.0-20240130113600-88ef6483f90f.3(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
 
+  '@buf/cosmos_cosmos-proto.bufbuild_es@1.10.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@bufbuild/protobuf': 1.10.0
+
   '@buf/cosmos_cosmos-proto.bufbuild_es@1.7.2-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
   '@buf/cosmos_cosmos-proto.bufbuild_es@1.9.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@bufbuild/protobuf': 1.10.0
-
-  '@buf/cosmos_cosmos-proto.bufbuild_es@1.9.0-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
@@ -3108,6 +3118,20 @@ snapshots:
       '@buf/cosmos_cosmos-proto.bufbuild_es': 1.9.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect-query': 1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  '@buf/cosmos_cosmos-sdk.bufbuild_es@1.10.0-20230522115704-e7a85cef453e.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.10.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_gogo-proto.bufbuild_es': 1.10.0-20221020125208-34d970b699f8.1(@bufbuild/protobuf@1.10.0)
+      '@buf/googleapis_googleapis.bufbuild_es': 1.10.0-20221214150216-75b4300737fb.1(@bufbuild/protobuf@1.10.0)
+      '@bufbuild/protobuf': 1.10.0
+
+  '@buf/cosmos_cosmos-sdk.bufbuild_es@1.10.0-20230719110346-aa25660f4ff7.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.10.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_gogo-proto.bufbuild_es': 1.10.0-20230509103710-5e5b9fdd0180.1(@bufbuild/protobuf@1.10.0)
+      '@buf/googleapis_googleapis.bufbuild_es': 1.10.0-20230502210827-cc916c318597.1(@bufbuild/protobuf@1.10.0)
+      '@bufbuild/protobuf': 1.10.0
 
   '@buf/cosmos_cosmos-sdk.bufbuild_es@1.7.2-20230522115704-e7a85cef453e.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
@@ -3130,25 +3154,11 @@ snapshots:
       '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20221214150216-75b4300737fb.1(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
 
-  '@buf/cosmos_cosmos-sdk.bufbuild_es@1.9.0-20230522115704-e7a85cef453e.2(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.9.0-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_gogo-proto.bufbuild_es': 1.9.0-20221020125208-34d970b699f8.2(@bufbuild/protobuf@1.10.0)
-      '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20221214150216-75b4300737fb.2(@bufbuild/protobuf@1.10.0)
-      '@bufbuild/protobuf': 1.10.0
-
   '@buf/cosmos_cosmos-sdk.bufbuild_es@1.9.0-20230719110346-aa25660f4ff7.1(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@buf/cosmos_cosmos-proto.bufbuild_es': 1.9.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)
       '@buf/cosmos_gogo-proto.bufbuild_es': 1.9.0-20230509103710-5e5b9fdd0180.1(@bufbuild/protobuf@1.10.0)
       '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20230502210827-cc916c318597.1(@bufbuild/protobuf@1.10.0)
-      '@bufbuild/protobuf': 1.10.0
-
-  '@buf/cosmos_cosmos-sdk.bufbuild_es@1.9.0-20230719110346-aa25660f4ff7.2(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.9.0-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_gogo-proto.bufbuild_es': 1.9.0-20230509103710-5e5b9fdd0180.2(@bufbuild/protobuf@1.10.0)
-      '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20230502210827-cc916c318597.2(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
 
   '@buf/cosmos_cosmos-sdk.connectrpc_es@1.4.0-20230522115704-e7a85cef453e.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))':
@@ -3189,6 +3199,14 @@ snapshots:
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect-query': 1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
+  '@buf/cosmos_gogo-proto.bufbuild_es@1.10.0-20221020125208-34d970b699f8.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@bufbuild/protobuf': 1.10.0
+
+  '@buf/cosmos_gogo-proto.bufbuild_es@1.10.0-20230509103710-5e5b9fdd0180.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@bufbuild/protobuf': 1.10.0
+
   '@buf/cosmos_gogo-proto.bufbuild_es@1.7.2-20221020125208-34d970b699f8.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
@@ -3205,15 +3223,7 @@ snapshots:
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
-  '@buf/cosmos_gogo-proto.bufbuild_es@1.9.0-20221020125208-34d970b699f8.2(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@bufbuild/protobuf': 1.10.0
-
   '@buf/cosmos_gogo-proto.bufbuild_es@1.9.0-20230509103710-5e5b9fdd0180.1(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@bufbuild/protobuf': 1.10.0
-
-  '@buf/cosmos_gogo-proto.bufbuild_es@1.9.0-20230509103710-5e5b9fdd0180.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
@@ -3243,7 +3253,34 @@ snapshots:
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect-query': 1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
+  '@buf/cosmos_ibc.bufbuild_es@1.10.0-20230913112312-7ab44ae956a0.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.10.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.10.0-20230719110346-aa25660f4ff7.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_gogo-proto.bufbuild_es': 1.10.0-20221020125208-34d970b699f8.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_ics23.bufbuild_es': 1.10.0-20221207100654-55085f7c710a.1(@bufbuild/protobuf@1.10.0)
+      '@buf/googleapis_googleapis.bufbuild_es': 1.10.0-20220908150232-8d7204855ec1.1(@bufbuild/protobuf@1.10.0)
+      '@bufbuild/protobuf': 1.10.0
+
+  '@buf/cosmos_ibc.bufbuild_es@1.10.0-20240806013332-7ba0ade26258.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.10.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.10.0-20230719110346-aa25660f4ff7.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_gogo-proto.bufbuild_es': 1.10.0-20221020125208-34d970b699f8.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_ics23.bufbuild_es': 1.10.0-20221207100654-55085f7c710a.1(@bufbuild/protobuf@1.10.0)
+      '@buf/googleapis_googleapis.bufbuild_es': 1.10.0-20220908150232-8d7204855ec1.1(@bufbuild/protobuf@1.10.0)
+      '@bufbuild/protobuf': 1.10.0
+
   '@buf/cosmos_ibc.bufbuild_es@1.7.2-20230913112312-7ab44ae956a0.2(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.7.2-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.7.2-20230719110346-aa25660f4ff7.2(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_gogo-proto.bufbuild_es': 1.7.2-20221020125208-34d970b699f8.2(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_ics23.bufbuild_es': 1.7.2-20221207100654-55085f7c710a.2(@bufbuild/protobuf@1.10.0)
+      '@buf/googleapis_googleapis.bufbuild_es': 1.7.2-20220908150232-8d7204855ec1.2(@bufbuild/protobuf@1.10.0)
+      '@bufbuild/protobuf': 1.10.0
+
+  '@buf/cosmos_ibc.bufbuild_es@1.7.2-20240806013332-7ba0ade26258.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@buf/cosmos_cosmos-proto.bufbuild_es': 1.7.2-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)
       '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.7.2-20230719110346-aa25660f4ff7.2(@bufbuild/protobuf@1.10.0)
@@ -3261,30 +3298,24 @@ snapshots:
       '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20220908150232-8d7204855ec1.1(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
 
-  '@buf/cosmos_ibc.bufbuild_es@1.9.0-20230913112312-7ab44ae956a0.2(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.9.0-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.9.0-20230719110346-aa25660f4ff7.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_gogo-proto.bufbuild_es': 1.9.0-20221020125208-34d970b699f8.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_ics23.bufbuild_es': 1.9.0-20221207100654-55085f7c710a.2(@bufbuild/protobuf@1.10.0)
-      '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20220908150232-8d7204855ec1.2(@bufbuild/protobuf@1.10.0)
-      '@bufbuild/protobuf': 1.10.0
-
-  '@buf/cosmos_ibc.bufbuild_es@1.9.0-20240806013332-7ba0ade26258.2(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.9.0-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.9.0-20230719110346-aa25660f4ff7.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_gogo-proto.bufbuild_es': 1.9.0-20221020125208-34d970b699f8.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_ics23.bufbuild_es': 1.9.0-20221207100654-55085f7c710a.2(@bufbuild/protobuf@1.10.0)
-      '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20220908150232-8d7204855ec1.2(@bufbuild/protobuf@1.10.0)
-      '@bufbuild/protobuf': 1.10.0
-
   '@buf/cosmos_ibc.connectrpc_es@1.4.0-20230913112312-7ab44ae956a0.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))':
     dependencies:
       '@buf/cosmos_cosmos-proto.connectrpc_es': 1.4.0-20211202220400-1935555c206d.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@buf/cosmos_cosmos-sdk.connectrpc_es': 1.4.0-20230719110346-aa25660f4ff7.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@buf/cosmos_gogo-proto.connectrpc_es': 1.4.0-20221020125208-34d970b699f8.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@buf/cosmos_ibc.bufbuild_es': 1.7.2-20230913112312-7ab44ae956a0.2(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_ics23.connectrpc_es': 1.4.0-20221207100654-55085f7c710a.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
+      '@buf/googleapis_googleapis.connectrpc_es': 1.4.0-20220908150232-8d7204855ec1.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
+      '@connectrpc/connect': 1.4.0(@bufbuild/protobuf@1.10.0)
+    transitivePeerDependencies:
+      - '@bufbuild/protobuf'
+
+  '@buf/cosmos_ibc.connectrpc_es@1.4.0-20240806013332-7ba0ade26258.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))':
+    dependencies:
+      '@buf/cosmos_cosmos-proto.connectrpc_es': 1.4.0-20211202220400-1935555c206d.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
+      '@buf/cosmos_cosmos-sdk.connectrpc_es': 1.4.0-20230719110346-aa25660f4ff7.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
+      '@buf/cosmos_gogo-proto.connectrpc_es': 1.4.0-20221020125208-34d970b699f8.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
+      '@buf/cosmos_ibc.bufbuild_es': 1.7.2-20240806013332-7ba0ade26258.2(@bufbuild/protobuf@1.10.0)
       '@buf/cosmos_ics23.connectrpc_es': 1.4.0-20221207100654-55085f7c710a.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@buf/googleapis_googleapis.connectrpc_es': 1.4.0-20220908150232-8d7204855ec1.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@connectrpc/connect': 1.4.0(@bufbuild/protobuf@1.10.0)
@@ -3302,15 +3333,15 @@ snapshots:
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect-query': 1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
+  '@buf/cosmos_ics23.bufbuild_es@1.10.0-20221207100654-55085f7c710a.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@bufbuild/protobuf': 1.10.0
+
   '@buf/cosmos_ics23.bufbuild_es@1.7.2-20221207100654-55085f7c710a.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
   '@buf/cosmos_ics23.bufbuild_es@1.9.0-20221207100654-55085f7c710a.1(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@bufbuild/protobuf': 1.10.0
-
-  '@buf/cosmos_ics23.bufbuild_es@1.9.0-20221207100654-55085f7c710a.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
@@ -3326,6 +3357,18 @@ snapshots:
       '@buf/cosmos_ics23.bufbuild_es': 1.9.0-20221207100654-55085f7c710a.1(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect-query': 1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  '@buf/googleapis_googleapis.bufbuild_es@1.10.0-20220908150232-8d7204855ec1.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@bufbuild/protobuf': 1.10.0
+
+  '@buf/googleapis_googleapis.bufbuild_es@1.10.0-20221214150216-75b4300737fb.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@bufbuild/protobuf': 1.10.0
+
+  '@buf/googleapis_googleapis.bufbuild_es@1.10.0-20230502210827-cc916c318597.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@bufbuild/protobuf': 1.10.0
 
   '@buf/googleapis_googleapis.bufbuild_es@1.7.2-20220908150232-8d7204855ec1.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
@@ -3343,23 +3386,11 @@ snapshots:
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
-  '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20220908150232-8d7204855ec1.2(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@bufbuild/protobuf': 1.10.0
-
   '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20221214150216-75b4300737fb.1(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
-  '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20221214150216-75b4300737fb.2(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@bufbuild/protobuf': 1.10.0
-
   '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20230502210827-cc916c318597.1(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@bufbuild/protobuf': 1.10.0
-
-  '@buf/googleapis_googleapis.bufbuild_es@1.9.0-20230502210827-cc916c318597.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@bufbuild/protobuf': 1.10.0
 
@@ -3402,7 +3433,17 @@ snapshots:
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect-query': 1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  '@buf/penumbra-zone_penumbra.bufbuild_es@1.7.2-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)':
+  '@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)':
+    dependencies:
+      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.10.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.10.0-20230522115704-e7a85cef453e.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_gogo-proto.bufbuild_es': 1.10.0-20221020125208-34d970b699f8.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_ibc.bufbuild_es': 1.10.0-20230913112312-7ab44ae956a0.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_ics23.bufbuild_es': 1.10.0-20221207100654-55085f7c710a.1(@bufbuild/protobuf@1.10.0)
+      '@buf/googleapis_googleapis.bufbuild_es': 1.10.0-20221214150216-75b4300737fb.1(@bufbuild/protobuf@1.10.0)
+      '@bufbuild/protobuf': 1.10.0
+
+  '@buf/penumbra-zone_penumbra.bufbuild_es@1.7.2-20240807155725-ffd12c6ea3c1.2(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@buf/cosmos_cosmos-proto.bufbuild_es': 1.7.2-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)
       '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.7.2-20230522115704-e7a85cef453e.2(@bufbuild/protobuf@1.10.0)
@@ -3412,7 +3453,7 @@ snapshots:
       '@buf/googleapis_googleapis.bufbuild_es': 1.7.2-20221214150216-75b4300737fb.2(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
 
-  '@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.1(@bufbuild/protobuf@1.10.0)':
+  '@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)':
     dependencies:
       '@buf/cosmos_cosmos-proto.bufbuild_es': 1.9.0-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)
       '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.9.0-20230522115704-e7a85cef453e.1(@bufbuild/protobuf@1.10.0)
@@ -3422,17 +3463,7 @@ snapshots:
       '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20221214150216-75b4300737fb.1(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
 
-  '@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)':
-    dependencies:
-      '@buf/cosmos_cosmos-proto.bufbuild_es': 1.9.0-20211202220400-1935555c206d.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_cosmos-sdk.bufbuild_es': 1.9.0-20230522115704-e7a85cef453e.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_gogo-proto.bufbuild_es': 1.9.0-20221020125208-34d970b699f8.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_ibc.bufbuild_es': 1.9.0-20230913112312-7ab44ae956a0.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_ics23.bufbuild_es': 1.9.0-20221207100654-55085f7c710a.2(@bufbuild/protobuf@1.10.0)
-      '@buf/googleapis_googleapis.bufbuild_es': 1.9.0-20221214150216-75b4300737fb.2(@bufbuild/protobuf@1.10.0)
-      '@bufbuild/protobuf': 1.10.0
-
-  '@buf/penumbra-zone_penumbra.connectrpc_es@1.4.0-20240806161416-0b68f838c3de.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))':
+  '@buf/penumbra-zone_penumbra.connectrpc_es@1.4.0-20240807155725-ffd12c6ea3c1.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))':
     dependencies:
       '@buf/cosmos_cosmos-proto.connectrpc_es': 1.4.0-20211202220400-1935555c206d.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@buf/cosmos_cosmos-sdk.connectrpc_es': 1.4.0-20230522115704-e7a85cef453e.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
@@ -3440,12 +3471,12 @@ snapshots:
       '@buf/cosmos_ibc.connectrpc_es': 1.4.0-20230913112312-7ab44ae956a0.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@buf/cosmos_ics23.connectrpc_es': 1.4.0-20221207100654-55085f7c710a.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@buf/googleapis_googleapis.connectrpc_es': 1.4.0-20221214150216-75b4300737fb.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
-      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.7.2-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)
+      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.7.2-20240807155725-ffd12c6ea3c1.2(@bufbuild/protobuf@1.10.0)
       '@connectrpc/connect': 1.4.0(@bufbuild/protobuf@1.10.0)
     transitivePeerDependencies:
       - '@bufbuild/protobuf'
 
-  '@buf/penumbra-zone_penumbra.connectrpc_query-es@1.4.1-20240806161416-0b68f838c3de.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@buf/penumbra-zone_penumbra.connectrpc_query-es@1.4.1-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@buf/cosmos_cosmos-proto.connectrpc_query-es': 1.4.1-20211202220400-1935555c206d.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@buf/cosmos_cosmos-sdk.connectrpc_query-es': 1.4.1-20230522115704-e7a85cef453e.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
@@ -3453,7 +3484,7 @@ snapshots:
       '@buf/cosmos_ibc.connectrpc_query-es': 1.4.1-20230913112312-7ab44ae956a0.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@buf/cosmos_ics23.connectrpc_query-es': 1.4.1-20221207100654-55085f7c710a.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@buf/googleapis_googleapis.connectrpc_query-es': 1.4.1-20221214150216-75b4300737fb.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect-query@1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.9.0-20240806161416-0b68f838c3de.1(@bufbuild/protobuf@1.10.0)
+      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.9.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
       '@connectrpc/connect-query': 1.4.1(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))(@tanstack/react-query@5.51.21(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
@@ -3680,37 +3711,37 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@penumbra-zone/bech32m@3.1.1(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))':
+  '@penumbra-zone/bech32m@3.1.1(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))':
     dependencies:
-      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)
+      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)
       bech32: 2.0.0
 
-  '@penumbra-zone/bech32m@3.2.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))':
+  '@penumbra-zone/bech32m@3.2.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))':
     dependencies:
-      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)
+      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)
       bech32: 2.0.0
 
-  '@penumbra-zone/getters@4.0.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))(@bufbuild/protobuf@1.10.0)':
+  '@penumbra-zone/getters@4.0.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))(@bufbuild/protobuf@1.10.0)':
     dependencies:
-      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)
+      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
-      '@penumbra-zone/bech32m': 3.1.1(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))
+      '@penumbra-zone/bech32m': 3.1.1(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))
 
-  '@penumbra-zone/getters@4.1.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))(@bufbuild/protobuf@1.10.0)':
+  '@penumbra-zone/getters@4.1.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))(@bufbuild/protobuf@1.10.0)':
     dependencies:
-      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)
+      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)
       '@bufbuild/protobuf': 1.10.0
-      '@penumbra-zone/bech32m': 3.2.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))
+      '@penumbra-zone/bech32m': 3.2.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))
 
-  '@penumbra-zone/types@5.0.0(@buf/cosmos_ibc.bufbuild_es@1.9.0-20240806013332-7ba0ade26258.2(@bufbuild/protobuf@1.10.0))(@buf/cosmos_ibc.connectrpc_es@1.4.0-20230913112312-7ab44ae956a0.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0)))(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))(@buf/penumbra-zone_penumbra.connectrpc_es@1.4.0-20240806161416-0b68f838c3de.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0)))(@bufbuild/protobuf@1.10.0)':
+  '@penumbra-zone/types@5.0.0(@buf/cosmos_ibc.bufbuild_es@1.10.0-20240806013332-7ba0ade26258.1(@bufbuild/protobuf@1.10.0))(@buf/cosmos_ibc.connectrpc_es@1.4.0-20240806013332-7ba0ade26258.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0)))(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))(@buf/penumbra-zone_penumbra.connectrpc_es@1.4.0-20240807155725-ffd12c6ea3c1.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0)))(@bufbuild/protobuf@1.10.0)':
     dependencies:
-      '@buf/cosmos_ibc.bufbuild_es': 1.9.0-20240806013332-7ba0ade26258.2(@bufbuild/protobuf@1.10.0)
-      '@buf/cosmos_ibc.connectrpc_es': 1.4.0-20230913112312-7ab44ae956a0.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
-      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0)
-      '@buf/penumbra-zone_penumbra.connectrpc_es': 1.4.0-20240806161416-0b68f838c3de.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
+      '@buf/cosmos_ibc.bufbuild_es': 1.10.0-20240806013332-7ba0ade26258.1(@bufbuild/protobuf@1.10.0)
+      '@buf/cosmos_ibc.connectrpc_es': 1.4.0-20240806013332-7ba0ade26258.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
+      '@buf/penumbra-zone_penumbra.bufbuild_es': 1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0)
+      '@buf/penumbra-zone_penumbra.connectrpc_es': 1.4.0-20240807155725-ffd12c6ea3c1.3(@bufbuild/protobuf@1.10.0)(@connectrpc/connect@1.4.0(@bufbuild/protobuf@1.10.0))
       '@bufbuild/protobuf': 1.10.0
-      '@penumbra-zone/bech32m': 3.1.1(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))
-      '@penumbra-zone/getters': 4.0.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.9.0-20240806161416-0b68f838c3de.2(@bufbuild/protobuf@1.10.0))(@bufbuild/protobuf@1.10.0)
+      '@penumbra-zone/bech32m': 3.1.1(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))
+      '@penumbra-zone/getters': 4.0.0(@buf/penumbra-zone_penumbra.bufbuild_es@1.10.0-20240807155725-ffd12c6ea3c1.1(@bufbuild/protobuf@1.10.0))(@bufbuild/protobuf@1.10.0)
       bignumber.js: 9.1.2
       idb: 8.0.0
       zod: 3.23.8
