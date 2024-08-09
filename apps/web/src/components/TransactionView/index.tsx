@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { TransactionView as TransactionViewSchema, Transaction, TransactionBodyView as TransactionBodyViewSchema, MemoView } from "@buf/penumbra-zone_penumbra.bufbuild_es/penumbra/core/transaction/v1/transaction_pb";
-import { makeActionView } from "@/lib/protobuf";
+import { ibcRegistry, makeActionView } from "@/lib/protobuf";
 import { TransactionBodyView } from "./TransactionBodyView";
 import { FlexRow } from "../ui/flex";
 import { ActionRow } from "../ActionView";
@@ -39,7 +39,7 @@ interface TransactionViewProps {
 }
 
 export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
-  const txView = makeTransactionView(Transaction.fromJson(tx));
+  const txView = makeTransactionView(Transaction.fromJson(tx, { typeRegistry: ibcRegistry }));
   return (
     <FlexRow className="flex-wrap justify-start w-full">
       <p className="font-semibold sm:text-lg">Transaction View</p>
