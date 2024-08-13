@@ -9,12 +9,13 @@
 
 
 # nextjs files
-!apps/*/src/
-!apps/*/public/
-!apps/*/.next/
-!apps/*/*.ts
+!apps/
 !apps/*/*.js
 !apps/*/*.json
+!apps/*/*.ts
+!apps/*/.next/
+!apps/*/public/
+!apps/*/src/
 
 !public/
 !src/
