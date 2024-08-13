@@ -45,7 +45,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
-          file: Containerfile
+          file: apps/web/Containerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
