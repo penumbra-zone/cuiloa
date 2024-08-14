@@ -4,20 +4,21 @@ default:
   just --list
 
 dev:
-  npm run dev
+  pnpm dev
 
 build:
-  npm run build
+  @echo "INFO: Remember to set the proper env variables in apps/web/.env before building for turbo to pickup."
+  pnpm build
 
 start: build
-  npm run start
+  pnpm start:web
 
 lint:
-  npm run lint
+  pnpm lint
 
 pgtyped-cli:
-  @echo "Starting pgtyped with DATABASE_URL: $DATABASE_URL"
-  npx pgtyped -w -c pgtyped.config.json
+  cd apps/web && @echo "Starting pgtyped with DATABASE_URL: $DATABASE_URL"
+  cd apps/web && pnpx pgtyped -w -c pgtyped.config.json
 
 # Download the postgres db schema for CometBFT event indexing. See docs at
 # https://docs.cometbft.com/v0.37/app-dev/indexing-transactions#postgresql
