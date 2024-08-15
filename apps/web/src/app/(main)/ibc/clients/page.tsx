@@ -25,8 +25,10 @@ const Page = () => {
   });
 
   return (
-    <div className="bg-primary/60 flex flex-col gap-5 pt-5 items-center">
-      <h1 className="sm:text-2xl font-bold">IBC Clients</h1>
+    <div className="flex flex-col gap-8 items-center">
+      <div className="sm:w-11/12 w-full">
+        <h1 className="text-lg font-medium">IBC Clients</h1>
+      </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ClientsTable
           className="sm:w-11/12 w-full"

@@ -1,37 +1,37 @@
 export const dynamic = "force-dynamic";
-import { BlocksTable } from "@/components/BlocksTable";
-import { getBlocks } from "@/components/BlocksTable/getBlocks";
+import { ChannelsTable } from "@/components/ibc/channels/ChannelsTable";
+import { getIbcChannels } from "@/components/ibc/channels/getIbcChannels";
 import { getQueryClient } from "@/lib/utils";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-
 
 const Page = () => {
   const queryClient = getQueryClient();
 
   const defaultQueryOptions = {
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 0,
   };
 
-  const queryName = "BlocksTable";
-  const endpoint = "api/blocks";
-  const errorMessage = "Failed to query data while trying to generate blocks table, please try reloading the page.";
+  const endpoint = "api/ibc/channels";
+  const queryName = "IbcChannels";
+  const errorMessage = "Failed to query for IBC Channels. Please try again.";
 
   queryClient.prefetchQuery({
-    queryFn: () => getBlocks({ endpoint, pageIndex: 0}),
     queryKey: [queryName, defaultQueryOptions.pageIndex],
-    staleTime: 0,
+    queryFn: () => getIbcChannels({ endpoint, pageIndex: defaultQueryOptions.pageIndex }),
     meta: {
       errorMessage,
     },
   });
 
   return (
-    <div className="bg-primary/60 flex flex-col gap-5 pt-5">
-      <h1 className="sm:text-2xl font-bold self-center">Recent Blocks</h1>
+    <div className="flex flex-col gap-8 items-center">
+      <div className="sm:w-11/12 w-full">
+        <h1 className="text-lg font-medium">IBC Channels</h1>
+      </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <BlocksTable
-          className="self-center sm:w-2/3 w-full"
+        <ChannelsTable
+          className="sm:w-11/12 w-full"
           queryName={queryName}
           defaultQueryOptions={defaultQueryOptions}
           endpoint={endpoint}
