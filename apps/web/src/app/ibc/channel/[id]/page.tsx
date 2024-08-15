@@ -26,7 +26,7 @@ const Page : FC<PageProps> = ({ params }) => {
   });
 
   return (
-    <div className="bg-primary flex flex-col gap-5 pt-5 items-center ">
+    <div className="bg-primary/60 flex flex-col gap-5 pt-5 items-center ">
       <h1 className="font-medium">IBC Channel</h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <div className="sm:w-11/12 w-full">

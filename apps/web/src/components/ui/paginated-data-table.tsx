@@ -35,6 +35,7 @@ export function PaginatedDataTable<TData, TValue> ({ table, columns } : Paginate
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                className="hover:bg-muted/80"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >

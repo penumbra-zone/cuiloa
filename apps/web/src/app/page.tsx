@@ -10,7 +10,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
-import { getQueryClient } from "@/lib/utils";
+import { cn, getQueryClient } from "@/lib/utils";
 
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { PreviewTable } from "@/components/PreviewTable";
@@ -30,7 +30,7 @@ interface CardProps {
 const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, buttonLink, disabled = false }) => {
   console.log(heading, disabled);
   return (
-    <Card className={className}>
+    <Card className={cn("bg-card/60", className)}>
       <CardHeader>
         <CardTitle className="text-lg font-medium">{heading}</CardTitle>
       </CardHeader>

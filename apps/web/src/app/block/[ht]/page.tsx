@@ -28,7 +28,7 @@ const Page : FC<PageProps> = ({ params }) => {
   });
 
   return (
-    <div className="bg-primary rounded-sm shadow-md">
+    <div className="bg-primary/60 rounded-sm shadow-md">
       <div className="flex flex-col gap-5 pt-5 items-center">
         <h1 className="sm:text-2xl text-lg font-bold">Block Summary</h1>
         <HydrationBoundary state={dehydrate(queryClient)}>

@@ -45,7 +45,7 @@ export function AttributeTable<TData, TValue>({
     <div className={`${className ?? ""}`}>
       <div className="rounded-md border">
         <Table>
-          <TableHeader className="">
+          <TableHeader>
             {table.getHeaderGroups()[0].headers.map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {
@@ -66,7 +66,6 @@ export function AttributeTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="hover:bg-muted"
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
