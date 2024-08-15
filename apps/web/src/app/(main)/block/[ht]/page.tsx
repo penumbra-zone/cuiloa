@@ -28,15 +28,13 @@ const Page : FC<PageProps> = ({ params }) => {
   });
 
   return (
-    <div className="bg-primary/60 rounded-sm shadow-md">
-      <div className="flex flex-col gap-5 pt-5 items-center">
-        <h1 className="sm:text-2xl text-lg font-bold">Block Summary</h1>
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <div className="sm:w-11/12 w-full">
-            <Block {...{endpoint, queryName, ht }}/>
-          </div>
-        </HydrationBoundary>
-      </div>
+    <div className="flex flex-col gap-8 items-center">
+      <h1 className="text-lg font-medium">Block Summary</h1>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className="sm:w-11/12 w-full">
+          <Block {...{ endpoint, queryName, ht }} />
+        </div>
+      </HydrationBoundary>
     </div>
   );
 };
