@@ -21,7 +21,7 @@ export const Transaction : FC<TransactionProps> = ({ endpoint, queryName, hash }
 
   const [ txResult, penumbraTx ] = data;
   return (
-    <div className="flex flex-wrap justify-between sm:p-5 p-2 sm:gap-y-10 gap-y-5 w-full">
+    <div className="flex flex-wrap justify-between sm:gap-y-10 gap-y-5 w-full">
       <div className="flex flex-wrap justify-start w-full">
         <p className="sm:w-1/6 w-full sm:text-lg font-semibold">Hash</p>
         {/* TODO: this width on smaller screens is pretty arbitrary and there's a few instances of this now through the codebase. revisit and implement as consistent tailwind variables. */}

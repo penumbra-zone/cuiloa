@@ -27,11 +27,13 @@ const Page = () => {
   });
 
   return (
-    <div className="bg-primary/60 flex flex-col gap-5 pt-5">
-      <h1 className="sm:text-2xl font-bold self-center">Recent Blocks</h1>
+    <div className="flex flex-col gap-8 items-center">
+      <div className="sm:w-11/12 w-full">
+        <h1 className="text-lg font-medium">Recent Blocks</h1>
+      </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <BlocksTable
-          className="self-center sm:w-2/3 w-full"
+          className="sm:w-11/12 w-full"
           queryName={queryName}
           defaultQueryOptions={defaultQueryOptions}
           endpoint={endpoint}
