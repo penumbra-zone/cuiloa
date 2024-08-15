@@ -34,7 +34,7 @@ export const Client : FC<ClientProps> = ({ endpoint, queryName, clientId }) => {
   // const header = events.find(({ key }) => key === "header")?.value ?? "NONE";
 
   return (
-    <div className="flex flex-col justify-start p-5 gap-y-5 w-full">
+    <div className="flex flex-col justify-start gap-y-5 w-full">
       <div className="flex flex-wrap justify-start w-full">
         <p className="sm:w-1/6 w-full font-semibold">Client ID</p>
         <pre className="sm:w-0 w-full">{client_id}</pre>

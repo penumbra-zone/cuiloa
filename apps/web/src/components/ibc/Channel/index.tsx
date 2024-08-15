@@ -22,7 +22,7 @@ export const Channel : FC<ChannelProps> = ({ endpoint, queryName, channelId }) =
   });
 
   return (
-    <div className="flex flex-col justify-start p-5 gap-y-5 w-full">
+    <div className="flex flex-col justify-start gap-y-5 w-full">
       <div className="flex flex-wrap justify-start w-full">
         <p className="sm:w-1/6 w-full font-semibold">Channel ID</p>
         <pre className="sm:w-0 w-full">{channelId}</pre>

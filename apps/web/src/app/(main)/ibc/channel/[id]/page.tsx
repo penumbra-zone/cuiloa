@@ -26,10 +26,13 @@ const Page : FC<PageProps> = ({ params }) => {
   });
 
   return (
-    <div className="bg-primary/60 flex flex-col gap-5 pt-5 items-center ">
-      <h1 className="font-medium">IBC Channel</h1>
+    <div className="flex flex-col gap-8 items-center ">
+      <div className="sm:w-11/12 w-full">
+        <h1 className="text-lg font-medium">IBC Channel</h1>
+      </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <div className="sm:w-11/12 w-full">
+        {/* TODO: don't forget to remove this extra pb-8 once Channel is cleaned up. */}
+        <div className="sm:w-11/12 w-full pb-8">
           <Channel {...{endpoint, queryName, channelId}}/>
         </div>
       </HydrationBoundary>
