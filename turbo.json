@@ -5,7 +5,7 @@
         "dependsOn": ["^build"],
         "env": ["DATABASE_URL"],
         "inputs": ["$TURBO_DEFAULT$",".env.local", ".env.production", ".env"],
-        "outputs": ["dist/**", ".next/**", "!.next/cache/**", "public/dist/**"]
+        "outputs": ["dist/**", ".next/**", "!.next/cache/**", "public/dist/**", "target/release/**"]
       },
       "start": {
         "cache": true,

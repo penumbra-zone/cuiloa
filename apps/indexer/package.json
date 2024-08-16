@@ -1,0 +1,6 @@
+{
+    "name": "cuiloa-indexer",
+    "scripts": {
+        "build": "cargo build --release"
+    }
+}
