@@ -25,7 +25,7 @@ export const ThemeToggleButton : FC<ThemeToggleProps> = ({ className }) => {
 
   return (
     <Button className={cn("rounded-full", className)} variant="outline" size="icon" onClick={() => setTheme(isLight ? "dark" : "light")}>
-      {isLight ? <LeftPartialEclipse height={16} width={16}/>: <RightPartialEclipse height={16} width={16} />}
+      {isLight ? <LeftPartialEclipse height={16} width={16}/> : <RightPartialEclipse height={16} width={16} />}
     </Button>
   );
 };

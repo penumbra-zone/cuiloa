@@ -52,7 +52,7 @@ const SearchBar : FC<SearchProps> = ({ className }) => {
   }, []);
 
   return (
-    <div>
+    <div className={cn("", className)}>
       <div className="hidden sm:inline-flex relative items-center rounded-full bg-popover border max-w-lg z-50 overflow-visible pl-3 gap-2">
         <Search className="w-5 h-5"/>
         <Input
@@ -87,13 +87,13 @@ const SearchBar : FC<SearchProps> = ({ className }) => {
       </div>
       <Button
         variant="outline"
+        size="icon"
         className={cn(
-          "sm:hidden relative rounded-full border h-8 justify-start bg-popover text-sm font-normal shadow-none",
+          "sm:hidden rounded-full border h-9 w-9 justify-center items-center bg-popover text-sm font-normal shadow-none",
         )}
         onClick={() => setOpen(true)}
       >
-        <Search className="w-4 h-4 self-center mr-1"/>
-        <span className="inline-flex sm:hidden text-muted-foreground mt-[1px]">Search...</span>
+        <Search className="w-4 h-4"/>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput
