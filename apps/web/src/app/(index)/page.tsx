@@ -28,7 +28,6 @@ interface CardProps {
 }
 
 const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, buttonLink, disabled = false }) => {
-  console.log(heading, disabled);
   return (
     <Card className={cn("bg-card/60", className)}>
       <CardHeader>
@@ -75,7 +74,7 @@ export default function Home() {
   // console.log(queryClient)
 
   return (
-    <div className="flex flex-wrap gap-3 items-center justify-between py-5">
+    <div className="flex flex-wrap gap-3 items-center justify-between">
       <LandingCard
         heading="Transactions"
         buttonLink="/transactions"
