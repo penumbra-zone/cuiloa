@@ -53,12 +53,12 @@ const SearchBar : FC<SearchProps> = ({ className }) => {
 
   return (
     <div className={cn("", className)}>
-      <div className="hidden sm:inline-flex relative items-center rounded-full bg-popover border max-w-lg z-50 overflow-visible pl-3 gap-2">
+      <div className="hidden sm:inline-flex relative items-center rounded-full bg-popover border w-full z-50 overflow-visible pl-3 gap-2">
         <Search className="w-5 h-5"/>
         <Input
           ref={inputRef}
           className={"border-none px-0 mt-[2px] rounded-full focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-transparent"}
-          placeholder="Search..."
+          placeholder="Search"
           value={input}
           onChange={(text) => {
             console.log("text: ", text.currentTarget.value);
@@ -97,7 +97,6 @@ const SearchBar : FC<SearchProps> = ({ className }) => {
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput
-        // className="h-9 sm:h-11 text-sm"
         ref={inputRef}
         placeholder="Search for transactions, blocks, IBC data..."
         value={input}

@@ -156,7 +156,7 @@ export const Navbar: FC = () => {
         </p>
       </div>
       <div className="flex items-center gap-2 sm:w-auto mb-auto">
-        <SearchBar className="w-9 h-9 sm:w-40 sm:h-11" />
+        <SearchBar className="w-9 h-9 sm:w-40 md:w-56 lg:w-80 sm:h-11" />
         <ThemeToggleButton className="w-9 sm:w-11 h-9 sm:h-11" />
       </div>
       {pathName !== "/" ? (
