@@ -51,9 +51,7 @@ const RadiantLogoLight = ({ className } : { className?: string }) => {
 // TBQF I don't think this sort of error checking is necessary. If anything, it'll cause errors whenever new paths are updated.
 // if (!segments.every(isBreadcrumbPath)) return null;
 
-const Breadcrumbs = () => {
-  const pathName = usePathname();
-
+const Breadcrumbs : FC<{ pathName: string }>= ({ pathName }) => {
   // Don't show breadcrumbs if on index.
   if (pathName === "/") return null;
 
@@ -129,29 +127,43 @@ const Breadcrumbs = () => {
   }
 };
 
-export const Navbar : FC = () => {
+export const Navbar: FC = () => {
+  const pathName = usePathname();
   return (
-  <div className="flex flex-wrap justify-between items-center p-4 sm:p-8 sm:gap-2 gap-0 max-w-[1400px] mx-auto">
-    <div className="flex flex-wrap grow items-center sm:w-auto w-2/3">
-      <Link href="https://radiantcommons.com">
-        <RadiantLogoDark className="sm:w-12 sm:h-12 w-9 h-9 dark:block hidden"/>
-        <RadiantLogoLight className="sm:w-12 sm:h-12 w-9 h-9 dark:hidden"/>
-      </Link>
-      <h1 className={`font-semibold text-2xl ml-1 mr-3 ${workSans.className}`}><Link href="/" className="hover:underline">Cuiloa</Link></h1>
-      {/* NOTE: the 5px of padding-top is to better align the smaller text with the text above, please keep it. */}
-      <p className={`sm:w-fit w-2/3 sm:basis-auto basis-full font-medium pt-[5px] ${workSans.className}`}>
-        <Link href="https://penumbra.zone/" className="hover:underline text-link">
-          Block Explorer For Penumbra
+    <div className="flex flex-wrap justify-between items-center px-4 py-8 sm:px-8 sm:py-16 sm:gap-2 gap-0 max-w-[1400px] mx-auto">
+      <div className="flex flex-wrap grow items-center sm:w-auto w-2/3">
+        <Link href="https://radiantcommons.com">
+          <RadiantLogoDark className="sm:w-12 sm:h-12 w-9 h-9 dark:block hidden" />
+          <RadiantLogoLight className="sm:w-12 sm:h-12 w-9 h-9 dark:hidden" />
         </Link>
-      </p>
+        <h1
+          className={`font-semibold text-2xl ml-1 mr-3 ${workSans.className}`}
+        >
+          <Link href="/" className="hover:underline">
+            Cuiloa
+          </Link>
+        </h1>
+        {/* NOTE: the 5px of padding-top is to better align the smaller text with the text above, please keep it. */}
+        <p
+          className={`sm:w-fit w-2/3 sm:basis-auto basis-full font-medium pt-[5px] ${workSans.className}`}
+        >
+          <Link
+            href="https://penumbra.zone/"
+            className="hover:underline text-link"
+          >
+            Block Explorer For Penumbra
+          </Link>
+        </p>
+      </div>
+      <div className="flex items-center gap-2 sm:w-auto mb-auto">
+        <SearchBar className="w-9 h-9 sm:w-40 sm:h-11" />
+        <ThemeToggleButton className="w-9 sm:w-11 h-9 sm:h-11" />
+      </div>
+      {pathName !== "/" ? (
+        <div className="w-full h-5 pt-2 sm:pt-0">
+          <Breadcrumbs pathName={pathName} />
+        </div>
+      ) : null}
     </div>
-    <div className="flex items-center gap-2 sm:w-auto mb-auto">
-      <SearchBar className="w-9 h-9 sm:w-40 sm:h-11"/>
-      <ThemeToggleButton className="w-9 sm:w-11 h-9 sm:h-11"/>
-    </div>
-    <div className="w-full h-5">
-      <Breadcrumbs />
-    </div>
-  </div>
   );
 };
