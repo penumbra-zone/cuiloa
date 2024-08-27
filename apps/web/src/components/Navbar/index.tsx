@@ -26,18 +26,18 @@ import {
 // } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
 
-const RadiantLogoDark = ({ width, height, className } : { width: number, height: number, className?: string }) => {
+const RadiantLogoDark = ({ className } : { className?: string }) => {
   return (
     <div className={className}>
-      <Image src={radiantLogoDark} alt="RadiantCommons.com Logo" width={width} height={height} priority/>
+      <Image src={radiantLogoDark} alt="RadiantCommons.com Logo" priority/>
     </div>
   );
 };
 
-const RadiantLogoLight = ({ width, height, className } : { width: number, height: number, className?: string }) => {
+const RadiantLogoLight = ({ className } : { className?: string }) => {
   return (
     <div className={className}>
-      <Image src={radiantLogoLight} alt="RadiantCommons.com Logo" width={width} height={height} priority/>
+      <Image src={radiantLogoLight} alt="RadiantCommons.com Logo" priority/>
     </div>
   );
 };
@@ -131,25 +131,23 @@ const Breadcrumbs = () => {
 
 export const Navbar : FC = () => {
   return (
-  <div className="flex flex-wrap justify-between items-center p-8 gap-2 max-w-[1400px] mx-auto">
-    <div className="flex-grow flex flex-wrap">
-      <Link href="https://radiantcommons.com" className="" >
-        <RadiantLogoDark height={48} width={48} className="dark:block hidden"/>
-        <RadiantLogoLight height={48} width={48} className="dark:hidden"/>
+  <div className="flex flex-wrap justify-between items-center p-4 sm:p-8 sm:gap-2 gap-0 max-w-[1400px] mx-auto">
+    <div className="flex flex-wrap grow items-center sm:w-auto w-2/3">
+      <Link href="https://radiantcommons.com">
+        <RadiantLogoDark className="sm:w-12 sm:h-12 w-9 h-9 dark:block hidden"/>
+        <RadiantLogoLight className="sm:w-12 sm:h-12 w-9 h-9 dark:hidden"/>
       </Link>
-      <div className="flex items-center">
-        <h1 className={`font-semibold text-2xl ml-1 mr-3 ${workSans.className}`}><Link href="/">Cuiloa</Link></h1>
-        {/* NOTE: the 5px of padding-top is to better align the smaller text with the text above, please keep it. */}
-        <p className={`text-link font-medium pt-[5px] ${workSans.className}`}>
-          <Link href="https://penumbra.zone/" className="">
-            A Block Explorer For Penumbra
-          </Link>
-        </p>
-      </div>
+      <h1 className={`font-semibold text-2xl ml-1 mr-3 ${workSans.className}`}><Link href="/" className="hover:underline">Cuiloa</Link></h1>
+      {/* NOTE: the 5px of padding-top is to better align the smaller text with the text above, please keep it. */}
+      <p className={`sm:w-fit w-2/3 sm:basis-auto basis-full font-medium pt-[5px] ${workSans.className}`}>
+        <Link href="https://penumbra.zone/" className="hover:underline text-link">
+          Block Explorer For Penumbra
+        </Link>
+      </p>
     </div>
-    <div className="flex items-center gap-2">
-      <SearchBar className="w-5/6 sm:max-w-40"/>
-      <ThemeToggleButton />
+    <div className="flex items-center gap-2 sm:w-auto mb-auto">
+      <SearchBar className="w-9 h-9 sm:w-40 sm:h-11"/>
+      <ThemeToggleButton className="w-9 sm:w-11 h-9 sm:h-11"/>
     </div>
     <div className="w-full h-5">
       <Breadcrumbs />
