@@ -57,9 +57,11 @@ export const TwitterEmbed: FC<{ className?: string }> = ({ className }) => {
               href="https://twitter.com/penumbrazone?ref_src=twsrc%5Etfw"
             />
           </div>
-          <div className="col-span-1 row-span-1 col-start-1 row-start-1">
-            { !loaded ? <Skeleton className={cn("w-full h-[300px] opacity-85")}/> : null}
-          </div>
+          { !loaded ? (
+            <div className="col-span-1 row-span-1 col-start-1 row-start-1">
+              <Skeleton className={cn("w-full h-[300px] opacity-85")}/>
+            </div>
+          ) : null}
         <Script
           async
           src="https://platform.twitter.com/widgets.js"
