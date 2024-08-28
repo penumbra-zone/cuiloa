@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "A block explorer for Penumbra.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
