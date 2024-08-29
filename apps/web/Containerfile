@@ -15,7 +15,6 @@ FROM base AS builder
 ENV NEXT_TELEMETRY_DISABLED=1
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine
 # to understand why libc6-compat might be needed.
-RUN apk update
 RUN apk add --no-cache libc6-compat
 # Set working directory
 COPY . /app
@@ -45,6 +44,8 @@ RUN turbo run build --filter=cuiloa-app
 
 # Run container
 FROM alpine AS runner
+# Ensure that SSL certs are present for DB connections
+RUN apk add --no-cache ca-certificates
 WORKDIR /app
 
 # Disable telemetry.
