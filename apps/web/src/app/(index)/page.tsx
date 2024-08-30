@@ -36,7 +36,7 @@ const LandingCard: FC<CardProps> = ({ heading, children, className, buttonText, 
       </CardHeader>
       <CardContent className="flex flex-col gap-1 items-center">
         {children}
-        <Button className="w-full" variant={ disabled ? "outline" : "default"} disabled={disabled} asChild={!disabled}>
+        <Button className="w-full" variant={ disabled ? "ghost" : "outline"} disabled={disabled} asChild={!disabled}>
           <Link href={buttonLink}>{buttonText}</Link>
         </Button>
       </CardContent>
@@ -80,7 +80,7 @@ export default function Home() {
         heading="Transactions"
         buttonLink="/transactions"
         buttonText="Explore Transactions"
-        className="basis-[45%] w-full max-w-screen-sm"
+        className="sm:basis-[45%] w-full max-w-screen-sm"
         children={
           <HydrationBoundary state={dehydrate(queryClient)}>
             <PreviewTable
@@ -97,7 +97,7 @@ export default function Home() {
         heading="Blocks"
         buttonLink="/blocks"
         buttonText="Explore Blocks"
-        className="basis-[50%] w-full max-w-screen-sm"
+        className="sm:basis-[50%] w-full max-w-screen-sm"
         children={
           <HydrationBoundary state={dehydrate(queryClient)}>
             <PreviewTable

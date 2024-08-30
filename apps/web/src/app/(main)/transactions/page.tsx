@@ -28,8 +28,8 @@ const Page = () => {
   });
 
   return (
-    <div className="flex flex-col gap-8 items-center">
-      <div className="sm:w-11/12 w-full">
+    <div className="flex flex-col gap-8 px-6 items-center">
+      <div className="flex flex-col sm:w-11/12 w-full">
         <h1 className="text-lg font-medium">Recent Transactions</h1>
       </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
