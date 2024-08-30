@@ -18,15 +18,15 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="bg-primary/60 py-8 rounded-lg border">
-      <div className="flex flex-col gap-8 items-center">
-        <h1 className="text-lg font-medium sm:w-11/12 w-full">An error has occurred.</h1>
-        <p className="text-sm sm:w-11/12 w-full">Apologies, but something happened with Cuiloa and the client couldn&apos;t recover.</p>
-        <div className="flex sm:w-11/12 w-full gap-8">
-          <Button className="w-fit" asChild>
+    <div className="bg-primary/60 px-3 py-4 sm:p-8 rounded-lg border">
+      <div className="flex flex-col gap-5 items-center">
+        <h1 className="text-lg font-medium w-full">An error has occurred.</h1>
+        <p className="text-sm w-full">Apologies, but something happened with Cuiloa and the client couldn&apos;t recover.</p>
+        <div className="flex w-full gap-5">
+          <Button className="w-fit" variant={"outline"} asChild>
             <Link href={"/"}>Home</Link>
           </Button>
-          <Button className="w-fit" onClick={() => reset()}>
+          <Button className="w-fit" variant={"outline"} onClick={() => reset()}>
             Try Reloading
           </Button>
         </div>
