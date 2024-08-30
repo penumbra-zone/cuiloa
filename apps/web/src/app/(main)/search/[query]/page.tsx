@@ -28,7 +28,7 @@ const Page : FC<PageProps> = ({ params }) => {
   });
 
   return (
-    <div className="flex flex-col px-6 pb-8 gap-5 sm:p-8" key={query}>
+    <div className="flex flex-col gap-5" key={query}>
       <h1 className="text-lg font-medium">Search results</h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <SearchResultsTable className="w-full" query={query}/>

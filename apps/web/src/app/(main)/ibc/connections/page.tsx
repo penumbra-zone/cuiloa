@@ -25,13 +25,11 @@ const Page = () => {
   });
 
   return (
-    <div className="flex flex-col gap-8 px-6 items-center">
-      <div className="flex w-full justify-start items-center">
-        <h1 className="text-lg font-medium">IBC Connections</h1>
-      </div>
+    <div className="flex flex-col gap-5">
+      <h1 className="text-lg font-medium">IBC Connections</h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ConnectionsTable
-          className="sm:w-11/12 w-full"
+          className="w-full"
           queryName={queryName}
           defaultQueryOptions={defaultQueryOptions}
           endpoint={endpoint}

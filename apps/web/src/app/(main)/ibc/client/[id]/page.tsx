@@ -26,12 +26,10 @@ const Page : FC<PageProps> = ({ params }) => {
   });
 
   return (
-    <div className="flex flex-col gap-8 px-6 items-center ">
-      <div className="sm:w-11/12 w-full">
-        <h1 className="text-lg font-medium">IBC Client</h1>
-      </div>
+    <div className="flex flex-col gap-5">
+      <h1 className="text-lg font-medium">IBC Client</h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <div className="sm:w-11/12 w-full pb-8">
+        <div className="w-full">
           <Client {...{endpoint, queryName, clientId}}/>
         </div>
       </HydrationBoundary>
