@@ -42,7 +42,7 @@ export const TransactionView : FC<TransactionViewProps> = ({ tx }) => {
   const txView = makeTransactionView(Transaction.fromJson(tx, { typeRegistry: ibcRegistry }));
   return (
     <FlexRow className="flex-wrap justify-start w-full">
-      <p className="font-semibold sm:text-lg">Transaction View</p>
+      <p className="font-medium sm:text-lg">Transaction View</p>
       {txView.bodyView ? <TransactionBodyView bodyView={txView.bodyView}/> : "None"}
       {txView.bindingSig ? <BindingSig label="Binding Signature" value={txView.bindingSig.inner}/> : null}
       {txView.anchor ? <MerkleRoot label="Anchor" value={txView.anchor.inner}/> : null}

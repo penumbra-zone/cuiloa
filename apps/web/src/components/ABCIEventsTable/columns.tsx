@@ -10,7 +10,7 @@ export const makeColumns = ( header: string ) => {
   const columns : Array<ColumnDef<ABCIEventsColumns>> = [
     {
       id: "type",
-      header: () => <div className="break-all text-sm text-foreground">{header}</div>,
+      header: () => <div className="text-sm text-foreground overflow-scroll">{header}</div>,
       columns: [
         {
           accessorKey: "key",

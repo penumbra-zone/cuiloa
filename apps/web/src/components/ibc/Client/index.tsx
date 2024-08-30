@@ -34,21 +34,21 @@ export const Client : FC<ClientProps> = ({ endpoint, queryName, clientId }) => {
   // const header = events.find(({ key }) => key === "header")?.value ?? "NONE";
 
   return (
-    <div className="flex flex-col justify-start gap-y-5 w-full">
+    <div className="flex flex-col justify-start gap-5 w-full">
       <div className="flex flex-wrap justify-start w-full">
-        <p className="sm:w-1/6 w-full font-semibold">Client ID</p>
+        <p className="sm:w-1/6 w-full font-medium">Client ID</p>
         <pre className="sm:w-0 w-full">{client_id}</pre>
       </div>
       <div className="flex flex-wrap justify-start w-full">
-        <p className="sm:w-1/6 w-full font-semibold">Client Type</p>
+        <p className="sm:w-1/6 w-full font-medium">Client Type</p>
         <pre className="sm:w-0 w-full">{clientType}</pre>
       </div>
       <div className="flex flex-wrap justify-start w-full">
-        <p className="sm:w-1/6 w-full font-semibold">Counterparty Height</p>
+        <p className="sm:w-1/6 w-full font-medium">Counterparty Height</p>
         <pre className="sm:w-0 w-full">{consensusHeight}</pre>
       </div>
       <div className="flex flex-wrap justify-start w-full">
-        <p className="sm:w-1/6 w-full font-semibold">Connection IDs</p>
+        <p className="sm:w-1/6 w-full font-medium">Connection IDs</p>
         <Link
           href={`/ibc/connection/${connectionId}`}
           className="underline sm:w-0 w-full"
@@ -57,7 +57,7 @@ export const Client : FC<ClientProps> = ({ endpoint, queryName, clientId }) => {
         </Link>
       </div>
       <div className="flex flex-wrap justify-start w-full">
-        <p className="sm:w-1/6 w-full font-semibold">Channel IDs</p>
+        <p className="sm:w-1/6 w-full font-medium">Channel IDs</p>
         <div className="">
           {channels.map((channelId, i) => (
             <Link
