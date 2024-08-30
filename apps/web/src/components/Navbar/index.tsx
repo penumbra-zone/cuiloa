@@ -71,13 +71,15 @@ const Breadcrumbs : FC<{ pathName: string }>= ({ pathName }) => {
   const isIbc = segments.length >= 2 ? isIbcPath(segments) : false;
   const isBlockOrTx = segments.length === 2 && segments[0] === "block" || segments[0] === "transaction";
   const isTable = isTablePath(segments);
+  const isSearch = segments.length === 2 && segments[0] === "search";
 
-  // Handle case of /{transactions|blocks} and /ibc/{clients|channels|connections}
-  if (isTable) {
+  console.log("building breadcrumb...", isSearch);
+  // Handle case of /{transactions|blocks}, /ibc/{clients|channels|connections}, /search
+  if (isTable || isSearch) {
     // /{transactions|blocks|clients|channels|connections}
     const parent = isIbc ? segments[1] : segments[0];
     const _href = isIbc ? `/ibc/${parent}` : `/${parent}`;
-    const linkText = isIbc ? `IBC ${capitalize(parent)}` : `Recent ${capitalize(parent)}`;
+    const linkText = isIbc ? `IBC ${capitalize(parent)}` : isSearch ? `${capitalize(parent)}` : `Recent ${capitalize(parent)}`;
 
     return (
       <Breadcrumb>
@@ -105,7 +107,7 @@ const Breadcrumbs : FC<{ pathName: string }>= ({ pathName }) => {
     const tableRef = isIbc ? `/ibc/${parentTable}` : `/${parentTable}`;
     const _href = isIbc ? `/ibc/${parent}/${slug}` : `/${parent}/${slug}`;
     // Same prefixing but for the "current" breadcrumb
-    const linkText = isIbc ? `IBC ${capitalize(parent)} Summary` : `${capitalize(parent)} Summary`;
+    const linkText = `${capitalize(parent)} Summary`;
 
     return (
       <Breadcrumb>

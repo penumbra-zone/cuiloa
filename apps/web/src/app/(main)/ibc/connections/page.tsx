@@ -25,8 +25,10 @@ const Page = () => {
   });
 
   return (
-    <div className="bg-primary/60 flex flex-col gap-5 items-center pt-5">
-      <h1 className="sm:text-2xl font-bold">IBC Channels</h1>
+    <div className="flex flex-col gap-8 px-6 items-center">
+      <div className="flex w-full justify-start items-center">
+        <h1 className="text-lg font-medium">IBC Connections</h1>
+      </div>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ConnectionsTable
           className="sm:w-11/12 w-full"

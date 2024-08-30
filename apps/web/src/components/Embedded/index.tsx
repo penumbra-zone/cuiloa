@@ -41,19 +41,20 @@ export const TwitterEmbed: FC<{ className?: string }> = ({ className }) => {
     <Card className={cn("bg-card/60", className)}>
       <CardHeader className="flex justify-center">
         <CardTitle className="text-lg font-medium">
-          <span className="font-mono font-bold">@penumbrazone</span> on Twitter
+          Recent Updates
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-2 h-[320px]">
+      <CardContent className="h-[320px]">
         <div className="grid grid-cols-1 grid-rows-1">
           <div className="col-span-1 row-span-1 col-start-1 row-start-1">
             <Link
               id="twitter-tl"
               className={cn("twitter-timeline")}
               data-tweet-limit={5}
-              data-limit="5"
+              // data-limit="5"
               data-height="300"
-              data-chrome="noheader"
+              // data-chrome="noheader"
+              // data-chrome="noborders"
               href="https://twitter.com/penumbrazone?ref_src=twsrc%5Etfw"
             />
           </div>

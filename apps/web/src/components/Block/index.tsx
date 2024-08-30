@@ -24,15 +24,15 @@ export const Block : FC<BlockProps> = ({ endpoint, queryName, ht }) => {
   return (
     <div className="flex flex-wrap justify-between sm:gap-y-10 gap-y-5 w-full">
       <div className="flex flex-wrap justify-start w-full">
-        <p className="sm:w-1/6 w-full font-semibold">Block Height</p>
+        <p className="sm:w-1/6 w-full font-medium">Block Height</p>
         <pre className="sm:w-0 w-full">{ht}</pre>
       </div>
       <div className="flex flex-wrap justify-start w-full">
-        <p className="w-1/6 font-semibold">Timestamp</p>
+        <p className="w-1/6 font-medium">Timestamp</p>
         <pre className="sm:w-0 w-full">{created_at}</pre>
       </div>
       <div className="flex justify-start flex-wrap w-full">
-        <p className="sm:w-1/6 w-full font-bold">Transactions</p>
+        <p className="sm:w-1/6 w-full font-medium">Transactions</p>
         {/* eslint-disable-next-line @typescript-eslint/naming-convention */}
         {tx_hashes.length !== 0 ? (
           tx_hashes.map((hash, i) => (

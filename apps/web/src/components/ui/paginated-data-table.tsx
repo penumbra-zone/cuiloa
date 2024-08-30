@@ -1,6 +1,7 @@
 import { ColumnDef, Table as TableT, flexRender } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./Table";
 import { Button } from "./button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginatedDataTableProps<TData, TValue> {
   table: TableT<TData>,
@@ -56,14 +57,15 @@ export function PaginatedDataTable<TData, TValue> ({ table, columns } : Paginate
         </TableBody>
       </Table>
     </div>
-    <div className="flex items-center justify-end space-x-2 py-4">
+    <div className="flex items-center justify-center sm:justify-end py-4">
       <Button
         variant="ghost"
         size="sm"
         onClick={() => {table.previousPage()}}
         disabled={!table.getCanPreviousPage()}
       >
-        Previous
+        <ChevronLeft className="w-4 h-4 mr-[1px] mt-[-1px]"/>
+        <span className="align-middle">Previous</span>
       </Button>
       <Button
         variant="ghost"
@@ -71,7 +73,8 @@ export function PaginatedDataTable<TData, TValue> ({ table, columns } : Paginate
         onClick={() => {table.nextPage()}}
         disabled={!table.getCanNextPage()}
       >
-        Next
+        <span>Next</span>
+        <ChevronRight className="w-4 h-4 ml-[1px] mt-[-1px]"/>
       </Button>
     </div>
    </div>
