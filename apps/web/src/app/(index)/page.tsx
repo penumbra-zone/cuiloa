@@ -16,6 +16,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { PreviewTable } from "@/components/PreviewTable";
 import { getBlocks } from "@/components/BlocksTable/getBlocks";
 import { getTransactions } from "@/components/TransactionsTable/getTransactions";
+import { TwitterEmbed } from "@/components/Embedded";
 
 
 interface CardProps {
@@ -87,7 +88,8 @@ export default function Home() {
               queryName={transactionsQuery}
               pageIndex={0}
               endpoint={transactionEndpoint}
-              errorMessage={errorMessage}/>
+              errorMessage={errorMessage}
+            />
           </HydrationBoundary>
         }
       />
@@ -103,7 +105,8 @@ export default function Home() {
               queryName={blocksQuery}
               pageIndex={0}
               endpoint={blocksEndpoint}
-              errorMessage={errorMessage}/>
+              errorMessage={errorMessage}
+            />
           </HydrationBoundary>
         }
       />
@@ -146,6 +149,9 @@ export default function Home() {
         className="w-[380px]"
         disabled={true}
       />
+      <div className="flex w-full items-center justify-center">
+        <TwitterEmbed className="w-full sm:w-1/2"/>
+      </div>
     </div>
   );
 }
