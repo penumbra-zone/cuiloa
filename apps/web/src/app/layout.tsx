@@ -6,8 +6,7 @@ import "@/lib/patch-toJSON-BigInt";
 import { Navbar } from "@/components/Navbar";
 import Providers from "@/components/Providers";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { TwitterIcon, BookIcon, GitPullRequestIcon, MessageSquareIcon } from "lucide-react";
-import Link from "next/link";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Cuiloa",
@@ -29,28 +28,15 @@ export default function RootLayout({
       // Necessary for next-themes: https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
       suppressHydrationWarning
     >
-      <body className="bg-gradient-repeat-radial min-w-full min-h-screen">
+      <body className="bg-gradient-repeat-radial min-w-full min-h-screen flex flex-col w-full">
         <Providers>
           <Navbar />
-          <div className="container xs-container justify-start min-h-[640px]">
+          <div className="container xs-container justify-start min-h-[640px] grow">
             {children}
           </div>
           <ReactQueryDevtools initialIsOpen={false} />
         </Providers>
-        <div className="flex justify-center items-center h-28 gap-3">
-          <Link href="https://discord.gg/penumbrazone" title="The Official Penumbra Discord">
-            <MessageSquareIcon className="w-4" />
-          </Link>
-          <Link href="https://guide.penumbra.zone/" title="Penumbra User Guide">
-            <BookIcon className="w-4" />
-          </Link>
-          <Link href="https://github.com/penumbra-zone/cuiloa" title="Cuiloa Source Code">
-            <GitPullRequestIcon className="w-4" />
-          </Link>
-          <Link href="https://twitter.com/penumbrazone" title="Penumbra's Twitter">
-            <TwitterIcon className="w-4" />
-          </Link>
-        </div>
+        <Footer />
       </body>
     </html>
   );

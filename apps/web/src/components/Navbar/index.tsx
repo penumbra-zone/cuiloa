@@ -132,7 +132,7 @@ const Breadcrumbs : FC<{ pathName: string }>= ({ pathName }) => {
 export const Navbar: FC = () => {
   const pathName = usePathname();
   return (
-    <div className="flex flex-wrap justify-between items-center px-4 py-8 sm:px-8 sm:py-16 sm:gap-2 gap-0 max-w-[1400px] mx-auto">
+    <div className="flex flex-wrap justify-between items-center px-4 py-8 sm:px-8 sm:py-16 sm:gap-2 gap-0 max-w-[1400px] mx-auto w-full">
       <div className="flex flex-wrap grow items-center sm:w-auto w-2/3">
         <Link href="https://radiantcommons.com">
           <RadiantLogoDark className="sm:w-12 sm:h-12 w-9 h-9 dark:block hidden" />
