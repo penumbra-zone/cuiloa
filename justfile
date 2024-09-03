@@ -25,8 +25,13 @@ pgtyped-cli:
 update-cometbft-schema:
   curl -o deploy/postgres-cometbft-schema.sql -sSf "https://raw.githubusercontent.com/cometbft/cometbft/v0.37.2/state/indexer/sink/psql/schema.sql"
 
+# Build the webapp container image
 container:
-  podman build -t ghcr.io/penumbra-zone/cuiloa .
+  podman build -t ghcr.io/penumbra-zone/cuiloa -f apps/web/Containerfile .
+
+# Build, then run the webapp container image. Uses local env vars.
+run-container: container
+  podman run -e CA_CERT -e DATABASE_URL -e APP_URL -e PENUMBRA_GRPC_ENDPOINT -p 3000:3000 -it ghcr.io/penumbra-zone/cuiloa
 
 compose:
   docker compose up
