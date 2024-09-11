@@ -55,7 +55,7 @@ export default function Home() {
 
   Promise.all([
     queryClient.prefetchQuery({
-      queryFn: () => getTransactions({ endpoint: transactionEndpoint, pageIndex: 0 }),
+      queryFn: () => getTransactions({ endpoint: transactionEndpoint, pageIndex: 0, cached: false }),
       queryKey: [transactionsQuery, 0],
       staleTime: 0,
       meta: {
@@ -63,7 +63,7 @@ export default function Home() {
       },
     }),
     queryClient.prefetchQuery({
-      queryFn: () => getBlocks({ endpoint: blocksEndpoint, pageIndex: 0 }),
+      queryFn: () => getBlocks({ endpoint: blocksEndpoint, pageIndex: 0, cached: false }),
       queryKey: [blocksQuery, 0],
       staleTime: 0,
       meta: {
