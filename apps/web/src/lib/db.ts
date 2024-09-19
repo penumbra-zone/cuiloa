@@ -7,22 +7,20 @@ const { Pool, types } = pg;
 // Therefore let's provide an opt-in method of providing a CA for the cert info.
 // In order to use a DO managed DB URL, you must prune the `?sslmode=require` from the connection string!
 // This is documented here: https://node-postgres.com/features/ssl#usage-with-connectionstring
-const dbConfigTemp = {
+const dbConfig = {
   connectionString: process.env.DATABASE_URL,
   ssl: {},
+  // If a CA certificate was specified as an env var, pass that info to the database config.
+  // Be advised that if CA_CERT is set, then DATABASE_URL must *lack* an `sslmode` param!
+  ...(process.env.CA_CERT != null && {
+    ssl: {
+        rejectUnauthorized: true,
+        ca: process.env.CA_CERT,
+      },
+  }),
 };
 
-// If a CA certificate was specified as an env var, pass that info to the database config.
-// Be advised that if CA_CERT is set, then DATABASE_URL must *lack* an `sslmode` param!
-if (process.env.CA_CERT != null) {
-  dbConfigTemp["ssl"] = {
-    rejectUnauthorized: true,
-    ca: process.env.CA_CERT,
-  };
-}
-
 // Construct the db connection.
-const dbConfig = dbConfigTemp;
 const pool = new Pool(dbConfig);
 
 types.setTypeParser(types.builtins.DATE, (val: string) => val);
