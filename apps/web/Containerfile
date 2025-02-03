@@ -1,13 +1,14 @@
 # slimmest image. only for running the container.
-FROM docker.io/library/node:20-alpine AS alpine
+ARG NODE_MAJOR_VERSION=22
+FROM docker.io/library/node:${NODE_MAJOR_VERSION}-alpine AS base
 LABEL maintainer="team@penumbralabs.xyz"
 
-# provide pnpm globally for dep installing and building
-FROM alpine AS base
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable pnpm
+# We no longer use `corepack enable pnpm` due to breakage documented in
+# https://github.com/nodejs/corepack/issues/612
+RUN npm install -g pnpm@${PNPM_VERSION}
 RUN pnpm install turbo --global
 
 # prune package structure + code into out/
@@ -44,7 +45,7 @@ COPY turbo.json turbo.json
 RUN turbo run build --filter=cuiloa-app
 
 # Run container
-FROM alpine AS runner
+FROM base AS runner
 WORKDIR /app
 
 # Disable telemetry.
